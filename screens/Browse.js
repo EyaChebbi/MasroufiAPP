@@ -1,111 +1,112 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
 import {
   Dimensions,
   Image,
   StyleSheet,
+  FlatList,
+  Animated,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from "react-native";
+
+ import NavigationBar from '../navigation/NavigationBar';
 
 import { Card, Badge, Button, Block, Text } from "../components";
 import { theme, mocks } from "../constants";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 class Browse extends Component {
+
+
+  scrollX = new Animated.Value(0);
+
   state = {
-    active: "Products",
-    categories: []
-  };
-
-  componentDidMount() {
-    this.setState({ categories: this.props.categories });
+    showTerms: false,
   }
-
-  handleTab = tab => {
-    const { categories } = this.props;
-    const filtered = categories.filter(category =>
-      category.tags.includes(tab.toLowerCase())
-    );
-
-    this.setState({ active: tab, categories: filtered });
-  };
-
-  renderTab(tab) {
-    const { active } = this.state;
-    const isActive = active === tab;
+  
+  renderIllustrations() {
+    const { illustrations } = this.props;
 
     return (
-      <TouchableOpacity
-        key={`tab-${tab}`}
-        onPress={() => this.handleTab(tab)}
-        style={[styles.tab, isActive ? styles.active : null]}
-      >
-        <Text size={16} medium gray={!isActive} secondary={isActive}>
-          {tab}
-        </Text>
-      </TouchableOpacity>
-    );
+      <FlatList
+        horizontal
+        pagingEnabled
+        scrollEnabled
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={16}
+        snapToAlignment="center"
+        data={illustrations}
+        extraDate={this.state}
+        keyExtractor={(item, index) => `${item.id}`}
+        renderItem={({ item }) => (
+          <Image
+            source={item.source}
+            resizeMode="contain"
+            style={{ width, height: height / 2, overflow: 'visible' }}
+          />
+        )}
+        onScroll={
+          Animated.event([{
+            nativeEvent: { contentOffset: { x: this.scrollX } },
+            
+          }], {useNativeDriver: false})
+        }
+      />
+    )
   }
 
-  render() {
-    const { profile, navigation } = this.props;
-    const { categories } = this.state;
-    const tabs = ["Products", "Inspirations", "Shop"];
+renderSteps() {
+  const { illustrations } = this.props;
+  const stepPosition = Animated.divide(this.scrollX, width);
+  return (
+    <Block row center middle style={styles.stepsContainer}>
+      {illustrations.map((item, index) => {
+        const opacity = stepPosition.interpolate({
+          inputRange: [index - 1, index, index + 1],
+          outputRange: [0.4, 1, 0.4],
+          extrapolate: 'clamp',
+        });
 
-    return (
-      <Block>
-        <Block flex={false} row center space="between" style={styles.header}>
-          <Text h1 bold>
-            Browse
-          </Text>
-          <Button onPress={() => navigation.navigate("Settings")}>
-            <Image source={profile.avatar} style={styles.avatar} />
-          </Button>
-        </Block>
-
-        <Block flex={false} row style={styles.tabs}>
-          {tabs.map(tab => this.renderTab(tab))}
-        </Block>
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{ paddingVertical: theme.sizes.base * 2 }}
-        >
-          <Block flex={false} row space="between" style={styles.categories}>
-            {categories.map(category => (
-              <TouchableOpacity
-                key={category.name}
-                onPress={() => navigation.navigate("Explore", { category })}
-              >
-                <Card center middle shadow style={styles.category}>
-                  <Badge
-                    margin={[0, 0, 15]}
-                    size={50}
-                    color="rgba(41,216,143,0.20)"
-                  >
-                    <Image source={category.image} />
-                  </Badge>
-                  <Text medium height={20}>
-                    {category.name}
-                  </Text>
-                  <Text gray caption>
-                    {category.count} products
-                  </Text>
-                </Card>
-              </TouchableOpacity>
-            ))}
-          </Block>
-        </ScrollView>
-      </Block>
-    );
-  }
+        return (
+          <Block
+            animated
+            flex={false}
+            key={`step-${index}`}
+            color="gray"
+            style={[styles.steps, { opacity }]}
+          />
+        )
+      })}
+    </Block>
+  )
 }
 
+
+render() {
+
+  return (
+      
+      <Block center middle>
+        {this.renderIllustrations()}
+        {this.renderSteps()}
+      </Block>
+      
+  )
+}
+}
 Browse.defaultProps = {
-  profile: mocks.profile,
-  categories: mocks.categories
+illustrations: [
+  { id: 1, source: require('../assets/masroufi-logoo.png') },
+  { id: 2, source: require('../assets/masroufi-logoo.png') },
+  { id: 3, source: require('../assets/masroufi-logoo.png') },
+
+],
 };
+
+
+
 
 export default Browse;
 
@@ -141,5 +142,15 @@ const styles = StyleSheet.create({
     minWidth: (width - theme.sizes.padding * 2.4 - theme.sizes.base) / 2,
     maxWidth: (width - theme.sizes.padding * 2.4 - theme.sizes.base) / 2,
     maxHeight: (width - theme.sizes.padding * 2.4 - theme.sizes.base) / 2
-  }
+  },
+  footer: {
+    height: 70,
+    width: 'auto',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'stretch'
+
+  },
 });

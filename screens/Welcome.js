@@ -159,7 +159,7 @@ export default class Welcome extends Component {
 }
 Welcome.defaultProps = {
   illustrations: [
-    { id: 1, source: require('../assets/masroufi-logo.png') }
+    { id: 1, source: require('../assets/masroufi-logoo.png') }
   ],
 };
 
