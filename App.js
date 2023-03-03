@@ -8,6 +8,7 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
 import { theme } from './constants';
 import Browse from './screens/Browse';
+import Settings from './screens/Settings';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -20,16 +21,23 @@ const MyTheme = {
 
 export default function App() {
   return (
-    <View style={styles.container}>
-     <Browse/>
-     <View style ={styles.footer}>
-     <NavigationBar/>
-     </View>
+    // <View style={styles.container}>
+    //  <Browse/> 
+    //  <View style ={styles.footer}>
+    //  <NavigationBar/>
+    //  </View>
+    // </View>
+    <>
+    <RootNavigator/>
+    <View style={styles.footer}>
+    <NavigationBar/>
     </View>
+    </>
   );
 }
 const styles = StyleSheet.create({
   container: {
+    marginTop: 50,
     flex: 1,
     width: null,
     height: null,
@@ -37,10 +45,9 @@ const styles = StyleSheet.create({
   footer: {
     height: 70,
     width: 'auto',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
     borderTopColor: '#ddd',
     justifyContent: 'center',
-    alignItems: 'stretch',
+    padding: 10,
+    margin: 10,
   },
 });

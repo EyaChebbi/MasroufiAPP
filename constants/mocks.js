@@ -85,6 +85,7 @@ const categories = [
     newsletter: false,
   };
   
+  
   export {
     categories,
     explore,

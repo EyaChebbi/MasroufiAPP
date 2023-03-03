@@ -50,9 +50,9 @@ export default class Settings extends Component {
     const { profile, editing } = this.state;
 
     return (
-      <Block>
+      <Block style= {styles.container}>
         <Block flex={false} row center space="between" style={styles.header}>
-          <Text h1 bold>Settings</Text>
+  
           <Button>
             <Image
               source={profile.avatar}
@@ -155,6 +155,10 @@ Settings.defaultProps = {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    marginTop: 50,
+  },
   header: {
     paddingHorizontal: theme.sizes.base * 2,
   },

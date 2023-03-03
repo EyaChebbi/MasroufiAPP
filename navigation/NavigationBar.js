@@ -1,3 +1,4 @@
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -42,8 +43,9 @@ function NavigationBar() {
     >
       <Tab.Screen name="Dashboard" component={Browse} />
       <Tab.Screen name="Statistics" component={Statistics} />
-      <Tab.Screen name="Add" component={AddExpense} />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen name="Add" component={AddExpense}/>
+      {/* <Tab.Screen name="Expenses" component={Expenses} /> */}
+      <Tab.Screen name="Settings" component={Settings}/>
     </Tab.Navigator>
 
     </NavigationContainer>

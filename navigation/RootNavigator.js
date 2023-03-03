@@ -40,7 +40,7 @@ const RootNavigator = () => {
         <Stack.Screen name="Forgot" component={Forgot} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Product" component={Product} />
-        <Stack.Screen name="Settings" component={Settings} />
+        {/* <Stack.Screen name="Settings" component={Settings} /> */}
         <Stack.Screen name="SignUp" component={SignUp} />
       </Stack.Navigator>
     </NavigationContainer>
