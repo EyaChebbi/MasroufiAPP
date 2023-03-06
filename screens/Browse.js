@@ -104,15 +104,18 @@ renderSteps() {
 
 render() {
   return (
+    <>
       <Block center middle style={styles.pics} >
        
         {this.renderIllustrations()}
         {this.renderSteps()}
-         {/* <View style={styles.footer}>
-    <NavigationBar/>
-    </View> */}
+     
       </Block>
       
+      {/* <View style={styles.footer}>
+      <NavigationBar/>
+      </View> */}
+      </>
   )
 }
 }
@@ -173,16 +176,14 @@ const styles = StyleSheet.create({
   //   maxWidth: (width - theme.sizes.padding * 2.4 - theme.sizes.base) / 2,
   //   maxHeight: (width - theme.sizes.padding * 2.4 - theme.sizes.base) / 2
   // },
-  // footer: {
-  //   height: 70,
-  //   width: 'auto',
-  //   backgroundColor: '#fff',
-  //   borderTopWidth: 1,
-  //   borderTopColor: '#ddd',
-  //   justifyContent: 'center',
-  //   flexWrap: 'wrap',
-
-  // },
+   footer: {
+    height: 70,
+    width: 'auto',
+    borderTopColor: '#ddd',
+    justifyContent: 'center',
+    padding: 10,
+    margin: 10,
+   },
   stepsContainer: {
     position: 'relative',
     bottom: theme.sizes.base * 25,

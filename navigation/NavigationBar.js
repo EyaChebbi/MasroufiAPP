@@ -48,7 +48,7 @@ function NavigationBar() {
       <Tab.Screen name="Settings" component={Settings}/>
     </Tab.Navigator>
 
-    </NavigationContainer>
+      </NavigationContainer> 
   );
 }
 export default NavigationBar;

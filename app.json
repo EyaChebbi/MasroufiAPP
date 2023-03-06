@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Plant-App",
-    "slug": "Plant-App",
+    "name": "Masroufi-App",
+    "slug": "¨Masroufi-App",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/masroufi-logoo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/SplashGIF.gif",
