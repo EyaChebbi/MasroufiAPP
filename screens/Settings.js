@@ -189,3 +189,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.sizes.base * 2,
   }
 })
+
+
