@@ -1,103 +1,44 @@
-import React from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import React, {useState} from 'react'
+import { StyleSheet, Text, View, ScrollView, FlatList} from 'react-native';
 
 
 export default function Expenses() {
-    // const expenses = [
-    //     { id: 1, date: '2022-02-01', description: 'Textbook', amount: 50.0 },
-    //     { id: 2, date: '2022-02-03', description: 'Rent', amount: 500.0 },
-    //     { id: 3, date: '2022-02-08', description: 'Groceries', amount: 75.0 },
-    //     { id: 4, date: '2022-03-01', description: 'Internet Bill', amount: 40.0 },
-    //     { id: 5, date: '2022-03-05', description: 'Gas', amount: 30.0 },
-    //     { id: 6, date: '2022-03-10', description: 'Dinner', amount: 20.0 },
-    // ];
-    // const MonthlyExpenses = () => {
-    //     const [selectedMonth, setSelectedMonth] = useState(2); // default to February
-
-    //     // filter expenses to only show the selected month
-    //     const filteredExpenses = expenses.filter(
-    //         (expense) => new Date(expense.date).getMonth() + 1 === selectedMonth
-    //     );
-
-    //     return (
-    //         <View style={styles.container}>
-    //             <ScrollView>
-    //                 <View style={styles.monthSelector}>
-    //                     <Text style={styles.monthSelectorText}>Select Month:</Text>
-    //                     <View style={styles.monthButtons}>
-    //                         <Text
-    //                             style={[
-    //                                 styles.monthButton,
-    //                                 selectedMonth === 1 && styles.selectedMonthButton,
-    //                             ]}
-    //                             onPress={() => setSelectedMonth(1)}
-    //                         >
-    //                             Jan
-    //                         </Text>
-    //                         <Text
-    //                             style={[
-    //                                 styles.monthButton,
-    //                                 selectedMonth === 2 && styles.selectedMonthButton,
-    //                             ]}
-    //                             onPress={() => setSelectedMonth(2)}
-    //                         >
-    //                             Feb
-    //                         </Text>
-    //                         <Text
-    //                             style={[
-    //                                 styles.monthButton,
-    //                                 selectedMonth === 3 && styles.selectedMonthButton,
-    //                             ]}
-    //                             onPress={() => setSelectedMonth(3)}
-    //                         >
-    //                             Mar
-    //                         </Text>
-    //                         {/* add more months here as needed */}
-    //                     </View>
-    //                 </View>
-    //                 <View style={styles.expenseList}>
-    //                     {filteredExpenses.map((expense) => (
-    //                         <View key={expense.id} style={styles.expenseItem}>
-    //                             <Text style={styles.expenseDescription}>{expense.description}</Text>
-    //                             <Text style={styles.expenseAmount}>${expense.amount.toFixed(2)}</Text>
-    //                         </View>
-    //                     ))}
-    //                 </View>
-    //             </ScrollView>
-    //         </View>
-    //     );
-    // };
     const expenses = [
-        { id: '1', month: 'January', amount: '$50.00', description: 'Textbooks' },
-        { id: '2', month: 'February', amount: '$20.00', description: 'Lunch' },
-        { id: '3', month: 'February', amount: '$30.00', description: 'Supplies' },
-        { id: '4', month: 'March', amount: '$40.00', description: 'Transportation' },
-      ];
-      
-      const ExpenseScreen = () => {
-        const [expenseList, setExpenseList] = useState(expenses);
-      
-         renderExpense = ({ item }) => (
-          <View style={styles.expenseContainer}>
-            <Text style={styles.expenseMonth}>{item.month}</Text>
-            <Text style={styles.expenseAmount}>{item.amount}</Text>
-            <Text style={styles.expenseDescription}>{item.description}</Text>
-          </View>
-        );
-      
-        const sortExpenses = () => {
-          const sortedExpenses = expenseList.sort((a, b) => {
-            const dateA = new Date(a.month);
-            const dateB = new Date(b.month);
-            return dateA - dateB;
-          });
-          setExpenseList(sortedExpenses);
-        };
-      
-        return (
-          <>
+      { id: '1', month: 'January', date: '2023-01-05', amount: '$50.00', description: 'Textbooks' },
+      { id: '2', month: 'January', date: '2023-01-10', amount: '$25.00', description: 'Rent' },
+      { id: '3', month: 'January', date: '2023-01-20', amount: '$15.00', description: 'Internet bill' },
+      { id: '4', month: 'February', date: '2023-02-02', amount: '$20.00', description: 'Lunch' },
+      { id: '5', month: 'February', date: '2023-02-14', amount: '$30.00', description: 'Supplies' },
+      { id: '6', month: 'February', date: '2023-02-28', amount: '$75.00', description: 'Gas bill' },
+      { id: '7', month: 'March', date: '2023-03-01', amount: '$40.00', description: 'Transportation' },
+      { id: '8', month: 'March', date: '2023-03-15', amount: '$50.00', description: 'Electricity bill' },
+      { id: '9', month: 'March', date: '2023-03-28', amount: '$100.00', description: 'Groceries' },
+      { id: '10', month: 'April', date: '2023-04-03', amount: '$30.00', description: 'Gym membership' },
+    ];
+  
+    const ExpenseScreen = () => {
+      const [expenseList, setExpenseList] = useState(expenses);
+  
+      const renderExpense = ({ item }) => (
+        <View style={styles.expenseContainer}>
+          <Text style={styles.expenseMonth}>{item.month}</Text>
+          <Text style={styles.expenseAmount}>{item.amount}</Text>
+          <Text style={styles.expenseDescription}>{item.description}</Text>
+        </View>
+      );
+  
+      const sortExpenses = () => {
+        const sortedExpenses = expenseList.sort((a, b) => {
+          const dateA = new Date(a.month);
+          const dateB = new Date(b.month);
+          return dateA - dateB;
+        });
+        setExpenseList(sortedExpenses);
+      };
+  
+      return (
+        <>
           <View>
-            <Text> hello </Text>
           </View>
           <View style={styles.container}>
             <Text style={styles.title}>Expenses</Text>
@@ -107,41 +48,33 @@ export default function Expenses() {
               keyExtractor={item => item.id}
             />
           </View>
-          </>
-        );
-        }
+        </>
+      );
+    };
+  
+    return <ExpenseScreen />;
+  }
 
     const styles = StyleSheet.create({
-        container: {
-            // flex: 1,
-            backgroundColor: '#fff',
-            paddingTop: 50,
-        },
-        monthSelector: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginBottom: 20,
-        },
-        monthSelectorText: {
-            marginRight: 10,
-        },
-        monthButtons: {
-            flexDirection: 'row',
-            alignItems: 'center',
-        },
-        monthButton: {
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderWidth: 1,
-            borderColor: '#ccc',
-            borderRadius: 5,
-            marginRight: 10,
-        },
-        selectedMonthButton: {
-            backgroundColor: '#ccc',
-        },
-        expenseList: {
-            paddingHorizontal: 20,
-        }
+      container: {
+        backgroundColor: '#fff',
+        paddingTop: 50,
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+      },
+      expenseContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+      },
+      expenseMonth: {
+        fontWeight: 'bold',
+      },
+      expenseAmount: {},
+      expenseDescription: {},
     })
-}
