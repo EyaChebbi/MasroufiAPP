@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import {
     Dimensions,
     Image,
@@ -10,11 +10,7 @@ import {
     View,
 
 } from "react-native";
-import { Card, Badge, Button, Block, Text } from "../components";
-import { theme, mocks } from "../constants";
-import Icon from "react-native-vector-icons/FontAwesome";
-
-const { width, height } = Dimensions.get("window");
+import {Text } from "../components";
 
 export default function Home() {
     const budget = 1500;

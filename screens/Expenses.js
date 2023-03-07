@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 
 
@@ -77,7 +77,7 @@ export default function Expenses() {
       const ExpenseScreen = () => {
         const [expenseList, setExpenseList] = useState(expenses);
       
-        const renderExpense = ({ item }) => (
+         renderExpense = ({ item }) => (
           <View style={styles.expenseContainer}>
             <Text style={styles.expenseMonth}>{item.month}</Text>
             <Text style={styles.expenseAmount}>{item.amount}</Text>
@@ -95,6 +95,10 @@ export default function Expenses() {
         };
       
         return (
+          <>
+          <View>
+            <Text> hello </Text>
+          </View>
           <View style={styles.container}>
             <Text style={styles.title}>Expenses</Text>
             <FlatList
@@ -103,12 +107,13 @@ export default function Expenses() {
               keyExtractor={item => item.id}
             />
           </View>
+          </>
         );
-      };
+        }
 
     const styles = StyleSheet.create({
         container: {
-            flex: 1,
+            // flex: 1,
             backgroundColor: '#fff',
             paddingTop: 50,
         },

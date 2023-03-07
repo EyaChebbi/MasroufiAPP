@@ -7,8 +7,6 @@ import Home from '../screens/Home';
 import Expenses from "../screens/Expenses";
 import Settings from "../screens/Settings";
 import AddExpense from "../screens/AddExpense";
-import { NavigationContainer } from "@react-navigation/native";
-import Welcome from '../screens/Welcome';
 
 
 const Tab = createBottomTabNavigator();
@@ -43,11 +41,11 @@ function NavigationBar() {
       }}
       initialRouteName="Home"
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Expenses" component={Expenses} />
-      <Tab.Screen name="Add" component={AddExpense} options={{ tabBarLabel : () => null}}/>
-      <Tab.Screen name="Stats" component={Statistics} />
-      <Tab.Screen name="Settings" component={Settings}/>
+      <Tab.Screen name="Home" component={Home} options={{headerShown: false}} />
+      <Tab.Screen name="Expenses" component={Expenses} options={{headerShown: false}} />
+      <Tab.Screen name="Add" component={AddExpense} options={{ tabBarLabel : () => null, headerShown: false}}/>
+      <Tab.Screen name="Stats" component={Statistics} options={{headerShown: false}} />
+      <Tab.Screen name="Settings" component={Settings} options={{headerShown: false}}/>
     </Tab.Navigator>
     </View>
   );
@@ -60,7 +58,7 @@ const styles = StyleSheet.create({
     height: 70,
     width: 'auto',
     borderTopColor: '#ddd',
-    padding: 5,
+    padding: 0,
     justifyContent: 'space-around',
    }
   })
