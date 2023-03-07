@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View, StyleSheet } from "react-native";
 import Statistics from "../screens/Statistics";
-import Browse from "../screens/Browse";
+import Home from '../screens/Home';
 import Expenses from "../screens/Expenses";
 import Settings from "../screens/Settings";
 import AddExpense from "../screens/AddExpense";
@@ -16,7 +16,6 @@ const Tab = createBottomTabNavigator();
 function NavigationBar() {
   return (
 
-    <NavigationContainer >
 <View style={styles.footer}>
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -42,22 +41,22 @@ function NavigationBar() {
         activeTintColor: '#007AFF',
         inactiveTintColor: 'gray',
       }}
+      initialRouteName="Home"
     >
-      <Tab.Screen name="Home" component={Browse} />
+      <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Expenses" component={Expenses} />
       <Tab.Screen name="Add" component={AddExpense} options={{ tabBarLabel : () => null}}/>
       <Tab.Screen name="Stats" component={Statistics} />
       <Tab.Screen name="Settings" component={Settings}/>
     </Tab.Navigator>
     </View>
-
-      </NavigationContainer> 
   );
 }
 export default NavigationBar;
 const styles = StyleSheet.create({
 
   footer: {
+    flex: 1,
     height: 70,
     width: 'auto',
     borderTopColor: '#ddd',

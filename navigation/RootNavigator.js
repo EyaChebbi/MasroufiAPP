@@ -31,7 +31,7 @@ const RootNavigator = () => {
         {/* <Stack.Screen name="Browse">
                     {(props) => <Browse {...props} isLoggedIn={isLoggedIn} />}
                 </Stack.Screen>  */}
-        <Stack.Screen name="Browse" component={Home} />
+        <Stack.Screen name="Browse" component={NavigationBar} />
         <Stack.Screen name="Explore" component={Explore} />
         <Stack.Screen name="Forgot" component={Forgot} />
         <Stack.Screen name="Login" component={Login} />

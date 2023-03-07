@@ -30,7 +30,6 @@ export default function App() {
     // </View>
     <>
     <RootNavigator/>
-    <NavigationBar/>
     
      {/* <Expenses/> */}
     </>

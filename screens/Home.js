@@ -10,9 +10,6 @@ import {
     View,
 
 } from "react-native";
-
-import NavigationBar from '../navigation/NavigationBar';
-
 import { Card, Badge, Button, Block, Text } from "../components";
 import { theme, mocks } from "../constants";
 import Icon from "react-native-vector-icons/FontAwesome";
