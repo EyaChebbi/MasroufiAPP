@@ -8,6 +8,7 @@ import Forgot from "../screens/Forgot";
 import Explore from "../screens/Explore";
 import Browse from "../screens/Browse";
 import Product from "../screens/Product";
+import NavigationBar from "./NavigationBar";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,10 @@ const RootNavigator = () => {
           name="Home"
           component={Welcome}
           options={{ title: 'Welcome' }}
+          // options={() => ({
+          //   tabBarVisible: false,
+          //   tabBarButton: () => null,
+          // })}
         />
         {/* <Stack.Screen name="Browse">
                     {(props) => <Browse {...props} isLoggedIn={isLoggedIn} />}

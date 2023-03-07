@@ -29,9 +29,8 @@ export default function App() {
     // </View>
     <>
     <RootNavigator/>
-    <View style={styles.footer}>
     <NavigationBar/>
-    </View>
+    
     </>
   );
 }

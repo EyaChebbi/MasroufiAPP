@@ -1,31 +1,33 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
-
+import { View, StyleSheet } from "react-native";
 import Statistics from "../screens/Statistics";
 import Browse from "../screens/Browse";
 import Expenses from "../screens/Expenses";
 import Settings from "../screens/Settings";
 import AddExpense from "../screens/AddExpense";
 import { NavigationContainer } from "@react-navigation/native";
+import Welcome from '../screens/Welcome';
 
 
 const Tab = createBottomTabNavigator();
 
 function NavigationBar() {
   return (
-    <NavigationContainer>
 
+    <NavigationContainer  >
+<View style={styles.footer}>
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          if (route.name === 'Dashboard') {
+          if (route.name === 'Home') {
             iconName = 'chart-pie';
-          } else if (route.name === 'Planning') {
+          } else if (route.name === 'Expenses') {
             iconName = 'calendar-alt';
-          } else if (route.name === 'Statistics') {
+          } else if (route.name === 'Stats') {
             iconName = 'chart-line';
           } else if (route.name === 'Settings') {
             iconName = 'cog';
@@ -41,14 +43,25 @@ function NavigationBar() {
         inactiveTintColor: 'gray',
       }}
     >
-      <Tab.Screen name="Dashboard" component={Browse} />
-      <Tab.Screen name="Statistics" component={Statistics} />
-      <Tab.Screen name="Add" component={AddExpense}/>
-      {/* <Tab.Screen name="Expenses" component={Expenses} /> */}
+      <Tab.Screen name="Home" component={Browse} />
+      <Tab.Screen name="Expenses" component={Expenses} />
+      <Tab.Screen name="Add" component={AddExpense} options={{ tabBarLabel : () => null}}/>
+      <Tab.Screen name="Stats" component={Statistics} />
       <Tab.Screen name="Settings" component={Settings}/>
     </Tab.Navigator>
+    </View>
 
       </NavigationContainer> 
   );
 }
 export default NavigationBar;
+const styles = StyleSheet.create({
+
+  footer: {
+    height: 70,
+    width: 'auto',
+    borderTopColor: '#ddd',
+    padding: 5,
+    justifyContent: 'space-around',
+   }
+  })
