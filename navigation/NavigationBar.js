@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator();
 function NavigationBar() {
   return (
 
-    <NavigationContainer  >
+    <NavigationContainer >
 <View style={styles.footer}>
     <Tab.Navigator
       screenOptions={({ route }) => ({

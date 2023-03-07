@@ -9,6 +9,7 @@ import Explore from "../screens/Explore";
 import Browse from "../screens/Browse";
 import Product from "../screens/Product";
 import NavigationBar from "./NavigationBar";
+import Home from "../screens/Home";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +31,7 @@ const RootNavigator = () => {
         {/* <Stack.Screen name="Browse">
                     {(props) => <Browse {...props} isLoggedIn={isLoggedIn} />}
                 </Stack.Screen>  */}
-        <Stack.Screen name="Browse" component={Browse} />
+        <Stack.Screen name="Browse" component={Home} />
         <Stack.Screen name="Explore" component={Explore} />
         <Stack.Screen name="Forgot" component={Forgot} />
         <Stack.Screen name="Login" component={Login} />

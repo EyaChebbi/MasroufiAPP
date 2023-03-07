@@ -9,6 +9,7 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { theme } from './constants';
 import Browse from './screens/Browse';
 import Settings from './screens/Settings';
+import Expenses from './screens/Expenses';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -31,6 +32,7 @@ export default function App() {
     <RootNavigator/>
     <NavigationBar/>
     
+     {/* <Expenses/> */}
     </>
   );
 }
