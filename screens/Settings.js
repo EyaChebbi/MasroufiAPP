@@ -53,12 +53,12 @@ export default class Settings extends Component {
       <Block style= {styles.container}>
         <Block flex={false} row center space="between" style={styles.header}>
   
-          <Button>
+          {/* <Button>
             <Image
               source={profile.avatar}
               style={styles.avatar}
             />
-          </Button>
+          </Button> */}
         </Block>
 
         <ScrollView showsVerticalScrollIndicator={false}>

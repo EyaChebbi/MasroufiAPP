@@ -75,9 +75,9 @@ const categories = [
   ];
   
   const profile = {
-    username: 'react-ui-kit',
-    location: 'Europe',
-    email: 'contact@react-ui-kit.com',
+    username: 'user1',
+    location: 'Tunisia',
+    email: 'user1@test.com',
     avatar: require('../assets/images/avatar.png'),
     budget: 1000,
     monthly_cap: 5000,
