@@ -8,24 +8,37 @@ import {
     ScrollView,
     TouchableOpacity,
     View,
-
 } from "react-native";
-import {Text } from "../components";
+import { Text } from "../components";
+import { FontAwesome5 } from '@expo/vector-icons';
+import { LineChart } from 'react-native-chart-kit';
 
 export default function Home() {
     const budget = 1500;
 
     const budgets = [
+
         { type: 'Cash', value: 500 },
         { type: 'Bank Account', value: 1000 },
-        { type: 'Crypto Account', value : -200}
+        { type: 'Crypto Account', value: -200 }
     ]
-    const BudgetCard = ({ type, value }) => (
-        <View style={styles.card2}>
-            <Text style={styles.title}>{type}</Text>
-            <Text style={styles.value}>{`${value} DT`}</Text>
-        </View>
-    );
+    const BudgetCard = ({ type, value }) => {
+        let icon;
+        if (type === 'Cash') {
+            icon = <FontAwesome5 name="money-bill" size={24} color='#6cb1a7' />;
+        } else if (type === 'Bank Account') {
+            icon = <FontAwesome5 name="university" size={24} color= '#6cb1a7' />;
+        } else {
+            icon = <FontAwesome5 name="bitcoin" size={24} color='#6cb1a7' />;
+        }
+        return (
+            <View style={styles.card2}>
+                {icon}
+                <Text style={styles.title}>{type}</Text>
+                <Text style={styles.value}>{`${value} DT`}</Text>
+            </View>
+        );
+    };
 
     const topExpenses = [
         { name: 'Groceries', amount: 200 },
@@ -48,22 +61,19 @@ export default function Home() {
     ];
 
     const totalExpenses = topExpenses.reduce((acc, expense) => acc + expense.amount, 0);
-    const balance = budget- totalExpenses;
+    const balance = budget - totalExpenses;
 
 
 
     return (
         <ScrollView style={styles.container}>
-            {/* <View style={styles.card}>
-                <Text style={styles.title}>Budget</Text>
-                <Text style={styles.value}>{`${budget} DT`}</Text>
-            </View> */}
-            <FlatList 
+            <FlatList
                 data={budgets}
                 horizontal={true}
                 renderItem={({ item }) => <BudgetCard style={styles.card2}
-                type={item.type} value={item.value} />}
+                    type={item.type} value={item.value} />}
             />
+
             <View style={styles.card}>
                 <Text style={styles.title}>Top Expenses</Text>
                 {topExpenses.map((expense) => (
@@ -74,7 +84,7 @@ export default function Home() {
                 ))}
                 <Text style={styles.title}>{`Total Expenses: ${totalExpenses} DT`}</Text>
             </View>
-            <View style={styles.card}>
+            {/* <View style={styles.card}>
                 <Text style={styles.title}>Balance Trend</Text>
                 {balanceTrend.map((data) => (
                     <View key={data.month}>
@@ -82,7 +92,33 @@ export default function Home() {
                         <Text style={styles.value}>{`${data.balance} DT`}</Text>
                     </View>
                 ))}
-            </View>
+            </View> */}
+            <View style={styles.card}>
+  <Text style={styles.title}> Balance Trend</Text>
+  <LineChart
+  style={styles.chart}
+    data={{
+      labels: balanceTrend.map((data) => data.month),
+      datasets: [
+        {
+          data: balanceTrend.map((data) => data.balance),
+          color: () => '#405457',
+        },
+      ],
+    }}
+    width={Dimensions.get('window').width - 70}
+    height={220}
+    chartConfig={{
+      backgroundColor: '#feffff',
+      backgroundGradientFrom: '#feffff',
+      backgroundGradientTo: '#feffff',
+      decimalPlaces: 0,
+      color: (opacity = 1) => `#405754`,
+    }}
+    bezier
+  />
+</View>
+
             <View style={styles.card}>
                 <Text style={styles.title}>Current Balance</Text>
                 <Text style={styles.value}>{`${balance} DT`}</Text>
@@ -96,14 +132,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#74cbb0',
+        backgroundColor: '#6eccaf',
     },
     card2: {
         backgroundColor: '#feffff',
         borderRadius: 10,
         padding: 20,
         marginBottom: 20,
-        marginRight:20,
+        marginRight: 20,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
@@ -131,4 +167,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#666',
     },
+    chart: {
+        backgroundColor: '#feffff',
+        borderRadius: 10,
+        paddingLeft: -50,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    }
 });

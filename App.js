@@ -1,15 +1,9 @@
 import React from 'react';
-import { Block } from './components';
 import { View, StyleSheet } from "react-native";
-
 import RootNavigator from './navigation/RootNavigator';
-import NavigationBar from './navigation/NavigationBar';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { DefaultTheme } from '@react-navigation/native';
 
 import { theme } from './constants';
-import Browse from './screens/Browse';
-import Settings from './screens/Settings';
-import Expenses from './screens/Expenses';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -22,16 +16,8 @@ const MyTheme = {
 
 export default function App() {
   return (
-    // <View style={styles.container}>
-    //  <Browse/> 
-    //  <View style ={styles.footer}>
-    //  <NavigationBar/>
-    //  </View>
-    // </View>
     <>
     <RootNavigator/>
-    
-     {/* <Expenses/> */}
     </>
   );
 }
