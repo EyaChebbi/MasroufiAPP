@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Dimensions,
-    Image,
     StyleSheet,
     FlatList,
-    Animated,
     ScrollView,
     TouchableOpacity,
     View,
@@ -12,6 +10,8 @@ import {
 import { Text } from "../components";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
+import { useNavigation } from "@react-navigation/native";
+import BalanceTrend from "./BalanceTrend";
 
 export default function Home() {
     const budget = 1500;
@@ -25,11 +25,11 @@ export default function Home() {
     const BudgetCard = ({ type, value }) => {
         let icon;
         if (type === 'Cash') {
-            icon = <FontAwesome5 name="money-bill" size={24} color='#6cb1a7' />;
+            icon = <FontAwesome5 name="money-bill" size={24} color='blue' />;
         } else if (type === 'Bank Account') {
-            icon = <FontAwesome5 name="university" size={24} color= '#6cb1a7' />;
+            icon = <FontAwesome5 name="university" size={24} color='blue' />;
         } else {
-            icon = <FontAwesome5 name="bitcoin" size={24} color='#6cb1a7' />;
+            icon = <FontAwesome5 name="bitcoin" size={24} color='blue' />;
         }
         return (
             <View style={styles.card2}>
@@ -63,7 +63,14 @@ export default function Home() {
     const totalExpenses = topExpenses.reduce((acc, expense) => acc + expense.amount, 0);
     const balance = budget - totalExpenses;
 
+    const [expanded, setExpanded] = useState(false);
+    const toggleExpanded = () => {
+        //setExpanded(!expanded);
+            navigation.navigate('BalanceTrend');
+          };
+   
 
+    const navigation = useNavigation();
 
     return (
         <ScrollView style={styles.container}>
@@ -84,47 +91,50 @@ export default function Home() {
                 ))}
                 <Text style={styles.title}>{`Total Expenses: ${totalExpenses} DT`}</Text>
             </View>
-            {/* <View style={styles.card}>
-                <Text style={styles.title}>Balance Trend</Text>
-                {balanceTrend.map((data) => (
-                    <View key={data.month}>
-                        <Text>{data.month}</Text>
-                        <Text style={styles.value}>{`${data.balance} DT`}</Text>
-                    </View>
-                ))}
-            </View> */}
+           
             <View style={styles.card}>
-  <Text style={styles.title}> Balance Trend</Text>
-  <LineChart
-  style={styles.chart}
-    data={{
-      labels: balanceTrend.map((data) => data.month),
-      datasets: [
-        {
-          data: balanceTrend.map((data) => data.balance),
-          color: () => '#405457',
-        },
-      ],
-    }}
-    width={Dimensions.get('window').width - 70}
-    height={220}
-    chartConfig={{
-      backgroundColor: '#feffff',
-      backgroundGradientFrom: '#feffff',
-      backgroundGradientTo: '#feffff',
-      decimalPlaces: 0,
-      color: (opacity = 1) => `#405754`,
-    }}
-    bezier
-  />
-</View>
+                <Text style={styles.title}> Balance Trend</Text>
+                <View style={{ flex: 1 }}>
+                    <LineChart
+                        style={styles.chart}
+                        data={{
+                            labels: balanceTrend.map((data) => data.month),
+                            datasets: [
+                                {
+                                    data: balanceTrend.map((data) => data.balance),
+                                    color: () => 'black',
+                                },
+                            ],
+                        }}
+                        width={Dimensions.get('window').width - 85}
+                        height={220}
+                        chartConfig={{
+                            backgroundColor: '#feffff',
+                            backgroundGradientFrom: '#feffff',
+                            backgroundGradientTo: '#feffff',
+                            decimalPlaces: 0,
+                            color: (opacity = 1) => `blue`,
+                        }}
+                        bezier
+                    />
+                    <TouchableOpacity onPress={toggleExpanded}>
+                <Text style={{ color: "blue", marginTop: 10 ,  fontWeight: 'bold', textAlign: 'right'}}>
+                    {expanded ? "See Less" : "See More"}
+                </Text>
+            </TouchableOpacity>
+                </View>
+            </View>
+            
+            {/* {expanded && <BalanceTrend />} */}
 
             <View style={styles.card}>
                 <Text style={styles.title}>Current Balance</Text>
                 <Text style={styles.value}>{`${balance} DT`}</Text>
             </View>
         </ScrollView>
+        
     );
+                    
 };
 
 
@@ -162,6 +172,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         fontSize: 20,
+        
     },
     value: {
         fontSize: 18,
