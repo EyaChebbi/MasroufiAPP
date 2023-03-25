@@ -6,7 +6,7 @@ import Statistics from "../screens/Statistics";
 import Home from '../screens/Home';
 import Expenses from "../screens/Expenses";
 import Settings from "../screens/Settings";
-import AddExpense from "../screens/AddExpense";
+import AddExpense from "../screens/AddTransaction";
 import { NavigationContainer } from '@react-navigation/native';
 
 

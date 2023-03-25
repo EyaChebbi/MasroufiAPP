@@ -21,6 +21,37 @@ router.get('/categories', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+app.post('/transactions', (req, res) => {
+  const { date, description, amount, category } = req.body;
+
+  connection.query(
+    'INSERT INTO transactions (date, description, amount, category) VALUES (?, ?, ?, ?)',
+    [date, description, amount, category],
+    (err, result) => {
+      if (err) {
+        console.error('Error adding transaction:', err);
+        res.status(500).send('Error adding transaction.');
+        return;
+      }
+      res.status(200).send('Transaction added successfully.');
+    }
+  );
+});
+app.get('/transactions', (req, res) => {
+  connection.query(
+    'SELECT * FROM transactions',
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching transactions:', err);
+        res.status(500).send('Error fetching transactions.');
+        return;
+      }
+      res.status(200).json(results);
+    }
+  );
+});
+
 // Define more routes here
 
 app.listen(3000, () => {
