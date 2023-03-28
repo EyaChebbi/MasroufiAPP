@@ -65,7 +65,6 @@ export default function Home() {
 
     const [expanded, setExpanded] = useState(false);
     const toggleExpanded = () => {
-        //setExpanded(!expanded);
             navigation.navigate('BalanceTrend');
           };
    
@@ -125,8 +124,6 @@ export default function Home() {
                 </View>
             </View>
             
-            {/* {expanded && <BalanceTrend />} */}
-
             <View style={styles.card}>
                 <Text style={styles.title}>Current Balance</Text>
                 <Text style={styles.value}>{`${balance} DT`}</Text>
