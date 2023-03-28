@@ -11,6 +11,7 @@ import NavigationBar from "./NavigationBar";
 import Home from "../screens/Home";
 import AddTransaction from "../screens/AddTransaction";
 import BalanceTrend from "../screens/BalanceTrend";
+import AddTransaction from "../screens/AddTransaction";
 
 const Stack = createNativeStackNavigator();
 

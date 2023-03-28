@@ -105,7 +105,7 @@ export default class Settings extends Component {
                 value={this.state.budget}
                 onValueChange={value => this.setState({ budget: value })}
               />
-              <Text caption gray right>$1,000</Text>
+              <Text caption gray right>1,000DT</Text>
             </Block>
             <Block margin={[10, 0]}>
               <Text gray2 style={{ marginBottom: 10 }}>Monthly Cap</Text>
@@ -120,7 +120,7 @@ export default class Settings extends Component {
                 value={this.state.monthly}
                 onValueChange={value => this.setState({ monthly: value })}
               />
-              <Text caption gray right>$5,000</Text>
+              <Text caption gray right>5,000 DT</Text>
             </Block>
           </Block>
 

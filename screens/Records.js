@@ -85,6 +85,89 @@
 //     })
 
 
+// import React, { useState, useEffect } from 'react';
+// import { StyleSheet, Text, View, ScrollView, FlatList } from 'react-native';
+// import axios from 'axios';
+
+// export default function Records() {
+//   const [expenses, setExpenses] = useState([]);
+//   const [incomes, setIncomes] = useState([]);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const result = await axios('http://localhost:3000/expenses');
+//       const data = result.data;
+
+//       const expenses = data.filter(item => item.type === 'expense');
+//       setExpenses(expenses);
+
+//       const incomes = data.filter(item => item.type === 'income');
+//       setIncomes(incomes);
+//     };
+
+//     fetchData();
+//   }, []);
+
+//   const Records = () => {
+//     const renderExpense = ({ item }) => (
+//       <View style={styles.expenseContainer}>
+//         <Text style={styles.expenseMonth}>{item.month}</Text>
+//         <Text style={styles.expenseAmount}>{item.amount}</Text>
+//         <Text style={styles.expenseDescription}>{item.description}</Text>
+//       </View>
+//     );
+
+//     return (
+//       <>
+//         <View style={styles.container}>
+//           <Text style={styles.title}>Expenses</Text>
+//           <FlatList
+//             data={expenses}
+//             renderItem={renderExpense}
+//             keyExtractor={item => item.id}
+//           />
+//         </View>
+
+//         <View style={styles.container}>
+//           <Text style={styles.title}>Incomes</Text>
+//           <FlatList
+//             data={incomes}
+//             renderItem={renderExpense}
+//             keyExtractor={item => item.id}
+//           />
+//         </View>
+//       </>
+//     );
+//   };
+
+//   return <Records />;
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     backgroundColor: '#fff',
+//     paddingTop: 50,
+//   },
+//   title: {
+//     fontSize: 24,
+//     fontWeight: 'bold',
+//     marginBottom: 20,
+//   },
+//   expenseContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     padding: 10,
+//     borderBottomWidth: 1,
+//     borderBottomColor: '#ccc',
+//   },
+//   expenseMonth: {
+//     fontWeight: 'bold',
+//   },
+//   expenseAmount: {},
+//   expenseDescription: {},
+// });
+
+
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, FlatList } from 'react-native';
 import axios from 'axios';
@@ -94,53 +177,54 @@ export default function Records() {
   const [incomes, setIncomes] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios('http://localhost:3000/expenses');
-      const data = result.data;
-
-      const expenses = data.filter(item => item.type === 'expense');
-      setExpenses(expenses);
-
-      const incomes = data.filter(item => item.type === 'income');
-      setIncomes(incomes);
-    };
-
-    fetchData();
+    const sampleExpenses = [
+      { id: '1', month: 'January', amount: '$100', description: 'Rent' },
+      { id: '2', month: 'February', amount: '$50', description: 'Groceries' },
+      { id: '3', month: 'March', amount: '$20', description: 'Transportation' },
+      { id: '4', month: 'April', amount: '$80', description: 'Dining out' },
+      { id: '5', month: 'May', amount: '$120', description: 'Utilities' },
+    ];
+    const sampleIncomes = [
+      { id: '1', month: 'January', amount: '$2000', description: 'Salary' },
+      { id: '2', month: 'February', amount: '$1500', description: 'Freelance work' },
+      { id: '3', month: 'March', amount: '$1800', description: 'Bonus' },
+      { id: '4', month: 'April', amount: '$1000', description: 'Investment income' },
+      { id: '5', month: 'May', amount: '$2500', description: 'Contract work' },
+    ];
+    
+    setExpenses(sampleExpenses);
+    setIncomes(sampleIncomes);
   }, []);
 
-  const Records = () => {
-    const renderExpense = ({ item }) => (
-      <View style={styles.expenseContainer}>
-        <Text style={styles.expenseMonth}>{item.month}</Text>
-        <Text style={styles.expenseAmount}>{item.amount}</Text>
-        <Text style={styles.expenseDescription}>{item.description}</Text>
+  const renderExpense = ({ item }) => (
+    <View style={styles.expenseContainer}>
+      <Text style={styles.expenseMonth}>{item.month}</Text>
+      <Text style={styles.expenseAmount}>{item.amount}</Text>
+      <Text style={styles.expenseDescription}>{item.description}</Text>
+    </View>
+  );
+
+  return (
+    <>
+      <View style={styles.container}>
+        <Text style={styles.title}>Expenses</Text>
+        <FlatList
+          data={expenses}
+          renderItem={renderExpense}
+          keyExtractor={item => item.id}
+        />
       </View>
-    );
 
-    return (
-      <>
-        <View style={styles.container}>
-          <Text style={styles.title}>Expenses</Text>
-          <FlatList
-            data={expenses}
-            renderItem={renderExpense}
-            keyExtractor={item => item.id}
-          />
-        </View>
-
-        <View style={styles.container}>
-          <Text style={styles.title}>Incomes</Text>
-          <FlatList
-            data={incomes}
-            renderItem={renderExpense}
-            keyExtractor={item => item.id}
-          />
-        </View>
-      </>
-    );
-  };
-
-  return <Records />;
+      <View style={styles.container}>
+        <Text style={styles.title}>Incomes</Text>
+        <FlatList
+          data={incomes}
+          renderItem={renderExpense}
+          keyExtractor={item => item.id}
+        />
+      </View>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
