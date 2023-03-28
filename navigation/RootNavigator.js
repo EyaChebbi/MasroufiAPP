@@ -9,6 +9,7 @@ import Explore from "../screens/Explore";
 import Product from "../screens/Product";
 import NavigationBar from "./NavigationBar";
 import Home from "../screens/Home";
+import AddTransaction from "../screens/AddTransaction";
 import BalanceTrend from "../screens/BalanceTrend";
 
 const Stack = createNativeStackNavigator();
