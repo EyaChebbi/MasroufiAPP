@@ -4,7 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { View, StyleSheet } from "react-native";
 import Statistics from "../screens/Statistics";
 import Home from '../screens/Home';
-import Expenses from "../screens/Expenses";
+import Records from "../screens/Records";
 import Settings from "../screens/Settings";
 import AddExpense from "../screens/AddTransaction";
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,7 +23,7 @@ function NavigationBar() {
 
           if (route.name === 'Home') {
             iconName = 'chart-pie';
-          } else if (route.name === 'Expenses') {
+          } else if (route.name === 'Records') {
             iconName = 'calendar-alt';
           } else if (route.name === 'Stats') {
             iconName = 'chart-line';
@@ -43,7 +43,7 @@ function NavigationBar() {
       initialRouteName="Home"
     >
       <Tab.Screen name="Home" component={Home} options={{headerShown: false}} />
-      <Tab.Screen name="Expenses" component={Expenses} options={{headerShown: false}} />
+      <Tab.Screen name="Records" component={Records} options={{headerShown: false}} />
       <Tab.Screen name="Add" component={AddExpense} options={{ tabBarLabel : () => null, headerShown: false}}/>
       <Tab.Screen name="Stats" component={Statistics} options={{headerShown: false}} />
       <Tab.Screen name="Settings" component={Settings} options={{headerShown: false}}/>
