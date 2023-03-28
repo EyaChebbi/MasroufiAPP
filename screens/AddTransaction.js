@@ -3,9 +3,12 @@ import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native'
 import TransactionHeader from '../components/TransactionHeader'
 import { Ionicons } from '@expo/vector-icons';
 import CalendarComponent from '../components/CalendarComponent';
+import Categories from './Categories';
 import { useNavigation } from "@react-navigation/native";
-export default function AddTrasaction({navigation}) {
+export default function AddTrasaction() {
     
+    const navigation = useNavigation();
+
     const toggleExpanded = () => {
         navigation.navigate('Categories');
     };

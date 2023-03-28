@@ -1,5 +1,5 @@
 import React, {useState} from 'react';  
-import { View, Text, StyleSheet, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TextInput, ScrollView } from 'react-native';
 
 
 export default function TransactionHeader() {
@@ -21,15 +21,14 @@ export default function TransactionHeader() {
                 Add Transaction
             </Text>
             <View style={styles.transaction}>
-                <Pressable onPress={() => setType('Expense')} style={[styles.boxExpense, {backgroundColor: type === 'Expense' ? '#fff' : '#41837A',
-                color: type ==='Expense' ? '#000' : '#fff',}]}>
-                    <Text style={styles.text}>
+                <Pressable onPress={() => setType('Expense')} style={[styles.boxExpense, {backgroundColor: type === 'Expense' ? '#fff' : '#41837A',}]}>
+                    <Text style={[styles.text, {color: type === 'Expense' ? '#000000' : '#ffffff'}]}>
                         Expense
                     </Text>
                 </Pressable>
                 <Pressable onPress={() => setType('Income')} style={[styles.boxIncome, {backgroundColor: type === 'Income' ? '#fff' : '#41837A',
                 color: type ==='Expense' ? '#000' : '#fff',}]}>
-                    <Text style={styles.text}>
+                    <Text style={[styles.text, {color: type === 'Income' ? '#000000' : '#ffffff'}]}>
                         Income
                     </Text>
                 </Pressable>
@@ -43,6 +42,7 @@ export default function TransactionHeader() {
                     onChangeText={(value) => setAmount(value)}
                     placeholder="Amount"
                     keyboardType="numeric"
+                    keyboardDismissMode = "on-drag"
                     style={styles.amount}
                 />   
                 
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     title:{
         fontSize: 28,   
         color: 'white',
-        marginTop: 90,
+        justifyContent: 'center',
         marginLeft: 50,
         fontWeight: '700',
     },
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center',
         fontWeight: '600',
+        
 
     },
     transaction:{
