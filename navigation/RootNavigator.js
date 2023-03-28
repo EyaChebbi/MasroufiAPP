@@ -30,6 +30,7 @@ const RootNavigator = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Product" component={Product} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="AddTransaction" component={AddTransaction} />
         <Stack.Screen name="BalanceTrend" component={BalanceTrend}/>
       </Stack.Navigator>
       </NavigationContainer>
