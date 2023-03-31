@@ -1,5 +1,5 @@
 import { Text, View, Pressable, FlatList, StyleSheet, useWindowDimensions } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 export default function Categories({navigation}) {
@@ -7,31 +7,36 @@ export default function Categories({navigation}) {
     //to get the dimensions from a separate hook call, it needs to be integrated in the styles function
     const { styles } = useStyle(); 
 
-    const [CategData, setCategData] = useState([])
+    /*const [CategData, setCategData] = useState([])
 
-    fetch('http://localhost:3306/categories')
-     .then(res => categRows.json())
-     .then(data => {
-        setCategData(data);
-        console.log(data);
-     })
-     .catch(error => console.log(error));
-    /*const CategData = [
+    useEffect(() => { 
+        fetch('http://localhost:3306/categories')
+        .then(res => {
+            res.json();
+            console.log(data)
+        })
+        .then(data => {
+            setCategData(data);
+        })
+        .catch(error => console.log(error))
+    }, []);
+    */
+
+    const CategData = [
         {id: 0, name: 'Food and Drinks', color: '#C00F0F'},
         {id: 1, name: 'Housing', color: '#ECE544'},
         {id: 2, name: 'Transportation', color: '#A8E12F'},
         {id: 3, name: 'Vehicle', color: '#2FE196'},
         {id: 4, name: 'test5', color: '#C00F0F'},
-        {id: 5, name: 'test5', color: '#C00F0F'},
-        {id: 6, name: 'test5', color: '#C00F0F'},
-        {id: 7, name: 'test5', color: '#C00F0F'},
-        {id: 8, name: 'test5', color: '#C00F0F'},
-        {id: 9, name: 'test5', color: '#C00F0F'},
-        {id: 10, name: 'test5', color: '#C00F0F'},
-        {id: 11, name: 'test5', color: '#C00F0F'},
-        {id: 12, name: 'test5', color: '#C00F0F'},
+        {id: 5, name: 'test6', color: '#C00F0F'},
+        {id: 6, name: 'test7', color: '#C00F0F'},
+        {id: 7, name: 'test8', color: '#C00F0F'},
+        {id: 8, name: 'test9', color: '#C00F0F'},
+        {id: 9, name: 'test10', color: '#C00F0F'},
+        {id: 10, name: 'test11', color: '#C00F0F'},
+        {id: 11, name: 'test12', color: '#C00F0F'},
+        {id: 12, name: 'test13', color: '#C00F0F'},
     ]
-    */
 
     const Category = ({name, catColor}) => {
         return (
@@ -81,6 +86,7 @@ const useStyle = () => {
     
         categList: {
             flex: 1,
+            height: 'auto',
         },
 
         categContainer: {
