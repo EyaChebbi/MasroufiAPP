@@ -73,6 +73,7 @@ import { Dimensions,
     TouchableOpacity,
     View,
     Text} from 'react-native';
+import BalanceByCategory from './BalanceByCategory';
 const screenWidth = Dimensions.get('window').width - 85;
 const chartData = {
   labels: [
@@ -196,8 +197,10 @@ const BalanceTrend = () => {
     // calculate data for year
   }
 
+  
   return (
     <>
+     <ScrollView>
       <View style={styles.card}>
         <Text style={styles.title}> Balance Trend</Text>
         <TimeFrameBar setTimeFrame={setTimeFrame} />
@@ -210,18 +213,122 @@ const BalanceTrend = () => {
         />
       </View>
       <View style={styles.card}>
-        <Accounts />
+        <ScrollView>
+        <BalanceByCategory/>
+        </ScrollView>
       </View>
+      </ScrollView>
     </>
   );
 };
 
 
 const styles = StyleSheet.create({
+  // bar: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   marginBottom: 10,
+  // },
+  // button: {
+  //   backgroundColor: '#feffff',
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 20,
+  //   borderRadius: 20,
+  // },
+  // buttonText: {
+  //   color: '#405754',
+  //   fontWeight: 'bold',
+  //   fontSize: 20,
+  // },
+  // container: {
+  //     flex: 1,
+  //     padding: 20,
+  //     backgroundColor: '#6eccaf',
+  // },
+ 
+  // card: {
+  
+  //     backgroundColor: '#feffff',
+  //     borderRadius: 10,
+  //     padding: 20,
+  //     marginBottom: 20,
+  //     shadowColor: '#000',
+  //     shadowOffset: { width: 0, height: 1 },
+  //     shadowOpacity: 0.8,
+  //     shadowRadius: 2,
+  //     elevation: 5,
+  // },
+  // title: {
+  //     fontWeight: 'bold',
+  //     marginBottom: 10,
+  //     fontSize: 20,
+      
+  // },
+ 
+  // chart: {
+  //     backgroundColor: '#feffff',
+  //     borderRadius: 10,
+  //     paddingLeft: -50,
+  //     marginBottom: 20,
+  //     shadowColor: '#000',
+  //     shadowOffset: { width: 0, height: 1 },
+  //     shadowOpacity: 0.8,
+  //     shadowRadius: 2,
+  //     elevation: 5,
+  // }
   bar: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 10,
+    },
+
+  container: {
+    flex: 1,
+    backgroundColor: '#6eccaf',
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  card: {
+    backgroundColor: '#feffff',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    marginBottom: 10,
+    fontFamily: 'Helvetica Neue',
+    color: '#405754',
+  },
+  subtitle: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 10,
+    fontFamily: 'Helvetica Neue',
+    color: '#405754',
+  },
+  chart: {
+    backgroundColor: '#feffff',
+    borderRadius: 10,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  timeFrameBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   button: {
     backgroundColor: '#feffff',
@@ -232,44 +339,15 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#405754',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
+    fontFamily: 'Helvetica Neue',
   },
-  container: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: '#6eccaf',
+  selectedButton: {
+    backgroundColor: '#405754',
   },
- 
-  card: {
-  
-      backgroundColor: '#feffff',
-      borderRadius: 10,
-      padding: 20,
-      marginBottom: 20,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.8,
-      shadowRadius: 2,
-      elevation: 5,
+  selectedButtonText: {
+    color: '#feffff',
   },
-  title: {
-      fontWeight: 'bold',
-      marginBottom: 10,
-      fontSize: 20,
-      
-  },
- 
-  chart: {
-      backgroundColor: '#feffff',
-      borderRadius: 10,
-      paddingLeft: -50,
-      marginBottom: 20,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.8,
-      shadowRadius: 2,
-      elevation: 5,
-  }
 });
 
 export default BalanceTrend;

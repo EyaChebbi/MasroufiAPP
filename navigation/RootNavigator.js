@@ -9,7 +9,9 @@ import Explore from "../screens/Explore";
 import Product from "../screens/Product";
 import NavigationBar from "./NavigationBar";
 import Home from "../screens/Home";
+import AddTransaction from "../screens/AddTransaction";
 import BalanceTrend from "../screens/BalanceTrend";
+import AddTransaction from "../screens/AddTransaction";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +32,7 @@ const RootNavigator = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Product" component={Product} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="AddTransaction" component={AddTransaction} />
         <Stack.Screen name="BalanceTrend" component={BalanceTrend}/>
       </Stack.Navigator>
       </NavigationContainer>
