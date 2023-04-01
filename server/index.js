@@ -22,10 +22,11 @@ app.use(bodyParser.json());
 
 //for the register
 app.post('/register', (req, res) => {
-  const { email, password } = req.body;
-  const insertQuery = `INSERT INTO user (firstName, lastName, emailAdress, userPassword) VALUES (?, ?)`;
-  connection.query(insertQuery, [email, password], (err, result) => {
+  const { firstName, lastName, email, password } = req.body;
+  const insertQuery = `INSERT INTO user (firstName, lastName, emailAdress, userPassword) VALUES (?, ?, ?, ?)`;
+  connection.query(insertQuery, [firstName, lastName, email, password], (err, result) => {
     if (err) {
+      console.log
       console.log(err);
       res.status(500).send('Error registering new user');
     } else {
@@ -66,13 +67,18 @@ router.get('/users', async (req, res) => {
 
 //for the Categories
 router.get('/categories', async (req, res) => {
-  try {
-    const [categRows, fields] = await db.query('SELECT * FROM categories');
-    res.json(categRows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+  const { id, categName, categColor } = req.body;
+  const getQuery = `SELECT * FROM categories`;
+  connection.query(getQuery, [id, categName, categColor], (err, result) => {
+    if (err) {
+      console.log
+      console.log(err);
+      res.status(500).send('Error fetching categories');
+    } else {
+      res.status(200).send('Success');
+      res.json();
+    }
+    });
 });
 
 //for the transactions
