@@ -64,6 +64,7 @@ export default function SignUp({ navigation })  {
       )
     })
     .catch(error => {
+      setErrors(error.response.data.errors);
       console.log(error.response.data);
     });
 
@@ -99,7 +100,7 @@ export default function SignUp({ navigation })  {
               defaultValue={password}
               onChangeText={text => setPassword(text)}
             />
-            <Button gradient onPress={() => this.handleSignUp()}>
+            <Button gradient onPress={() => handleSignUp()}>
               {loading ?
                 <ActivityIndicator size="small" color="white" /> :
                 <Text bold white center>Sign Up</Text>
