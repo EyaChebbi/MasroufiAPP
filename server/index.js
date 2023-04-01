@@ -15,8 +15,8 @@ const SECRET_KEY = 'your_secret_key';
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'password',
-  database: 'mydb',
+  password: 'root',
+  database: 'masroufiDB'
 });
 
 app.use(cors());
