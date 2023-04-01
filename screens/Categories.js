@@ -1,4 +1,4 @@
-import { Text, View, Pressable, FlatList, StyleSheet, useWindowDimensions } from "react-native";
+import { Text, View, Pressable, FlatList, StyleSheet, useWindowDimensions, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 
 
@@ -58,9 +58,12 @@ export default function Categories({navigation}) {
                     style={styles.categList}
                     contentContainerStyle={styles.contentContainer}
                 />
-                <Pressable style={{flex: 1}}>
-                    <Category name="Add category..." catColor="white" />
-                </Pressable>
+                {/* <Pressable style={styles.pressable}>
+                    <Category name="Add category..." catColor="white" fontSize='50' />
+                </Pressable> */}
+                  <TouchableOpacity style={styles.pressable}>
+                  <Category name="Add category..." catColor="white" fontSize='50' />
+                  </TouchableOpacity>
             </View>
          
         </View>
@@ -113,6 +116,11 @@ const useStyle = () => {
             height: 10,
             marginHorizontal: 20,
         },
+        pressable: {
+            flex: 0.2,
+            margin: 20,
+            fontSize: 50,
+        }
     })  
     return { styles };
 }

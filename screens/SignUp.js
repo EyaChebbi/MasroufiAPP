@@ -1,8 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useState} from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 
 import { Button, Block, Input, Text } from '../components';
 import { theme } from '../constants';
+
+import axios from 'axios';
+const API_URL = 'http://localhost:3000';
 
 export default class SignUp extends Component {
   state = {
@@ -28,7 +31,24 @@ export default class SignUp extends Component {
 
     this.setState({ errors, loading: false });
 
-    if (!errors.length) {
+    // if (!errors.length) {
+    //   Alert.alert(
+    //     'Success!',
+    //     'Your account has been created',
+    //     [
+    //       {
+    //         text: 'Continue', onPress: () => {
+    //           navigation.navigate('Browse')
+    //         }
+    //       }
+    //     ],
+    //     { cancelable: false }
+    //   )
+    // }
+
+    axios.post(`${API_URL}/register`, { email, password })
+    .then(response => {
+      console.log(response.data.token);
       Alert.alert(
         'Success!',
         'Your account has been created',
@@ -41,8 +61,13 @@ export default class SignUp extends Component {
         ],
         { cancelable: false }
       )
-    }
+    })
+    .catch(error => {
+      console.log(error.response.data);
+    });
+
   }
+
 
   render() {
     const { navigation } = this.props;

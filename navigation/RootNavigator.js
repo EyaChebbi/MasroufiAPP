@@ -11,6 +11,7 @@ import NavigationBar from "./NavigationBar";
 import Home from "../screens/Home";
 import AddTransaction from "../screens/AddTransaction";
 import BalanceTrend from "../screens/BalanceTrend";
+import Categories from "../screens/Categories";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ const RootNavigator = () => {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="AddTransaction" component={AddTransaction} />
         <Stack.Screen name="BalanceTrend" component={BalanceTrend}/>
+        <Stack.Screen name="Categories" component={Categories}/>
       </Stack.Navigator>
       </NavigationContainer>
   );
