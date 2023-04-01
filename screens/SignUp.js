@@ -66,7 +66,8 @@ export default function SignUp({ navigation })  {
     .catch(error => {
       setErrors(error.response.data.errors);
       console.log(error.response.data);
-    });
+    })
+    .finally(() => setLoading(false));
 
   }
   const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
