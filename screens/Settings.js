@@ -63,6 +63,29 @@ export default class Settings extends Component {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <Block style={styles.inputs}>
+          <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+              <Block>
+                <Text gray2 style={{ marginBottom: 10 }}>First Name</Text>
+                {this.renderEdit('firstname')}
+              </Block>
+              <Text medium secondary onPress={() => this.toggleEdit('firstname')}>
+                {editing === 'firstname' ? 'Save' : 'Edit'}
+              </Text>
+            </Block>
+            <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+              <Block>
+                <Text gray2 style={{ marginBottom: 10 }}>Last Name</Text>
+                {this.renderEdit('lastname')}
+              </Block>
+              <Text medium secondary onPress={() => this.toggleEdit('lastname')}>
+                {editing === 'lastname' ? 'Save' : 'Edit'}
+              </Text>
+            </Block>
+            <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+              <Block>
+                <Text gray2 style={{ marginBottom: 10 }}>E-mail</Text>
+                <Text bold>{profile.email}</Text>
+              </Block>
             <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
               <Block>
                 <Text gray2 style={{ marginBottom: 10 }}>Username</Text>
@@ -74,6 +97,25 @@ export default class Settings extends Component {
             </Block>
             <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
               <Block>
+                <Text gray2 style={{ marginBottom: 10 }}>Occupation</Text>
+                {this.renderEdit('occupation')}
+              </Block>
+              <Text medium secondary onPress={() => this.toggleEdit('occupation')}>
+                {editing === 'occupation' ? 'Save' : 'Edit'}
+              </Text>
+            </Block>
+             <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+              <Block>
+                <Text gray2 style={{ marginBottom: 10 }}>Age</Text>
+                <Text bold>{profile.age}</Text>
+              </Block>
+             <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+              <Block>
+                <Text gray2 style={{ marginBottom: 10 }}>Phone number</Text>
+                <Text bold>{profile.phone number}</Text>
+              </Block> 
+            <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+              <Block>
                 <Text gray2 style={{ marginBottom: 10 }}>Location</Text>
                 {this.renderEdit('location')}
               </Block>
@@ -81,11 +123,6 @@ export default class Settings extends Component {
                 {editing === 'location' ? 'Save' : 'Edit'}
               </Text>
             </Block>
-            <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
-              <Block>
-                <Text gray2 style={{ marginBottom: 10 }}>E-mail</Text>
-                <Text bold>{profile.email}</Text>
-              </Block>
             </Block>
           </Block>
 
