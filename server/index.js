@@ -34,23 +34,68 @@ app.post('/register', (req, res) => {
     });
 });
 
-// for the login
+// for the login VERSION 1 WORKS FINE (TO KEEP)
+// app.post('/login', (req, res) => {
+//   const { email, password } = req.body;
+//   const selectQuery = `SELECT * FROM user WHERE emailAdress = ?`;
+//   connection.query(selectQuery, [email], (err, result) => {
+//     if (err) {
+//       console.log(err);
+//       res.status(500).send('Error fetching user');
+//     } else if (result.length == 0) {
+//       res.status(401).send('Email or password is incorrect');
+//       console.log('Email:', email);
+//       console.log('Password:', password);
+//     } else {
+//       res.status(200).send("User logged in!");
+//     }
+//   });
+// });
+
+//Login Version to test
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const selectQuery = `SELECT * FROM user WHERE emailAdress = ?`;
-  connection.query(selectQuery, [email], (err, result) => {
+  const errors = [];
+
+  if (!email) {
+    errors.push('email');
+  }
+  if (!password) {
+    errors.push('password');
+  }
+
+  if (errors.length) {
+    res.status(400).json({ errors });
+    return;
+  }
+
+  const query = `SELECT * FROM users WHERE email = ?`;
+  const params = [email];
+
+  connection.query(query, params, (err, results) => {
     if (err) {
-      console.log(err);
-      res.status(500).send('Error fetching user');
-    } else if (result.length == 0) {
-      res.status(401).send('Email or password is incorrect');
-      console.log('Email:', email);
-      console.log('Password:', password);
-    } else {
-      res.status(200).send("User logged in!");
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
     }
+
+    if (results.length === 0) {
+      res.status(401).json({ error: 'User not found. Please sign up.' });
+      return;
+    }
+
+    const user = results[0];
+
+    if (user.password !== password) {
+      res.status(401).json({ error: 'Incorrect password' });
+      return;
+    }
+
+    res.json({ user });
   });
 });
+
 
 
 

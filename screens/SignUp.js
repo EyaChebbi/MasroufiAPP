@@ -1,36 +1,11 @@
 import React, { Component, useState} from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 
-import { Button, Block, Input, Text } from '../components';
+import { Button, Block, TextInput, Text } from '../components';
 import { theme } from '../constants';
 
-import axios from 'axios';
-const API_URL = 'http://localhost:3000';
 
-export default class SignUp extends Component {
-
-  // const [email, setEmail] = useState('');
-  // const [username, setUsername] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [errors, setErrors] = useState([]);
-  // const [loading, setLoading] = useState(false);
-
-  handleSignUp() {
-    
-    const errors = [];
-    
-    Keyboard.dismiss();
-    setLoading(true);
-
-    // check with backend API or with some static data
-    if (!email) errors.push('email');
-    if (!username) errors.push('username');
-    if (!password) errors.push('password');
-
-    setErrors(errors);
-    setLoading(false);
-
-    // if (!errors.length) {
+// if (!errors.length) {
     //   Alert.alert(
     //     'Success!',
     //     'Your account has been created',
@@ -45,7 +20,34 @@ export default class SignUp extends Component {
     //   )
     // }
 
-    axios.post(`${API_URL}/register`, { email, password })
+
+import axios from 'axios';
+const API_URL = 'http://localhost:3000';
+    
+export default function SignUp({ navigation })  {
+
+  const [email, setEmail] = useState('email');
+  const [username, setUsername] = useState('username');
+  const [password, setPassword] = useState('password');
+  const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = () => {
+    
+    const errors = [];
+    
+    Keyboard.dismiss();
+    setLoading(true);
+
+    // check with backend API or with some static data
+    if (!email) errors.push('email');
+    if (!username) errors.push('username');
+    if (!password) errors.push('password');
+
+    setErrors(errors);
+    setLoading(false);
+
+    axios.post(`${API_URL}/register`, { email, username, password })
     .then(response => {
       console.log(response.data.token);
       Alert.alert(
@@ -66,40 +68,36 @@ export default class SignUp extends Component {
     });
 
   }
+  const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
 
 
-  render() {
-    const { navigation } = this.props;
-    const { loading, errors } = this.state;
-    const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
-
-    return (
+  return(
       <KeyboardAvoidingView style={styles.signup} behavior="padding">
         <Block padding={[0, theme.sizes.base * 2]}>
           <Text h1 bold>Sign Up</Text>
           <Block middle>
-            <Input
+            <TextInput
               email
               label="Email"
               error={hasErrors('email')}
               style={[styles.input, hasErrors('email')]}
-              defaultValue={this.state.email}
-              onChangeText={text => this.setState({ email: text })}
+              defaultValue={email}
+              onChangeText={text => setEmail(text)}
             />
-            <Input
+            <TextInput
               label="Username"
               error={hasErrors('username')}
               style={[styles.input, hasErrors('username')]}
-              defaultValue={this.state.username}
-              onChangeText={text => this.setState({ username: text })}
+              defaultValue={username}
+              onChangeText={text => setUsername(text)}
             />
-            <Input
+            <TextInput
               secure
               label="Password"
               error={hasErrors('password')}
               style={[styles.input, hasErrors('password')]}
-              defaultValue={this.state.password}
-              onChangeText={text => this.setState({ password: text })}
+              defaultValue={password}
+              onChangeText={text => setPassword(text)}
             />
             <Button gradient onPress={() => this.handleSignUp()}>
               {loading ?
@@ -116,8 +114,7 @@ export default class SignUp extends Component {
           </Block>
         </Block>
       </KeyboardAvoidingView>
-    )
-  }
+  )
 }
 
 const styles = StyleSheet.create({
