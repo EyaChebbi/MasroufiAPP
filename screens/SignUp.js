@@ -8,28 +8,27 @@ import axios from 'axios';
 const API_URL = 'http://localhost:3000';
 
 export default class SignUp extends Component {
-  state = {
-    email: null,
-    username: null,
-    password: null,
-    errors: [],
-    loading: false,
-  }
+
+  // const [email, setEmail] = useState('');
+  // const [username, setUsername] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [errors, setErrors] = useState([]);
+  // const [loading, setLoading] = useState(false);
 
   handleSignUp() {
-    const { navigation } = this.props;
-    const { email, username, password } = this.state;
+    
     const errors = [];
-
+    
     Keyboard.dismiss();
-    this.setState({ loading: true });
+    setLoading(true);
 
     // check with backend API or with some static data
     if (!email) errors.push('email');
     if (!username) errors.push('username');
     if (!password) errors.push('password');
 
-    this.setState({ errors, loading: false });
+    setErrors(errors);
+    setLoading(false);
 
     // if (!errors.length) {
     //   Alert.alert(

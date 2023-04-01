@@ -7,8 +7,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
-const saltRounds = 10;
-const SECRET_KEY = 'your_secret_key';
+
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -20,6 +19,8 @@ const connection = mysql.createConnection({
 app.use(cors());
 app.use(bodyParser.json());
 
+
+//for the register
 app.post('/register', (req, res) => {
   const { email, password } = req.body;
   const insertQuery = `INSERT INTO user (firstName, lastName, emailAdress, userPassword) VALUES (?, ?)`;
@@ -33,7 +34,7 @@ app.post('/register', (req, res) => {
     });
 });
 
-
+// for the login
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const selectQuery = `SELECT * FROM user WHERE emailAdress = ?`;

@@ -7,7 +7,7 @@ export default function Categories({navigation}) {
     //to get the dimensions from a separate hook call, it needs to be integrated in the styles function
     const { styles } = useStyle(); 
 
-    /*const [CategData, setCategData] = useState([])
+    const [CategData, setCategData] = useState([])
 
     useEffect(() => { 
         fetch('http://localhost:3306/categories')
@@ -20,9 +20,8 @@ export default function Categories({navigation}) {
         })
         .catch(error => console.log(error))
     }, []);
-    */
 
-    const CategData = [
+    /*const CategData = [
         {id: 0, name: 'Food and Drinks', color: '#C00F0F'},
         {id: 1, name: 'Housing', color: '#ECE544'},
         {id: 2, name: 'Transportation', color: '#A8E12F'},
@@ -37,6 +36,7 @@ export default function Categories({navigation}) {
         {id: 11, name: 'test12', color: '#C00F0F'},
         {id: 12, name: 'test13', color: '#C00F0F'},
     ]
+    */
 
     const Category = ({name, catColor}) => {
         return (
