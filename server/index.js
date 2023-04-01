@@ -4,9 +4,7 @@ const db = require('../db')
 
 
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
 const saltRounds = 10;
@@ -24,38 +22,31 @@ app.use(bodyParser.json());
 
 app.post('/register', (req, res) => {
   const { email, password } = req.body;
-  bcrypt.hash(password, saltRounds, (err, hash) => {
-    const insertQuery = `INSERT INTO users (email, password) VALUES (?, ?)`;
-    connection.query(insertQuery, [email, hash], (err, result) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send('Error registering new user');
-      } else {
-        const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: '1h' });
-        res.status(200).send({ token });
-      }
+  const insertQuery = `INSERT INTO user (firstName, lastName, emailAdress, userPassword) VALUES (?, ?)`;
+  connection.query(insertQuery, [email, password], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error registering new user');
+    } else {
+      res.status(200).send('Success');
+    }
     });
-  });
 });
+
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const selectQuery = `SELECT * FROM users WHERE email = ?`;
+  const selectQuery = `SELECT * FROM user WHERE emailAdress = ?`;
   connection.query(selectQuery, [email], (err, result) => {
     if (err) {
       console.log(err);
       res.status(500).send('Error fetching user');
     } else if (result.length == 0) {
       res.status(401).send('Email or password is incorrect');
+      console.log('Email:', email);
+      console.log('Password:', password);
     } else {
-      bcrypt.compare(password, result[0].password, (err, match) => {
-        if (match) {
-          const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: '1h' });
-          res.status(200).send({ token });
-        } else {
-          res.status(401).send('Email or password is incorrect');
-        }
-      });
+      res.status(200).send("User logged in!");
     }
   });
 });
@@ -64,7 +55,7 @@ app.post('/login', (req, res) => {
 
 router.get('/users', async (req, res) => {
   try {
-    const [rows, fields] = await db.query('SELECT * FROM User');
+    const [rows, fields] = await db.query('SELECT * FROM user');
     res.json(rows);
   } catch (err) {
     console.error(err);
