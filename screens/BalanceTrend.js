@@ -165,7 +165,7 @@ const TimeFrameBar = ({ setTimeFrame }) => {
 };
 
 const BalanceTrend = () => {
-  const [timeFrame, setTimeFrame] = useState('month');
+  const [timeFrame, setTimeFrame] = useState('Year');
 
   const chartData = {
     labels: [
@@ -212,11 +212,11 @@ const BalanceTrend = () => {
           bezier
         />
       </View>
-      <View style={styles.card}>
+      {/* <View style={styles.card}>
         <ScrollView>
         <BalanceByCategory/>
         </ScrollView>
-      </View>
+      </View> */}
       </ScrollView>
     </>
   );
@@ -224,58 +224,7 @@ const BalanceTrend = () => {
 
 
 const styles = StyleSheet.create({
-  // bar: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   marginBottom: 10,
-  // },
-  // button: {
-  //   backgroundColor: '#feffff',
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 20,
-  //   borderRadius: 20,
-  // },
-  // buttonText: {
-  //   color: '#405754',
-  //   fontWeight: 'bold',
-  //   fontSize: 20,
-  // },
-  // container: {
-  //     flex: 1,
-  //     padding: 20,
-  //     backgroundColor: '#6eccaf',
-  // },
- 
-  // card: {
   
-  //     backgroundColor: '#feffff',
-  //     borderRadius: 10,
-  //     padding: 20,
-  //     marginBottom: 20,
-  //     shadowColor: '#000',
-  //     shadowOffset: { width: 0, height: 1 },
-  //     shadowOpacity: 0.8,
-  //     shadowRadius: 2,
-  //     elevation: 5,
-  // },
-  // title: {
-  //     fontWeight: 'bold',
-  //     marginBottom: 10,
-  //     fontSize: 20,
-      
-  // },
- 
-  // chart: {
-  //     backgroundColor: '#feffff',
-  //     borderRadius: 10,
-  //     paddingLeft: -50,
-  //     marginBottom: 20,
-  //     shadowColor: '#000',
-  //     shadowOffset: { width: 0, height: 1 },
-  //     shadowOpacity: 0.8,
-  //     shadowRadius: 2,
-  //     elevation: 5,
-  // }
   bar: {
       flexDirection: 'row',
       justifyContent: 'space-between',
