@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db')
+//const db = require('../db')
 
 
 const bodyParser = require('body-parser');
@@ -73,7 +73,7 @@ app.post('/login', (req, res) => {
     return;
   }
 
-  const query = `SELECT * FROM users WHERE email = ?`;
+  const query = `SELECT * FROM user WHERE emailAdress = ?`;
   const params = [email];
 
   connection.query(query, params, (err, results) => {
@@ -90,7 +90,8 @@ app.post('/login', (req, res) => {
 
     const user = results[0];
 
-    if (user.password !== password) {
+    if (user.userPassword !== password) {
+      console.log(password + " " + user.userPassword);
       res.status(401).json({ error: 'Incorrect password' });
       return;
     }
