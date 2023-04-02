@@ -1,12 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Button, Block, Input, Text } from '../components';
 import { theme } from '../constants';
+import axios from 'axios';
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState('email');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('test');
+  const [password, setPassword] = useState('test');
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -16,21 +17,42 @@ export default function Login({ navigation }) {
     Keyboard.dismiss();
     setLoading(true);
 
-    // check with backend API or with some static data
-    if (!email) {
-      errors.push('email');
-    }
-    if (!password) {
-      errors.push('password');
-    }
-
-    setErrors(errors);
-    setLoading(false);
-
-    if (!errors.length) {
-      navigation.navigate("Browse");
-    }
+    axios
+    .post('http://localhost:3000/login', { email, password })
+    .then(response => {
+      console.log(email, password);
+      if (email == response.email) {
+        if (password != response.password) {
+          console.log("Incorrect Password")
+        }
+        else {
+          setLoading(false);
+          navigation.navigate("Browse");
+        }
+      }
+      else console.log("Incorrect Email");
+    })
+    .catch(error => {
+      setLoading(false);
+      setErrors(['Invalid email or password']);
+    });
   }
+
+
+    //   if (!email) {
+    //     errors.push('email');
+    //   }
+    //   if (!password) {
+    //     errors.push('password');
+    //   }
+
+    //   setErrors(errors);
+    //   setLoading(false);
+
+    //   if (!errors.length) {
+    //     navigation.navigate("Browse");
+    //   }
+    // }
 
   const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
 
