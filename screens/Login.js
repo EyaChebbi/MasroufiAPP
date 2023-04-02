@@ -18,27 +18,41 @@ export default function Login({ navigation }) {
     setLoading(true);
 
     axios
+    // .post('http://localhost:3000/login', { email, password })
+    // .then(response => {
+    //   console.log(email, password);
+    //   if (email === response.data.email) {
+    //     if (password !== response.data.password) {
+    //       console.log("Incorrect Password")
+    //     }
+    //     else {
+    //       setLoading(false);
+    //       navigation.navigate("Browse");
+    //     }
+    //   }
+    //   else console.log("Incorrect Email");
+    // })
+    // .catch(error => {
+    //   setLoading(false);
+    //   setErrors(['Invalid email or password']);
+    // });
+
     .post('http://localhost:3000/login', { email, password })
     .then(response => {
-      console.log(email, password);
-      if (email == response.email) {
-        if (password != response.password) {
-          console.log("Incorrect Password")
-        }
-        else {
-          setLoading(false);
-          navigation.navigate("Browse");
-        }
+      setLoading(false);
+      console.log(response.data);
+
+      if (response.data.success) {
+        navigation.navigate('Browse');
+      } else {
+        setErrors(['Invalid email or password']);
       }
-      else console.log("Incorrect Email");
     })
     .catch(error => {
       setLoading(false);
       setErrors(['Invalid email or password']);
     });
   }
-
-
     //   if (!email) {
     //     errors.push('email');
     //   }
