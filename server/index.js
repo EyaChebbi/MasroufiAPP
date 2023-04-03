@@ -56,7 +56,7 @@ app.post('/register', (req, res) => {
 
 
 
-//Login Version to test
+//Login works fine (to keep)
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const errors = [];
@@ -158,6 +158,16 @@ app.get('/transactions', (req, res) => {
   );
 });
 
+
+//For the transaction we need to POST request to add an amount of a transaction made
+
+
+
+
+
+
+
+
 //for the Balance Trend
 app.get('/balance-trend', (req, res) => {
 
@@ -180,6 +190,7 @@ app.get('/balance-trend', (req, res) => {
     res.json(chartData);
   });
 });
+
 
 // Define more routes here
 
