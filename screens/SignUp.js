@@ -1,7 +1,7 @@
 import React, { Component, useState} from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 
-import { Button, Block, TextInput, Text } from '../components';
+import { Button, Block, Input, Text } from '../components';
 import { theme } from '../constants';
 
 
@@ -78,7 +78,7 @@ export default function SignUp({ navigation })  {
         <Block padding={[0, theme.sizes.base * 2]}>
           <Text h1 bold>Sign Up</Text>
           <Block middle>
-            <TextInput
+            <Input
               email
               label="Email"
               error={hasErrors('email')}
@@ -86,14 +86,14 @@ export default function SignUp({ navigation })  {
               defaultValue={email}
               onChangeText={text => setEmail(text)}
             />
-            <TextInput
+            <Input
               label="Username"
               error={hasErrors('username')}
               style={[styles.input, hasErrors('username')]}
               defaultValue={username}
               onChangeText={text => setUsername(text)}
             />
-            <TextInput
+            <Input
               secure
               label="Password"
               error={hasErrors('password')}
