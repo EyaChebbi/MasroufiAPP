@@ -73,7 +73,7 @@ app.post('/login', (req, res) => {
     return;
   }
 
-  const query = `SELECT * FROM user WHERE emailAdress = ?`;
+  const query = `SELECT * FROM Users WHERE emailAddress = ?`;
   const params = [email];
 
   connection.query(query, params, (err, results) => {
@@ -104,7 +104,7 @@ app.post('/login', (req, res) => {
 //idk why its here
 router.get('/users', async (req, res) => {
   try {
-    const [rows, fields] = await db.query('SELECT * FROM user');
+    const [rows, fields] = await db.query('SELECT * FROM Users');
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -114,7 +114,7 @@ router.get('/users', async (req, res) => {
 
 //for the Categories
 router.get('/categories', async (req, res) => {
-  const getQuery = `SELECT * FROM categories`;
+  const getQuery = `SELECT * FROM Categories`;
   connection.query(getQuery, [], (err, result) => {
     if (err) {
       console.log(err);
@@ -129,11 +129,11 @@ app.use('/',router);
 
 //for the transactions
 app.post('/transactions', (req, res) => {
-  const { date, description, amount, category } = req.body;
+  const { userid, date, amount, category } = req.body;
 
   connection.query(
-    'INSERT INTO transactions (date, description, amount, category) VALUES (?, ?, ?, ?)',
-    [date, description, amount, category],
+    'INSERT INTO Transactions(userID, transactionDate, amount, categoryID) VALUES (?, ?, ?, ?)',
+    [userid, date, amount, category],
     (err, result) => {
       if (err) {
         console.error('Error adding transaction:', err);
@@ -146,7 +146,7 @@ app.post('/transactions', (req, res) => {
 });
 app.get('/transactions', (req, res) => {
   connection.query(
-    'SELECT * FROM transactions',
+    'SELECT * FROM Transactions',
     (err, results) => {
       if (err) {
         console.error('Error fetching transactions:', err);
@@ -171,7 +171,7 @@ app.get('/transactions', (req, res) => {
 //for the Balance Trend
 app.get('/balance-trend', (req, res) => {
 
-  connection.query('SELECT * FROM balance_trend', (err, results) => {
+  connection.query('SELECT * FROM BalanceHistory', (err, results) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Error retrieving balance trend data');

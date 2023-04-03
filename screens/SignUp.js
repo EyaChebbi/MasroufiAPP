@@ -1,7 +1,6 @@
 import React, { Component, useState} from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
-
-import { Button, Block, Input, Text } from '../components';
+import { Block, Input, Button, Text } from '../components';
 import { theme } from '../constants';
 
 
@@ -34,49 +33,48 @@ export default function SignUp({ navigation })  {
 
   const handleSignUp = () => {
     
-    const errors = [];
-    
-    Keyboard.dismiss();
-    setLoading(true);
+      
+    //   Keyboard.dismiss();
+    //   setLoading(true);
 
-    // check with backend API or with some static data
-    if (!email) errors.push('email');
-    if (!username) errors.push('username');
-    if (!password) errors.push('password');
+    //   // check with backend API or with some static data
+    //   if (!email) errors.push('email');
+    //   if (!username) errors.push('username');
+    //   if (!password) errors.push('password');
 
-    setErrors(errors);
-    setLoading(false);
+    //   setErrors(errors);
+    //   setLoading(false);
 
-    axios.post(`${API_URL}/register`, { email, username, password })
-    .then(response => {
-      console.log(response.data.token);
-      Alert.alert(
-        'Success!',
-        'Your account has been created',
-        [
-          {
-            text: 'Continue', onPress: () => {
-              navigation.navigate('Browse')
-            }
-          }
-        ],
-        { cancelable: false }
-      )
-    })
-    .catch(error => {
-      setErrors(error.response.data.errors);
-      console.log(error.response.data);
-    })
-    .finally(() => setLoading(false));
+    //   axios.post(`${API_URL}/register`, { email, username, password })
+    //   .then(response => {
+    //     console.log(response.data.token);
+    //     Alert.alert(
+    //       'Success!',
+    //       'Your account has been created',
+    //       [
+    //         {
+    //           text: 'Continue', onPress: () => {
+    //             navigation.navigate('Browse')
+    //           }
+    //         }
+    //       ],
+    //       { cancelable: false }
+    //     )
+    //   })
+    //   .catch(error => {
+    //     setErrors(error.response.data.errors);
+    //     console.log(error.response.data);
+    //   })
+    //   .finally(() => setLoading(false));
 
-  }
-  const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
+     }
+     const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
 
 
   return(
       <KeyboardAvoidingView style={styles.signup} behavior="padding">
         <Block padding={[0, theme.sizes.base * 2]}>
-          <Text h1 bold>Sign Up</Text>
+          {/* <Text h1 bold>Sign Up</Text> */}
           <Block middle>
             <Input
               email
@@ -101,7 +99,7 @@ export default function SignUp({ navigation })  {
               defaultValue={password}
               onChangeText={text => setPassword(text)}
             />
-            <Button gradient onPress={() => handleSignUp()}>
+             <Button gradient title="Sign Up" onPress={() => handleSignUp()}>
               {loading ?
                 <ActivityIndicator size="small" color="white" /> :
                 <Text bold white center>Sign Up</Text>
