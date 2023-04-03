@@ -20,12 +20,12 @@ export default function Home() {
     const [salaryAccountBalance, setSalaryAccountBalance] = useState(0);
     const [balanceAccountBalance, setBalanceAccountBalance] = useState(0);
     
-    // const budgets = [
+    const budgets = [
 
-    //     { type: 'Cash', value: 500 },
-    //     { type: 'Bank Account', value: 1000 },
-    //     { type: 'Crypto Account', value: -200 }
-    // ]
+        { type: 'Cash', value: 500 },
+        { type: 'Bank Account', value: 1000 },
+        { type: 'Crypto Account', value: -200 }
+    ]
 
     const BudgetCard = ({ type, value }) => {
         let icon;

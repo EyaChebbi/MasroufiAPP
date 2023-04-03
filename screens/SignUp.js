@@ -1,76 +1,57 @@
 import React, { Component, useState} from 'react';
-import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
-
-import { Button, Block, TextInput, Text } from '../components';
+import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet, Button, TextInput, Text } from 'react-native';
+import { Block } from '../components';
 import { theme } from '../constants';
-
-
-// if (!errors.length) {
-    //   Alert.alert(
-    //     'Success!',
-    //     'Your account has been created',
-    //     [
-    //       {
-    //         text: 'Continue', onPress: () => {
-    //           navigation.navigate('Browse')
-    //         }
-    //       }
-    //     ],
-    //     { cancelable: false }
-    //   )
-    // }
-
-
-import axios from 'axios';
+import {axios} from 'axios';
 const API_URL = 'http://localhost:3000';
     
 export default function SignUp({ navigation })  {
 
-  const [email, setEmail] = useState('email');
-  const [username, setUsername] = useState('username');
-  const [password, setPassword] = useState('password');
-  const [errors, setErrors] = useState([]);
-  const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('email');
+    const [username, setUsername] = useState('username');
+    const [password, setPassword] = useState('password');
+    const [errors, setErrors] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-  const handleSignUp = () => {
+    const handleSignUp = () => {
+      
     
-    const errors = [];
-    
-    Keyboard.dismiss();
-    setLoading(true);
+      
+      Keyboard.dismiss();
+      setLoading(true);
 
-    // check with backend API or with some static data
-    if (!email) errors.push('email');
-    if (!username) errors.push('username');
-    if (!password) errors.push('password');
+      // check with backend API or with some static data
+      if (!email) errors.push('email');
+      if (!username) errors.push('username');
+      if (!password) errors.push('password');
 
-    setErrors(errors);
-    setLoading(false);
+      setErrors(errors);
+      setLoading(false);
 
-    axios.post(`${API_URL}/register`, { email, username, password })
-    .then(response => {
-      console.log(response.data.token);
-      Alert.alert(
-        'Success!',
-        'Your account has been created',
-        [
-          {
-            text: 'Continue', onPress: () => {
-              navigation.navigate('Browse')
+      axios.post(`${API_URL}/register`, { email, username, password })
+      .then(response => {
+        console.log(response.data.token);
+        Alert.alert(
+          'Success!',
+          'Your account has been created',
+          [
+            {
+              text: 'Continue', onPress: () => {
+                navigation.navigate('Browse')
+              }
             }
-          }
-        ],
-        { cancelable: false }
-      )
-    })
-    .catch(error => {
-      setErrors(error.response.data.errors);
-      console.log(error.response.data);
-    })
-    .finally(() => setLoading(false));
+          ],
+          { cancelable: false }
+        )
+      })
+      .catch(error => {
+        setErrors(error.response.data.errors);
+        console.log(error.response.data);
+      })
+      .finally(() => setLoading(false));
 
-  }
-  const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
+    }
+     const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
 
 
   return(
@@ -101,19 +82,20 @@ export default function SignUp({ navigation })  {
               defaultValue={password}
               onChangeText={text => setPassword(text)}
             />
-            <Button gradient onPress={() => handleSignUp()}>
+             <Button title="Sign Up" onPress={() => handleSignUp()}>
               {loading ?
-                <ActivityIndicator size="small" color="white" /> :
+                <ActivityIndicator size="small" color="white"/> :
                 <Text bold white center>Sign Up</Text>
-              }
-            </Button>
+              } 
+              
+            </Button> 
 
-            <Button onPress={() => navigation.navigate('Login')}>
+            <Button title="SignUp" onPress={() => navigation.navigate('Login')}>
               <Text gray caption center style={{ textDecorationLine: 'underline' }}>
                 Back to Login
               </Text>
             </Button>
-          </Block>
+          </Block> 
         </Block>
       </KeyboardAvoidingView>
   )

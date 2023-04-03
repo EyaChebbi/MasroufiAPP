@@ -15,7 +15,6 @@ import Categories from "../screens/Categories";
 
 const Stack = createNativeStackNavigator();
 
-
 const RootNavigator = () => {
   const isLoggedIn = false;
   return (
