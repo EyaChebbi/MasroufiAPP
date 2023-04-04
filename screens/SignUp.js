@@ -2,27 +2,6 @@ import React, { Component, useState} from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Block, Input, Button, Text } from '../components';
 import { theme } from '../constants';
-<<<<<<< Updated upstream
-
-
-// if (!errors.length) {
-    //   Alert.alert(
-    //     'Success!',
-    //     'Your account has been created',
-    //     [
-    //       {
-    //         text: 'Continue', onPress: () => {
-    //           navigation.navigate('Browse')
-    //         }
-    //       }
-    //     ],
-    //     { cancelable: false }
-    //   )
-    // }
-
-
-=======
->>>>>>> Stashed changes
 import axios from 'axios';
 const API_URL = 'http://localhost:3000';
     
@@ -34,13 +13,7 @@ export default function SignUp({ navigation })  {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
-<<<<<<< Updated upstream
   const handleSignUp = () => {
-=======
-    const handleSignUp = () => {
-      Keyboard.dismiss();
-      setLoading(true);
->>>>>>> Stashed changes
     
       // check with backend API or with some static data
       if (!email) errors.push('email');
