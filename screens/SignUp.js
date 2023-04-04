@@ -2,6 +2,7 @@ import React, { Component, useState} from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Block, Input, Button, Text } from '../components';
 import { theme } from '../constants';
+<<<<<<< Updated upstream
 
 
 // if (!errors.length) {
@@ -20,6 +21,8 @@ import { theme } from '../constants';
     // }
 
 
+=======
+>>>>>>> Stashed changes
 import axios from 'axios';
 const API_URL = 'http://localhost:3000';
     
@@ -31,43 +34,48 @@ export default function SignUp({ navigation })  {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
+<<<<<<< Updated upstream
   const handleSignUp = () => {
+=======
+    const handleSignUp = () => {
+      Keyboard.dismiss();
+      setLoading(true);
+>>>>>>> Stashed changes
     
-      
-    //   Keyboard.dismiss();
-    //   setLoading(true);
-
-    //   // check with backend API or with some static data
-    //   if (!email) errors.push('email');
-    //   if (!username) errors.push('username');
-    //   if (!password) errors.push('password');
-
-    //   setErrors(errors);
-    //   setLoading(false);
-
-    //   axios.post(`${API_URL}/register`, { email, username, password })
-    //   .then(response => {
-    //     console.log(response.data.token);
-    //     Alert.alert(
-    //       'Success!',
-    //       'Your account has been created',
-    //       [
-    //         {
-    //           text: 'Continue', onPress: () => {
-    //             navigation.navigate('Browse')
-    //           }
-    //         }
-    //       ],
-    //       { cancelable: false }
-    //     )
-    //   })
-    //   .catch(error => {
-    //     setErrors(error.response.data.errors);
-    //     console.log(error.response.data);
-    //   })
-    //   .finally(() => setLoading(false));
-
-     }
+      // check with backend API or with some static data
+      if (!email) errors.push('email');
+      if (!username) errors.push('username');
+      if (!password) errors.push('password');
+    
+      setErrors(errors);
+      setLoading(false);
+    
+      axios.post(`${API_URL}/register`, { email, username, password })
+        .then(response => {
+          console.log(response.data.token);
+          Alert.alert(
+            'Success!',
+            'Your account has been created',
+            [
+              {
+                text: 'Continue', onPress: () => {
+                  navigation.navigate('Browse')
+                }
+              }
+            ],
+            { cancelable: false }
+          )
+        })
+        .catch(error => {
+          if (error.response && error.response.data) {
+            setErrors(error.response.data.errors);
+            console.log(error.response.data);
+          } else {
+            console.log(error);
+          }
+        })
+        .finally(() => setLoading(false));
+    };    
      const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
 
 
