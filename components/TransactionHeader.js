@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     container:{
         flex:0.35,
         backgroundColor: '#4FA095',
+        justifyContent: 'center',
     },
     title:{
         fontSize: 28,   

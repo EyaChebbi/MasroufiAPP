@@ -3,7 +3,7 @@ import { Animated, Dimensions, Image, FlatList, Modal, StyleSheet, ScrollView } 
 
 import { Button, Block, Text } from '../components';
 import { theme } from '../constants';
-import SignUp from './SignUp';
+
 const { width, height } = Dimensions.get('window');
 
 export default class Welcome extends Component {

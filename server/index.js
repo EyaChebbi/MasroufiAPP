@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
-
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
-
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -51,10 +49,7 @@ app.post('/register', (req, res) => {
 //   });
 // });
 
-
-
-
-//Login works fine (to keep)
+//Login works fine (to keep) with user not found and incorrect password
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   const errors = [];
@@ -127,7 +122,7 @@ router.get('/categories', async (req, res) => {
 
 app.use('/',router);
 
-//for the transactions
+//for the transactions, (it works) 
 app.post('/transactions', (req, res) => {
   const { userid, date, amount, category } = req.body;
 
@@ -194,6 +189,22 @@ app.get('/balance-trend', (req, res) => {
     res.json(chartData);
   });
 });
+
+
+
+
+
+//idk why its here
+router.get('/users', async (req, res) => {
+  try {
+    const [rows, fields] = await db.query('SELECT * FROM Users');
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 
 // Define more routes here
