@@ -1,24 +1,41 @@
 import { Text, View, Pressable, FlatList, StyleSheet, useWindowDimensions, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";    
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 
-export default function Categories({navigation}) {
+export default function Categories() {
     //this function is created because I wanted to base my sizes on each user's screen, but I'm unable
     //to get the dimensions from a separate hook call, it needs to be integrated in the styles function
     const { styles } = useStyle(); 
 
     const [CategData, setCategData] = useState([])
 
-    useEffect(() => { 
-        fetch('http://localhost:3000/categories')
-        .then(res => {res.json()
-            console.log()}
-            )
-        .then(data => {
-            setCategData(data);
-        })
-        .catch(error => console.log(error))
+    const navigation = useNavigation();
+
+    //version copied from records.js
+    useEffect(() => {
+    const fetchData = async () => {
+        const result = await axios("http://192.168.1.146/categories");
+        const data = result.data;
+
+        setCategData(data);
+    };
+
+    fetchData();
     }, []);
+
+    //version that didn't work before
+    // useEffect(() => { 
+    //     fetch('http://localhost:3000/categories')
+    //     .then(res => {res.json()
+    //         console.log()}
+    //         )
+    //     .then(data => {
+    //         setCategData(data);
+    //     })
+    //     .catch(error => console.log(error))
+    // }, []);
 
     const Category = ({name, catColor}) => {
         return (
@@ -46,8 +63,8 @@ export default function Categories({navigation}) {
                 {/* <Pressable style={styles.pressable}>
                     <Category name="Add category..." catColor="white" fontSize='50' />
                 </Pressable> */}
-                  <TouchableOpacity style={styles.pressable}>
-                  <Category name="Add category..." catColor="white" fontSize='50' />
+                  <TouchableOpacity style={styles.pressable} onPress={() => navigation.navigate("AddCategory")}>
+                    <Category name="Add category..." catColor="white" fontSize='50' />
                   </TouchableOpacity>
             </View>
          
