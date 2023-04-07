@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-//const db = require('../db')
-
 
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
@@ -103,13 +101,15 @@ app.post('/login', (req, res) => {
 
 //idk why its here
 router.get('/users', async (req, res) => {
-  try {
-    const [rows, fields] = await db.query('SELECT * FROM Users');
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+  const getQuery = `SELECT * FROM Users`;
+  connection.query(getQuery, [], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error fetching users');
+    } else {
+      res.status(200).json(result);
+    }
+    });
 });
 
 //for the Categories
@@ -162,7 +162,11 @@ app.get('/transactions', (req, res) => {
 //For the transaction we need to POST request to add an amount of a transaction made
 
 
-
+//PATCH request to change details about a specific transaction
+app.patch('/transactions/update',(req,res) => {
+  const { data } = req.body;
+})
+const updateQuery = 'UPDATE Transactions SET (amount=?, categoryID=?, transactionDate=?, transactionSource=?, payee=?, payer=?, location=?, transactionType=?, note=?) WHERE transactionID=?';
 
 
 
