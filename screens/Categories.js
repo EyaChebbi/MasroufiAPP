@@ -16,9 +16,10 @@ export default function Categories() {
     //version copied from records.js
     useEffect(() => {
     const fetchData = async () => {
-        const result = await axios("http://192.168.1.146/categories");
-        const data = result.data;
-
+        const result = await axios("http://localhost:3000/categories");
+        const data = await result.data;
+        
+        console.log(data);
         setCategData(data);
     };
 
@@ -39,7 +40,7 @@ export default function Categories() {
 
     const Category = ({name, catColor}) => {
         return (
-        <View style={styles.categContainer}>
+        <View style={styles.categElement}>
             <View style={[styles.categColor,{backgroundColor: catColor}]} />
             <Text style={styles.categName}>{name}</Text>
         </View>
@@ -47,27 +48,27 @@ export default function Categories() {
     }
 
     return(
-        <View style={styles.container}>
-            <Text style={styles.title}>Select Category</Text>
-            <View style={{flex: 1, alignItems: 'center'}}>
+        <View style={styles.bigContainer}>
+            <Text style={styles.screenTitle}>Select Category</Text>
+            <View style={styles.categSectionContainer}>
                 {//CategData.length > 0 ?
                     <FlatList 
                         data={CategData}
                         renderItem={({item}) => <Category name={item.name} catColor={item.color}/>}
                         keyExtractor={category => category.id}
-                        style={styles.categList}
-                        contentContainerStyle={styles.contentContainer}
+                        style={styles.categFlatList}
+                        //contentContainerStyle={styles.contentContainer}
                     />
                     //: <Text>Loading categories...</Text>
                 }
                 {/* <Pressable style={styles.pressable}>
                     <Category name="Add category..." catColor="white" fontSize='50' />
                 </Pressable> */}
-                  <TouchableOpacity style={styles.pressable} onPress={() => navigation.navigate("AddCategory")}>
-                    <Category name="Add category..." catColor="white" fontSize='50' />
-                  </TouchableOpacity>
+                  
             </View>
-         
+            <TouchableOpacity style={styles.categElement} onPress={() => navigation.navigate("AddCategory")}>
+                <Category name="Add category..." catColor="white" fontSize='50' />
+            </TouchableOpacity>
         </View>
     );
 }
@@ -78,50 +79,49 @@ const useStyle = () => {
 
     //same style declaration as before  
     const styles = StyleSheet.create({
-        container: {
+        //the whole screen
+        bigContainer: {
+            backgroundColor: "#DEDEDE",
             flex: 1,
-            backgroundColor: "#DEDEDE", //note to self: use backgroundColor to change the color of View components
         },
-        title: {
-            fontWeight: 'bold',
+        //"Select Category"
+        screenTitle: {
             fontSize: 28,
-            padding: 20,
-            paddingTop: 40,
-        },
-    
-        categList: {
-            flex: 1,
-            height: 'auto',
-        },
+            fontWeight: 'bold',
 
-        categContainer: {
-            flex: 0.1,
+            marginLeft: dimensions.width * 0.05,
+            marginVertical: 10,
+        },
+        //category section
+        categSectionContainer: {
+            width: dimensions.width * 0.9,
+            height: dimensions.height * 0.7,
+        },
+        categFlatList: {
+            flex: 1,
+        },
+        categElement: {
+            flex: 1,
             flexDirection: 'row',
             backgroundColor: 'white',
-            alignItems: 'center',
+            alignItems: 'flex-start',
+            height: dimensions.height * 0.05,
+            width: dimensions.width * 0.9,
 
-            borderRadius: 8,
-            width: dimensions.width * 0.9, 
-            height: dimensions.height * 0.1,
-            margin: 5,
-            padding: 0
+            marginVertical: 10,
+            borderRadius: 10,
+            alignSelf: 'center',
+            justifyContent: 'flex-start'
         },
-        contentContainer: {
-            flexGrow: 1,
+        categColor: {
+            marginHorizontal: 20,
+            marginVertical: 10,
+            height: 20,
+            width: 20,
+            borderRadius: 20,
         },
         categName: {
             fontSize: 13,
-        },
-        categColor: {
-            borderRadius: 10,
-            width: 10,
-            height: 10,
-            marginHorizontal: 20,
-        },
-        pressable: {
-            flex: 0.2,
-            margin: 20,
-            fontSize: 50,
         }
     })  
     return { styles };
