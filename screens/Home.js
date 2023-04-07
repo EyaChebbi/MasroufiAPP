@@ -79,7 +79,7 @@ export default function Home() {
     return (
         <ScrollView style={styles.container}>
             <FlatList
-                data={budgets}
+                data={budget}
                 horizontal={true}
                 renderItem={({ item }) => <BudgetCard style={styles.card2}
                     type={item.type} value={item.value} />}
