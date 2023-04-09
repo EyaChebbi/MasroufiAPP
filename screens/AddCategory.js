@@ -2,22 +2,41 @@ import { View, TextInput, StyleSheet, useWindowDimensions } from 'react-native';
 import { Button } from '../components';
 import { Text } from '../components';
 import ColorPicker from 'react-native-wheel-color-picker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 export default function AddCategory() {
     //used useState to change the color of the "preview" color after selecting a color
+    const [categName, setCategName] = useState("");
     const [selectedColor, setSelectedColor] = useState("#DEDEDE");
     const styles = useStyle(selectedColor);
 
     const navigation = useNavigation();
 
+    const handleAddCateg = async () => {
+        try {
+            const result = await axios.post("http://192.168.48.36:3000/categories/add", {
+                name: categName,
+                color: selectedColor,
+            });
+            console.log(result.data);
+            navigation.navigate("Categories");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return(
         <View style={styles.container}>
             <ScrollView>
                 <Text style={styles.textStyle}>Category Name:</Text>
-                <TextInput style={styles.textBox} />
+                <TextInput 
+                    style={styles.textBox} 
+                    onChangeText={text => setCategName(text)}
+                    value={categName}
+                />
                 <View style={{flex: 0.1, flexDirection: 'row', justifyContent:'space-between', alignItems: 'center'}}>
                     <Text style={styles.textStyle}>Choose Category Color:</Text>
                     <View style={styles.selectedColor} />
@@ -29,7 +48,7 @@ export default function AddCategory() {
                         color={"#DEDEDE"}
                     />
                 </View>
-                <Button gradient style={styles.button} onPress={() => navigation.navigate("Categories")}>
+                <Button gradient style={styles.button} onPress={() => handleAddCateg()}>
                     <Text bold white center>Add Category</Text>
                 </Button>
             </ScrollView>
@@ -46,7 +65,7 @@ const useStyle = (selectedColor) => {
             flex: 1,
             justifyContent: 'center',
             paddingHorizontal: 20,
-            paddingTop: dimensions.height / 5,
+            paddingTop: dimensions.height / 10,
         },
         textStyle: {
             fontSize: 16,
