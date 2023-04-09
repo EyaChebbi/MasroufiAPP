@@ -1,3 +1,184 @@
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, ScrollView, FlatList, Image } from 'react-native';
+import axios from 'axios';
+
+export default function Records() {
+  const [expenses, setExpenses] = useState([]);
+  const [incomes, setIncomes] = useState([]);
+
+  useEffect(() => {
+    const sampleExpenses = [
+      { id: '1', month: 'January', amount: '$100', description: 'Rent' },
+      { id: '2', month: 'February', amount: '$50', description: 'Groceries' },
+      { id: '3', month: 'March', amount: '$20', description: 'Transportation' },
+      { id: '4', month: 'April', amount: '$80', description: 'Dining out' },
+      { id: '5', month: 'May', amount: '$120', description: 'Utilities' },
+    ];
+    const sampleIncomes = [
+      { id: '1', month: 'January', amount: '$2000', description: 'Salary' },
+      { id: '2', month: 'February', amount: '$1500', description: 'Freelance work' },
+      { id: '3', month: 'March', amount: '$1800', description: 'Bonus' },
+      { id: '4', month: 'April', amount: '$1000', description: 'Investment income' },
+      { id: '5', month: 'May', amount: '$2500', description: 'Contract work' },
+    ];
+    
+    // setExpenses(sampleExpenses);
+    // setIncomes(sampleIncomes);
+  }, []);
+
+  const renderExpense = ({ item }) => (
+    <View style={styles.expenseContainer}>
+      <View style={styles.expenseMonth}>
+        <Text style={styles.expenseMonthText}>{item.month}</Text>
+      </View>
+      <View style={styles.expenseAmountDescr}>
+        <Text style={styles.expenseDescription}>{item.description}</Text>
+        <Text style={styles.expenseAmountText}>{item.amount}</Text>
+      </View>
+      
+    </View>
+  );
+
+  return (
+    <>
+      <ScrollView style={styles.containerTop}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Expenses</Text>
+        {
+          expenses.length === 0 ? 
+            <>
+              <View style={styles.innerContainer}>
+                <Image source={require('../assets/images/decline.png')} style={styles.image}/>
+                <Text style = {styles.noData}>No expenses have been recorded</Text>
+              </View>
+              
+            </>
+            
+          :
+            <FlatList
+            data={expenses}
+            renderItem={renderExpense}
+            keyExtractor={item => item.id}
+            />
+        }
+        
+      </View>
+
+      <View style={styles.container}>
+        <Text style={styles.title}>Incomes</Text>
+
+        {
+          incomes.length === 0 ? 
+            <>
+              <View style={styles.innerContainer}>
+                <Image source={require('../assets/images/decline.png')} style={styles.image}/>
+                <Text style = {styles.noData}>No Incomes have been recorded</Text>
+              </View>
+            </>
+          :
+            <FlatList
+            data={incomes}
+            renderItem={renderExpense}
+            keyExtractor={item => item.id}
+            />
+        }
+      </View>
+      </ScrollView>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  containerTop: {
+    flex: 1,
+    backgroundColor: 'white',
+    // alignContent: 'center'
+  },
+  container: {
+    backgroundColor: '#fff',
+    paddingTop: 20,
+    flex: 1,
+    // height: 50%,
+    // marginBottom: 20,    
+    // justifyContent: 'center'    
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color:'#4FA095' ,
+  },
+  expenseContainer: {
+    //flexDirection: 'row',
+    //justifyContent: 'space-between',
+    marginTop: 5,
+    padding: 10,
+    marginRight: 15,
+    marginLeft:15,
+    //marginRight: 15,
+    //alignItems: 'flex-start',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  expenseMonth: {
+    //
+  },
+  expenseMonthText:{
+    //textAlign: 'left',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  expenseAmountText: {
+    //flex: 1,
+    //textAlign: 'center',
+    //fontWeight: 'bold',
+    fontSize: 16,
+    borderColor: '#4FA095', 
+    borderWidth: 2,
+    width: 80,
+    height: 30,
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    borderRadius: 10,
+    //backgroundColor: '#eeeeee'
+  },
+  expenseAmountDescr: {
+    //textAlign: 'center',
+    //alignContent: 'center',
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    //width: 100,
+  },
+  expenseDescription: {
+    //fontWeight: 'bold',
+    fontSize: 16,
+  },
+  image:{ 
+    width: 130, 
+    height: 130,
+    alignSelf: 'center', 
+
+  },
+  noData: {
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 25,
+  },
+  scrollViewContainer:{
+    flex: 1,
+    alignItems: 'center', 
+  }
+});
+
+
 // import React, {useState} from 'react'
 // import { StyleSheet, Text, View, ScrollView, FlatList} from 'react-native';
 
@@ -166,137 +347,3 @@
 //   expenseAmount: {},
 //   expenseDescription: {},
 // });
-
-
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, FlatList } from 'react-native';
-import axios from 'axios';
-
-export default function Records() {
-  const [expenses, setExpenses] = useState([]);
-  const [incomes, setIncomes] = useState([]);
-
-  useEffect(() => {
-    const sampleExpenses = [
-      { id: '1', month: 'January', amount: '$100', description: 'Rent' },
-      { id: '2', month: 'February', amount: '$50', description: 'Groceries' },
-      { id: '3', month: 'March', amount: '$20', description: 'Transportation' },
-      { id: '4', month: 'April', amount: '$80', description: 'Dining out' },
-      { id: '5', month: 'May', amount: '$120', description: 'Utilities' },
-    ];
-    const sampleIncomes = [
-      { id: '1', month: 'January', amount: '$2000', description: 'Salary' },
-      { id: '2', month: 'February', amount: '$1500', description: 'Freelance work' },
-      { id: '3', month: 'March', amount: '$1800', description: 'Bonus' },
-      { id: '4', month: 'April', amount: '$1000', description: 'Investment income' },
-      { id: '5', month: 'May', amount: '$2500', description: 'Contract work' },
-    ];
-    
-    setExpenses(sampleExpenses);
-    setIncomes(sampleIncomes);
-  }, []);
-
-  const renderExpense = ({ item }) => (
-    <View style={styles.expenseContainer}>
-      <View style={styles.expenseMonth}>
-        <Text style={styles.expenseMonthText}>{item.month}</Text>
-      </View>
-      <View style={styles.expenseAmountDescr}>
-        <Text style={styles.expenseDescription}>{item.description}</Text>
-        <Text style={styles.expenseAmountText}>{item.amount}</Text>
-      </View>
-      
-    </View>
-  );
-
-  return (
-    <>
-      <View style={styles.containerTop}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Expenses</Text>
-        <FlatList
-          data={expenses}
-          renderItem={renderExpense}
-          keyExtractor={item => item.id}
-        />
-      </View>
-
-      <View style={styles.container}>
-        <Text style={styles.title}>Incomes</Text>
-        <FlatList
-          data={incomes}
-          renderItem={renderExpense}
-          keyExtractor={item => item.id}
-        />
-      </View>
-      </View>
-    </>
-  );
-}
-
-const styles = StyleSheet.create({
-  containerTop: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  container: {
-    backgroundColor: '#fff',
-    paddingTop: 20,
-    flex: 1,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    color:'#4FA095' ,
-  },
-  expenseContainer: {
-    //flexDirection: 'row',
-    //justifyContent: 'space-between',
-    marginTop: 5,
-    padding: 10,
-    marginRight: 15,
-    marginLeft:15,
-    //marginRight: 15,
-    //alignItems: 'flex-start',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  expenseMonth: {
-    //
-  },
-  expenseMonthText:{
-    //textAlign: 'left',
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-  expenseAmountText: {
-    //flex: 1,
-    //textAlign: 'center',
-    //fontWeight: 'bold',
-    fontSize: 16,
-    borderColor: '#4FA095', 
-    borderWidth: 2,
-    width: 80,
-    height: 30,
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    borderRadius: 10,
-    //backgroundColor: '#eeeeee'
-  },
-  expenseAmountDescr: {
-    //textAlign: 'center',
-    //alignContent: 'center',
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    //width: 100,
-  },
-  expenseDescription: {
-    //fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
