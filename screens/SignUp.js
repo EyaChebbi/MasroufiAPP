@@ -3,6 +3,7 @@ import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } 
 import { Block, Input, Button, Text } from '../components';
 import { theme } from '../constants';
 import axios from 'axios';
+import { ScrollView } from 'react-native-gesture-handler';
 // const API_URL = 'http://localhost:3000';
     
 export default function SignUp({ navigation })  {
@@ -53,7 +54,8 @@ export default function SignUp({ navigation })  {
     const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
 
      return(
-      <KeyboardAvoidingView style={styles.signup} behavior={Platform.OS === 'ios' ? 'position' : null}>
+      <KeyboardAvoidingView style={styles.signup} behavior={Platform.OS === 'ios' ? 'position' : null} enabled>
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">        
         <Block padding={[0, theme.sizes.base * 2]}>
           {/* <Text h1 bold>Sign Up</Text>*/ }
           <Block middle>
@@ -73,6 +75,7 @@ export default function SignUp({ navigation })  {
             <Text style={styles.label}> First Name </Text>
             <Input
               error={hasErrors('firstName')}
+              autoCapitalize="words"
               style={[firstName == 'First Name' ? styles.default : styles.input, hasErrors('firstName')]}
               defaultValue={firstName}
               onChangeText={text => setFirstName(text)}
@@ -85,6 +88,7 @@ export default function SignUp({ navigation })  {
             <Text style={styles.label}> Last Name </Text>
             <Input
               error={hasErrors('lastName')}
+              autoCapitalize="words"
               style={[lastName == 'Last Name' ? styles.default : styles.input, hasErrors('lastName')]}
               defaultValue={lastName}
               onChangeText={text => setLastName(text)}
@@ -121,6 +125,7 @@ export default function SignUp({ navigation })  {
             </Button>
           </Block>
         </Block>
+        </ScrollView>
       </KeyboardAvoidingView>
   )
 }
@@ -148,6 +153,11 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderBottomColor: theme.colors.gray2,
     borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: theme.sizes.base * 2,
   },
   hasErrors: {
     borderBottomColor: theme.colors.accent,
