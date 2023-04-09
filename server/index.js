@@ -6,9 +6,9 @@ const cors = require('cors');
 const app = express();
 
 const connection = mysql.createConnection({
-  host: '192.168.48.55',
+  host: 'localhost',
   user: 'root',
-  password: '29216124',
+  password: 'root',
   database: 'masroufiDB'
 });
 
@@ -30,24 +30,6 @@ app.post('/register', (req, res) => {
     }
     });
 });
-
-// for the login VERSION 1 WORKS FINE (TO KEEP)
-// app.post('/login', (req, res) => {
-//   const { email, password } = req.body;
-//   const selectQuery = `SELECT * FROM user WHERE emailAdress = ?`;
-//   connection.query(selectQuery, [email], (err, result) => {
-//     if (err) {
-//       console.log(err);
-//       res.status(500).send('Error fetching user');
-//     } else if (result.length == 0) {
-//       res.status(401).send('Email or password is incorrect');
-//       console.log('Email:', email);
-//       console.log('Password:', password);
-//     } else {
-//       res.status(200).send("User logged in!");
-//     }
-//   });
-// });
 
 //Login works fine (to keep) with user not found and incorrect password
 app.post('/login', (req, res) => {
@@ -153,9 +135,6 @@ app.get('/transactions', (req, res) => {
 });
 
 
-//For the transaction we need to POST request to add an amount of a transaction made
-
-
 //PATCH request to change details about a specific transaction
 app.patch('/transactions/update',(req,res) => {
   const { data } = req.body;
@@ -163,8 +142,21 @@ app.patch('/transactions/update',(req,res) => {
 const updateQuery = 'UPDATE Transactions SET (amount=?, categoryID=?, transactionDate=?, transactionSource=?, payee=?, payer=?, location=?, transactionType=?, note=?) WHERE transactionID=?';
 
 
-
-
+//for the accounts (budgets)
+app.get('/budgets', (req, res) => {
+  const { userId } = req.body;
+  connection.query(
+    'SELECT * FROM budgets WHERE userId =?',[userId],
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching budgets:', err);
+        res.status(500).send('Error fetching budgets.');
+        return;
+      }
+      res.status(200).json(results);
+    }
+  );
+});
 
 //for the Balance Trend
 app.get('/balance-trend', (req, res) => {
@@ -191,18 +183,6 @@ app.get('/balance-trend', (req, res) => {
 
 
 
-
-
-//idk why its here
-router.get('/users', async (req, res) => {
-  try {
-    const [rows, fields] = await db.query('SELECT * FROM Users');
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
 
 
 
