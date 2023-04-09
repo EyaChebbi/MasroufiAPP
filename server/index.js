@@ -6,9 +6,9 @@ const cors = require('cors');
 const app = express();
 
 const connection = mysql.createConnection({
-  host: 'localhost',
+  host: '192.168.48.55',
   user: 'root',
-  password: 'root',
+  password: '29216124',
   database: 'masroufiDB'
 });
 
@@ -18,9 +18,9 @@ app.use(bodyParser.json());
 
 //for the register
 app.post('/register', (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
-  const insertQuery = `INSERT INTO user (firstName, lastName, emailAdress, userPassword) VALUES (?, ?, ?, ?)`;
-  connection.query(insertQuery, [firstName, lastName, email, password], (err, result) => {
+  const { firstName, lastName, email, userPassword } = req.body;
+  const insertQuery = `INSERT INTO Users (firstName, lastName, emailAddress, userPassword) VALUES (?, ?, ?, ?)`;
+  connection.query(insertQuery, [firstName, lastName, email, userPassword], (err, result) => {
     if (err) {
       console.log
       console.log(err);
