@@ -7,10 +7,10 @@ import axios from 'axios';
     
 export default function SignUp({ navigation })  {
 
-  const [email, setEmail] = useState('Email');
+  const [email, setEmail] = useState('email@email.com');
   const [firstName, setFirstName] = useState('First Name');
   const [lastName, setLastName] = useState('Last Name');
-  const [password, setPassword] = useState('Password');
+  const [userPassword, setUserPassword] = useState('Password');
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +25,7 @@ export default function SignUp({ navigation })  {
       // setLoading(false);
     
       try {
-        const response = await axios.post(`http://192.168.48.26:3000/register`, { firstName, lastName, email, password });
+        const response = await axios.post(`http://192.168.48.55:3000/register`, { firstName, lastName, email, userPassword });
         console.log(response.data.token);
         Alert.alert(
           'Success!',
@@ -84,8 +84,8 @@ export default function SignUp({ navigation })  {
               label="Password"
               error={hasErrors('password')}
               style={[styles.input, hasErrors('password')]}
-              defaultValue={password}
-              onChangeText={text => setPassword(text)}
+              defaultValue={userPassword}
+              onChangeText={text => setUserPassword(text)}
             />
              <Button gradient title="Sign Up" onPress={() => handleSignUp()}>
               {loading ?
