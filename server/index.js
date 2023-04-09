@@ -75,17 +75,15 @@ app.post('/login', (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
       return;
     }
-
+    const user = results[0];
     if (results.length === 0) {
       res.status(401).json({ error: 'User not found. Please sign up.' });
+ 
       return;
-    }
-
-    const user = results[0];
-
-    if (user.userPassword !== password) {
+    } else if (user.userPassword !== password) {
       console.log(password + " " + user.userPassword);
       res.status(401).json({ error: 'Incorrect password' });
+     
       return;
     }
     res.json({ user });
@@ -95,9 +93,10 @@ app.post('/login', (req, res) => {
 
 
 //idk why its here
-router.get('/users', async (req, res) => {
-  const getQuery = `SELECT * FROM Users`;
-  connection.query(getQuery, [], (err, result) => {
+router.get('/user', async (req, res) => {
+  const {email, password} = req.body
+  const getQuery = `SELECT password FROM Users WHERE emailAddress=?`;
+  connection.query(getQuery, [email], (err, result) => {
     if (err) {
       console.log(err);
       res.status(500).send('Error fetching users');

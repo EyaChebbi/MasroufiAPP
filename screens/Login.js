@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Button, Block, Input, Text } from '../components';
 import { theme } from '../constants';
 import axios from 'axios';
@@ -11,82 +11,117 @@ export default function Login({ navigation }) {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // const handleLogin = () => {
-  //   const errors = [];
-  
-    // Keyboard.dismiss();
-    // setLoading(true);
-  
-    // const handleLogin = () => {
-    //   const errors = [];
-    
-    //   Keyboard.dismiss();
-    //   setLoading(true);
-    
-  //     axios
-  //     .post('http://192.168.48.26:3000/login', { email, password })
-  //     .then(response => {
-  //       console.log(email, password);
-  //       if (email == response.data.email) {
-  //         if (password != response.data.password) {
-  //           console.log("Incorrect Password")
-  //           setLoading(false);
-  //         }
-  //         else {
-  //           setLoading(false);
-  //           navigation.navigate("Browse");
-  //         }
-  //       }
-  //       else console.log("Incorrect Email");
-  //     })
-  //     .catch(error => {
-  //       setLoading(false);
-  //       setErrors(['Invalid email or password']);
-  //     });
-    //}
-    // }
+   const handleLogin = async () => {
 
-
-
-  const handleLogin = () => {
     const errors = [];
-
     Keyboard.dismiss();
     setLoading(true);
+  
+    try {
+      const response = await axios.post('http://192.168.48.26:3000/login', { email, password })
+      console.log(response.data.token);
+     navigation.navigate('Browse')
+        
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setErrors(error.response.data.errors);
+        console.log(error.response.data);
 
-    axios
-    .post('http://192.168.48.26:3000/login', { email, password })
-    .then(response => {
-      console.log("******************")
-      console.log(email, password);
-      console.log("hello");
-      if (email.equals(response.data.email)) {
-        if (!password.equals(response.data.password)) {
-          console.log("Incorrect Password");
-          setLoading(false);
-        }
-        else {
-          console.log("success");
-          setLoading(false);
-          navigation.navigate("Browse");
-        }
+       if(error.response.data.errors === 'User not found. Please sign up.') {
+
+        Alert.alert(
+          'Error!',
+          'Please sign up',
+          [
+            {
+              text: 'Continue', onPress: () => {
+                navigation.navigate('SignUp')
+              }
+            }
+          ],
+          { cancelable: false }
+        );
+       } else if (error.response.data.errors === 'Incorrect password'){
+        Alert.alert(
+          'Incorrect Password',
+          'Please try again',
+          [
+            {
+              text: 'Continue', onPress: () => {
+                navigation.navigate('Login')
+              }
+            }
+          ],
+          { cancelable: false }
+        );
+       }
+        
+      } else {
+        console.log(error);
       }
-      
-      else console.log("Incorrect Email");
-    })
-    .catch(error => {
+    } finally {
       setLoading(false);
-      setErrors(['Invalid email or password']);
-      console.log("Invalid email or password")
-      console.log(email);
-      console.log(password);
-      console.log(response.data.email);
-      console.log(response.data.password);
+    }
+  };  
+  
+    
+    //   axios
+    //   .post('http://192.168.48.26:3000/login', { email, password })
+    //   .then(response => {
+    //     console.log(email, password);
+    //     if (email == response.data.email) {
+    //       if (password != response.data.password) {
+    //         console.log("Incorrect Password")
+    //         setLoading(false);
+    //       }
+    //       else {
+    //         setLoading(false);
+    //         navigation.navigate("Browse");
+    //       }
+    //     }
+    //     else console.log("Incorrect Email");
+    //   })
+    //   .catch(error => {
+    //     setLoading(false);
+    //     setErrors(['Invalid email or password']);
+    //   });
+    
+    // }
+      
+  
 
-    });
-  }
+    // axios
+    // .post('http://192.168.48.26:3000/login', { email, password })
+    // .then(response => {
+    //   console.log("******************")
+    //   console.log(email, password);
+    //   console.log("hello");
+    //   if (email.equals(response.data.email)) {
+    //     if (!password.equals(response.data.password)) {
+    //       console.log("Incorrect Password");
+    //       setLoading(false);
+    //     }
+    //     else {
+    //       console.log("success");
+    //       setLoading(false);
+    //       navigation.navigate("Browse");
+    //     }
+    //   }
+      
+    //   else console.log("Incorrect Email");
+    // })
+    // .catch(error => {
+    //   setLoading(false);
+    //   setErrors(['Invalid email or password']);
+    //   console.log("Invalid email or password")
+    //   console.log(email);
+    //   console.log(password);
+    //   console.log(response.data.email);
+    //   console.log(response.data.password);
 
-  const hasErrors = key => errors.includes(key) ? styles.hasErrors : null;
+    // });
+  
+    const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
 
   return (
     <KeyboardAvoidingView style={styles.login} behavior="padding">
