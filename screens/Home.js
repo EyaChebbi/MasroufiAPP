@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dimensions,
     StyleSheet,
@@ -12,6 +12,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
 import { useNavigation } from "@react-navigation/native";
 import BalanceTrend from "./BalanceTrend";
+import axios from 'axios';
 
 export default function Home() {
     const budget = 1500;
@@ -27,14 +28,24 @@ export default function Home() {
     //     { type: 'Crypto Account', value: -200 }
     // ]
 
+    const [budgets, setBudgets] = useState([]);
+    useEffect(() => {
+        axios.get(`http://192.168.48.26:3000/budgets?userId=${userId}`)
+        .then(response => setBudgets(response.data))
+            .catch(error => console.error(error));
+    }, []);
+
+
+
     const BudgetCard = ({ type, value }) => {
         let icon;
-        if (type === 'Cash') {
-            icon = <FontAwesome5 name="money-bill" size={24} color='blue' />;
+        if (type === 'Bitcoin') {
+            icon = <FontAwesome5 name="bitcoin" size={24} color='blue' />;
         } else if (type === 'Bank Account') {
             icon = <FontAwesome5 name="university" size={24} color='blue' />;
         } else {
-            icon = <FontAwesome5 name="bitcoin" size={24} color='blue' />;
+            icon = <FontAwesome5 name="money-bill" size={24} color='blue' />;
+
         }
         return (
             <View style={styles.card2}>
@@ -79,7 +90,7 @@ export default function Home() {
     return (
         <ScrollView style={styles.container}>
             <FlatList
-                data={budget}
+                data={budgets}
                 horizontal={true}
                 renderItem={({ item }) => <BudgetCard style={styles.card2}
                     type={item.type} value={item.value} />}
