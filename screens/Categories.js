@@ -14,28 +14,14 @@ export default function Categories() {
 
     //version copied from records.js
     useEffect(() => {
-    const fetchData = async () => {
-        const result = await axios("http://192.168.1.146:3000/categories");
-        const data = await result.data;
-        
-        console.log(data);
-        setCategData(data);
-    };
+        const fetchData = async () => {
+            const result = await axios("http://192.168.48.36:3000/categories");
+            const data = await result.data;
 
-    fetchData();
+            setCategData(data);
+        };
+        fetchData();
     }, []);
-
-    //version that didn't work before
-    // useEffect(() => { 
-    //     fetch('http://localhost:3000/categories')
-    //     .then(res => {res.json()
-    //         console.log()}
-    //         )
-    //     .then(data => {
-    //         setCategData(data);
-    //     })
-    //     .catch(error => console.log(error))
-    // }, []);
 
     const Category = ({name, catColor}) => {
         return (
@@ -58,7 +44,7 @@ export default function Categories() {
                         style={styles.categFlatList}
                         contentContainerStyle={styles.contentContainer}
                     />
-                    : <Text>Loading categories...</Text>
+                    : <Text style={{alignSelf: 'center'}}>Loading categories...</Text>
                 }
                 {/* <Pressable style={styles.pressable}>
                     <Category name="Add category..." catColor="white" fontSize='50' />

@@ -108,7 +108,7 @@ router.get('/users', async (req, res) => {
 });
 
 //for the Categories
-router.get('/categories', async (req, res) => {
+app.get('/categories', async (req, res) => {
   const getQuery = `SELECT * FROM Categories`;
   connection.query(getQuery, [], (err, result) => {
     if (err) {
