@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Button, Block, Input, Text } from '../components';
 import { theme } from '../constants';
+import { Platform } from 'react-native';
 import axios from 'axios';
 
 export default function Login({ navigation }) {
@@ -72,23 +73,33 @@ export default function Login({ navigation }) {
     const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
 
   return (
-    <KeyboardAvoidingView style={styles.login} behavior="padding">
+    <KeyboardAvoidingView style={styles.login} behavior={Platform.OS === 'ios' ? 'position' : null}>
       <Block padding={[0, theme.sizes.base * 2]}>
         <Block middle>
           <Text style={styles.label}> Email </Text>
           <Input
             error={hasErrors('email')}
-            style={[styles.input, hasErrors('email')]}
-            placeholder={email}
+            style={[email == 'test@gmail.com' ? styles.default : styles.input, hasErrors('email')]}
+            defaultValue={email}
             onChangeText={text => setEmail(text)}
+            onFocus={() => {
+              if (email === 'test@gmail.com') {
+                setEmail(''); // Update TextInput value to empty string when focused
+              }
+            }}
           />
           <Text style={styles.label}> Password </Text>
           <Input
             secure
             error={hasErrors('password')}
-            style={[styles.input, hasErrors('password')]}
-            placeholder={password}
+            style={[password == '*********' ? styles.default : styles.input, hasErrors('password')]}
+            defaultValue={password}
             onChangeText={text => setPassword(text)}
+            onFocus={() => {
+              if (password === '*********') {
+                setPassword(''); // Update TextInput value to empty string when focused
+              }
+            }}
             
           />
 
@@ -121,6 +132,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     // marginTop: 2,
     // marginBottom: 2,
+  },
+  default:{
+    borderRadius: 0,
+    borderWidth: 0,
+    borderBottomColor: theme.colors.gray2,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    color: '#adb5bd'
+
   },
   input: {
     borderRadius: 0,

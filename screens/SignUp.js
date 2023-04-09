@@ -3,6 +3,7 @@ import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } 
 import { Block, Input, Button, Text } from '../components';
 import { theme } from '../constants';
 import axios from 'axios';
+import { ScrollView } from 'react-native-gesture-handler';
 // const API_URL = 'http://localhost:3000';
     
 export default function SignUp({ navigation })  {
@@ -10,7 +11,7 @@ export default function SignUp({ navigation })  {
   const [email, setEmail] = useState('email@email.com');
   const [firstName, setFirstName] = useState('First Name');
   const [lastName, setLastName] = useState('Last Name');
-  const [userPassword, setUserPassword] = useState('Password');
+  const [userPassword, setUserPassword] = useState('*********');
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -53,39 +54,62 @@ export default function SignUp({ navigation })  {
     const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
 
      return(
-      <KeyboardAvoidingView style={styles.signup} behavior="padding">
+      <KeyboardAvoidingView style={styles.signup} behavior={Platform.OS === 'ios' ? 'position' : null} enabled>
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">        
         <Block padding={[0, theme.sizes.base * 2]}>
           {/* <Text h1 bold>Sign Up</Text>*/ }
           <Block middle>
+          <Text style={styles.label}> Email </Text>
             <Input
               email
-              label="Email"
               error={hasErrors('email')}
-              style={[styles.input, hasErrors('email')]}
+              style={[email == 'email@email.com' ? styles.default : styles.input, hasErrors('email')]}
               defaultValue={email}
               onChangeText={text => setEmail(text)}
+              onFocus={() => {
+                if (email === 'email@email.com') {
+                  setEmail(''); // Update TextInput value to empty string when focused
+                }
+              }}
             />
+            <Text style={styles.label}> First Name </Text>
             <Input
-              label="First Name"
               error={hasErrors('firstName')}
-              style={[styles.input, hasErrors('firstName')]}
+              autoCapitalize="words"
+              style={[firstName == 'First Name' ? styles.default : styles.input, hasErrors('firstName')]}
               defaultValue={firstName}
               onChangeText={text => setFirstName(text)}
+              onFocus={() => {
+                if (firstName === 'First Name') {
+                  setFirstName(''); // Update TextInput value to empty string when focused
+                }
+              }}
             />
+            <Text style={styles.label}> Last Name </Text>
             <Input
-              label="Last Name"
               error={hasErrors('lastName')}
-              style={[styles.input, hasErrors('lastName')]}
+              autoCapitalize="words"
+              style={[lastName == 'Last Name' ? styles.default : styles.input, hasErrors('lastName')]}
               defaultValue={lastName}
               onChangeText={text => setLastName(text)}
+              onFocus={() => {
+                if (lastName === 'Last Name') {
+                  setLastName(''); // Update TextInput value to empty string when focused
+                }
+              }}
             />
+            <Text style={styles.label}> Password </Text>
             <Input
               secure
-              label="Password"
               error={hasErrors('password')}
-              style={[styles.input, hasErrors('password')]}
+              style={[userPassword == '*********' ? styles.default : styles.input, hasErrors('password')]}
               defaultValue={userPassword}
               onChangeText={text => setUserPassword(text)}
+              onFocus={() => {
+                if (userPassword === '*********') {
+                  setUserPassword(''); // Update TextInput value to empty string when focused
+                }
+              }}
             />
              <Button gradient title="Sign Up" onPress={() => handleSignUp()}>
               {loading ?
@@ -101,6 +125,7 @@ export default function SignUp({ navigation })  {
             </Button>
           </Block>
         </Block>
+        </ScrollView>
       </KeyboardAvoidingView>
   )
 }
@@ -110,11 +135,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  default:{
+    borderRadius: 0,
+    borderWidth: 0,
+    borderBottomColor: theme.colors.gray2,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    color: '#adb5bd'
+
+  },
+  label: {
+    color: 'black',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
   input: {
     borderRadius: 0,
     borderWidth: 0,
     borderBottomColor: theme.colors.gray2,
     borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: theme.sizes.base * 2,
   },
   hasErrors: {
     borderBottomColor: theme.colors.accent,
