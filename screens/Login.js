@@ -4,7 +4,8 @@ import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } 
 import { Button, Block, Input, Text } from '../components';
 import { theme } from '../constants';
 import { Platform } from 'react-native';
-import axios from 'axios';
+import api from '../api';
+
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('test@gmail.com');
@@ -12,6 +13,7 @@ export default function Login({ navigation }) {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
+   console.log();
    const handleLogin = async () => {
 
     const errors = [];
@@ -19,7 +21,8 @@ export default function Login({ navigation }) {
     setLoading(true);
   
     try {
-      const response = await axios.post('http://192.168.48.26:3000/login', { email, password })
+      const url = '/login';
+      const response = await api.post(url, { email, password })
       console.log(response.data.token);
      navigation.navigate('Browse')
         

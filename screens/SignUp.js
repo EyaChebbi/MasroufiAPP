@@ -4,6 +4,8 @@ import { Block, Input, Button, Text } from '../components';
 import { theme } from '../constants';
 import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
+import api from '../api';
+
 // const API_URL = 'http://localhost:3000';
     
 export default function SignUp({ navigation })  {
@@ -26,7 +28,8 @@ export default function SignUp({ navigation })  {
       // setLoading(false);
     
       try {
-        const response = await axios.post(`http://192.168.48.55:3000/register`, { firstName, lastName, email, userPassword });
+        const url = '/register';
+        const response = await api.post(url, { firstName, lastName, email, userPassword });
         console.log(response.data.token);
         Alert.alert(
           'Success!',
