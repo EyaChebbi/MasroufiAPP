@@ -101,6 +101,22 @@ app.get('/categories', async (req, res) => {
     });
 });
 
+//to add a new category
+app.post('/categories/add', async(req,res)=> {
+  const { name, color } = req.body;
+  const postQuery = 'INSERT INTO Categories(categoryName, color) VALUES (?,?)';
+
+  connection.query(postQuery, [name, color], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error adding category');
+    } else {
+      res.status(200).send('Success!');
+    }
+    });
+})
+
+
 app.use('/',router);
 
 //for the transactions, (it works) 

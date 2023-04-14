@@ -37,10 +37,12 @@ function NavigationBar() {
           return <FontAwesome5 name={iconName} size={size} color={color} />;
         },
       })}
-      tabBarOptions={{
-        activeTintColor: '#007AFF',
-        inactiveTintColor: 'gray',
-      }}
+      // tabBarOptions={{
+      //   activeTintColor: '#007AFF',
+      //   inactiveTintColor: 'gray',
+      // }}
+
+      
       initialRouteName="Home"
     >
       <Tab.Screen name="Home" component={Home} options={{headerShown: false}} />

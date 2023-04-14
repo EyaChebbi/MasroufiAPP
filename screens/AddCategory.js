@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
+import api from '../api';
 
 export default function AddCategory() {
     //used useState to change the color of the "preview" color after selecting a color
@@ -17,7 +18,7 @@ export default function AddCategory() {
 
     const handleAddCateg = async () => {
         try {
-            const result = await axios.post("http://192.168.48.36:3000/categories/add", {
+            const result = await api.post("http://192.168.50.47:3000/categories/add", {
                 name: categName,
                 color: selectedColor,
             });

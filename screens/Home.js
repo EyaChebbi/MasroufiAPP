@@ -13,7 +13,7 @@ import { LineChart } from 'react-native-chart-kit';
 import { useNavigation } from "@react-navigation/native";
 import BalanceTrend from "./BalanceTrend";
 import axios from 'axios';
-
+import api from "../api";
 export default function Home() {
     const budget = 1500;
 
@@ -28,12 +28,12 @@ export default function Home() {
     //     { type: 'Crypto Account', value: -200 }
     // ]
 
-    const [budgets, setBudgets] = useState([]);
-    useEffect(() => {
-        axios.get(`http://192.168.48.26:3000/budgets?userId=${userId}`)
-        .then(response => setBudgets(response.data))
-            .catch(error => console.error(error));
-    }, []);
+      const [budgets, setBudgets] = useState([]);
+    // useEffect(() => {
+    //     api.get(`/budgets?userId=${userId}`)
+    //     .then(response => setBudgets(response.data))
+    //         .catch(error => console.error(error));
+    // }, []);
 
 
 

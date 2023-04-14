@@ -31,8 +31,6 @@ export default function Login({ navigation }) {
         setErrors(error.response.data.errors);
         console.log(error.response.data);
 
-        console.log("error message Eya " + JSON.stringify(error.response.data))
-
         const errorSignUp= '{"error":"User not found. Please sign up."}' ;
         const errorLogin= '{"error":"Incorrect password"}' ;
 
@@ -76,7 +74,7 @@ export default function Login({ navigation }) {
     const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
 
   return (
-    <KeyboardAvoidingView style={styles.login} behavior={Platform.OS === 'ios' ? 'position' : null}>
+    <KeyboardAvoidingView style={styles.login} behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <Block padding={[0, theme.sizes.base * 2]}>
         <Block middle>
           <Text style={styles.label}> Email </Text>

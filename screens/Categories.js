@@ -1,6 +1,7 @@
 import { Text, View, Pressable, FlatList, StyleSheet, useWindowDimensions, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";    
 import axios from "axios";
+import api from "../api";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Categories() {
@@ -13,15 +14,30 @@ export default function Categories() {
     const navigation = useNavigation();
 
     //version copied from records.js
-    useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios("http://192.168.48.36:3000/categories");
-            const data = await result.data;
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const result = await axios("http://192.168.48.36:3000/categories");
+    //         const data = await result.data;
 
-            setCategData(data);
-        };
-        fetchData();
-    }, []);
+    //         setCategData(data);
+    //     };
+    //     fetchData();
+    // }, []);
+    useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await api.get('/categories'); // Use api instance instead of axios directly
+      const data = response.data; // Extract data from the response
+      
+      setCategData(data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Handle error
+    }
+  };
+  
+  fetchData();
+}, []);
 
     const Category = ({name, catColor}) => {
         return (
