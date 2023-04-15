@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
     marginBottom: 10,
-    fontFamily: 'Helvetica Neue',
+    // fontFamily: 'Helvetica Neue',
     color: '#405754',
   },
   chart: {

@@ -1,30 +1,98 @@
 import React, { Component, useState, useEffect} from 'react'
 import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native'
-import TransactionHeader from '../components/TransactionHeader'
 import { Ionicons } from '@expo/vector-icons';
 import CalendarComponent from '../components/CalendarComponent';
 import Categories from './Categories';
 import { useNavigation } from "@react-navigation/native";
-export default function AddTrasaction() {
-    
+import api from '../api';
+export default function AddTrasaction(props) {
+
+    const [errors, setErrors] = useState([]);
+    const [source, setSource] = useState('');
+    const [amount, setAmount] = useState('000');
+    const [location, setLocation] = useState('');
+    const [time, setTime] = useState('');
+    const [selectedDate, setSelectedDate] = useState('');    
+    const [payee, setPayee] = useState('');
+    const [type, setType] = useState('Spending');
+
+    const handleAddTransaction = async () => {
+        console.log(amount);
+        console.log(type);
+        console.log(selectedDate);
+
+        //     try {
+    //         const url = '/transactions';
+    //         const response = await api.post(url, { userid, date, time, source, location, payee, amount, category });
+    //         console.log(response.data.token);
+    //         Alert.alert(
+    //           'Success!',
+    //           'Your transaction has been added',
+    //           [
+    //             {
+    //               text: 'Ok', onPress: () => {
+    //                 navigation.navigate('Home')
+    //               }
+    //             }
+    //           ],
+    //           { cancelable: false }
+    //         );
+    //       } catch (error) {
+    //         if (error.response && error.response.data) {
+    //           setErrors(error.response.data.errors);
+    //           console.log(error.response.data);
+    //         } else {
+    //           console.log(error);
+    //         }
+    //       } finally {
+    //         setLoading(false);
+    //       }
+     };
+    // const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
+
     const navigation = useNavigation();
 
     const toggleExpanded = () => {
         navigation.navigate('Categories');
     };
-    const savePress = () =>{
-        console.log('saved');
-        // to be continued
-    }
-    const [source, setSource] = useState('');
-    const [location, setLocation] = useState('');
-    const [time, setTime] = useState('');
-    const [payee, setPayee] = useState('');
-
+    // const savePress = () =>{
+    //     console.log('saved');
+    //     // to be continued
+    // }
+    
     return(          
             <View  style={styles.container} keyboardDismissMode='on-drag'>
-                <TransactionHeader/>
-                
+                <View style={styles.containerHeader}>
+                    <Text style={styles.title}>
+                        Add Transaction
+                    </Text>
+                    <View style={styles.transaction}>
+                        <Pressable onPress={() => setType('Spending')} style={[styles.boxExpense, {backgroundColor: type === 'Spending' ? '#fff' : '#41837A',}]}>
+                            <Text style={[styles.text, {color: type === 'Spending' ? '#000000' : '#ffffff'}]}>
+                                Spending
+                            </Text>
+                        </Pressable>
+                        <Pressable onPress={() => setType('Earning')} style={[styles.boxIncome, {backgroundColor: type === 'Earning' ? '#fff' : '#41837A',
+                        color: type ==='Spending' ? '#000' : '#fff',}]}>
+                            <Text style={[styles.text, {color: type === 'Earning' ? '#000000' : '#ffffff'}]}>
+                                Earning
+                            </Text>
+                        </Pressable>
+                    </View>
+                    <View style={{flexDirection: 'row', }}>
+                        <Text style={styles.tnd}>
+                            TND
+                        </Text>
+                        <TextInput
+                            value={amount}
+                            onChangeText={(value) => setAmount(value)}
+                            placeholder="Amount"
+                            keyboardType="numeric"
+                            keyboardDismissMode = "on-drag"
+                            style={styles.amount}
+                        />        
+                    </View>     
+                </View>
                 <Text style={{ flex:0.065, paddingTop: 15, marginLeft: 50, fontWeight: '600', fontSize: 20,}}>
                     Transaction Details
                 </Text>
@@ -51,7 +119,7 @@ export default function AddTrasaction() {
                             Date
                         </Text>
                     </View>
-                    <CalendarComponent/>
+                    <CalendarComponent selectedDate={selectedDate}/>
                 </View>
 
                 <View style={styles.containerRow} >
@@ -123,7 +191,7 @@ export default function AddTrasaction() {
                 </View>
                 <View style={{flex: 0.04}}>
                 </View>
-                <Pressable onPress={savePress} style={styles.savePressable}>
+                <Pressable onPress={() => handleAddTransaction()} style={styles.savePressable}>
                     <Text style={styles.saveButton}>
                         Save
                     </Text>
@@ -175,5 +243,65 @@ const styles = StyleSheet.create({
         height: 35, 
         borderRadius: 7,
         fontSize: 17,
+    },
+    containerHeader:{
+        flex:0.34,
+        backgroundColor: '#4FA095',
+        justifyContent: 'center',
+    },
+    title:{
+        fontSize: 28,   
+        color: 'white',
+        justifyContent: 'center',
+        marginLeft: 50,
+        fontWeight: '700',
+    },
+    boxExpense:{
+        marginTop: 30, 
+        marginLeft:50,
+        width: 120,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 8,
+    },
+    boxIncome:{
+        marginTop: 30, 
+        marginRight:50,
+        width: 120,
+        borderRadius: 10,
+        padding: 8,
+        textAlign: 'center',
+        justifyContent: 'center',
+    },
+    tnd:{
+        marginTop: 17,
+        marginLeft: 50,
+        textAlign: 'center',
+        justifyContent: 'center',
+        fontWeight: '600',
+        borderRadius: 10,
+        padding: 8,
+        width: 80,
+        height: 40,
+        color: '#000',
+        backgroundColor: '#fff',
+        
+    },
+    text: {
+        textAlign: 'center',
+        fontWeight: '600',
+        
+
+    },
+    transaction:{
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+    },
+    amount:{
+        color: '#fff',
+        fontWeight: '600',
+        fontSize: 30,
+        marginTop: 17, 
+        marginLeft: 120,
     }
 })

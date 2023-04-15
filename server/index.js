@@ -8,7 +8,7 @@ const app = express();
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'root',
+  password: '29216124',
   database: 'masroufiDB'
 });
 
@@ -121,10 +121,10 @@ app.use('/',router);
 
 //for the transactions, (it works) 
 app.post('/transactions', (req, res) => {
-  const { userid, date, amount, category } = req.body;
+  const { userid, date, time, source, location, payee, amount, category } = req.body;
 
   connection.query(
-    'INSERT INTO Transactions(userID, transactionDate, amount, categoryID) VALUES (?, ?, ?, ?)',
+    'INSERT INTO Transactions(userID, transactionDate, transactionTime, transactionSource, location, payee, amount, categoryID) VALUES (?, ?, ?, ?)',
     [userid, date, amount, category],
     (err, result) => {
       if (err) {

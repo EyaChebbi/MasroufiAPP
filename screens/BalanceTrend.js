@@ -254,14 +254,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
     marginBottom: 10,
-    fontFamily: 'Helvetica Neue',
+    // fontFamily: 'Helvetica Neue',
     color: '#405754',
   },
   subtitle: {
     fontWeight: 'bold',
     fontSize: 20,
     marginBottom: 10,
-    fontFamily: 'Helvetica Neue',
+    // fontFamily: 'Helvetica Neue',
     color: '#405754',
   },
   chart: {
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     color: '#405754',
     fontWeight: 'bold',
     fontSize: 16,
-    fontFamily: 'Helvetica Neue',
+    // fontFamily: 'Helvetica Neue',
   },
   selectedButton: {
     backgroundColor: '#405754',
