@@ -5,8 +5,8 @@ import { theme } from '../constants';
 import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
 import api from '../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const API_URL = 'http://localhost:3000';
     
 export default function SignUp({ navigation })  {
 
@@ -30,7 +30,9 @@ export default function SignUp({ navigation })  {
       try {
         const url = '/register';
         const response = await api.post(url, { firstName, lastName, email, userPassword });
-        console.log(response.data.token);
+        const token = response.data.token; // Access the token in the response
+        await AsyncStorage.setItem('jwtToken', token); // Store the token in AsyncStorage
+
         Alert.alert(
           'Success!',
           'Your account has been created',

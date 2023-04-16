@@ -1,10 +1,11 @@
-
 import React, { useState } from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Button, Block, Input, Text } from '../components';
 import { theme } from '../constants';
 import { Platform } from 'react-native';
 import api from '../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 export default function Login({ navigation }) {
@@ -22,8 +23,11 @@ export default function Login({ navigation }) {
   
     try {
       const url = '/login';
-      const response = await api.post(url, { email, password })
-      console.log(response.data.token);
+      const response = await api.post(url, { email, password });
+      const token = response.data.token;
+      await AsyncStorage.setItem('jwtToken', token); // Store the token in AsyncStorage
+       //console.log(response.data.token);
+       //console.log('Login Response:', response);
      navigation.navigate('Browse')
         
     } catch (error) {
