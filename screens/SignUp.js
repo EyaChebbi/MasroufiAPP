@@ -49,6 +49,12 @@ export default function SignUp({ navigation })  {
         if (error.response && error.response.data) {
           setErrors(error.response.data.errors);
           console.log(error.response.data);
+
+            // Handle the email already in use error
+      if (error.response.status === 409) {
+        Alert.alert('Error: Email already in use! ', error.response.data.message);
+      }
+
         } else {
           console.log(error);
         }

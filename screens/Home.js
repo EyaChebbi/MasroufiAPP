@@ -14,6 +14,9 @@ import { useNavigation } from "@react-navigation/native";
 import BalanceTrend from "./BalanceTrend";
 import axios from 'axios';
 import api from "../api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
 export default function Home() {
     const budget = 1500;
 
@@ -21,20 +24,33 @@ export default function Home() {
     const [salaryAccountBalance, setSalaryAccountBalance] = useState(0);
     const [balanceAccountBalance, setBalanceAccountBalance] = useState(0);
     
-    // const budgets = [
+    const accounts = [
 
-    //     { type: 'Cash', value: 500 },
-    //     { type: 'Bank Account', value: 1000 },
-    //     { type: 'Crypto Account', value: -200 }
-    // ]
+        { type: 'Cash', value: 500 },
+        { type: 'Bank Account', value: 1000 },
+        { type: 'Crypto Account', value: -200 }
+    ]
 
-      const [budgets, setBudgets] = useState([]);
+     // const [accounts, setAccounts] = useState([]);
     // useEffect(() => {
-    //     api.get(`/budgets?userId=${userId}`)
-    //     .then(response => setBudgets(response.data))
-    //         .catch(error => console.error(error));
+    //     fetchAccounts();
     // }, []);
-
+    // const fetchAccounts = async () => {
+    //     try {
+    //       const token = await AsyncStorage.getItem('token'); // Retrieve the stored JWT
+    //       console.log("token home " + token)
+    //       const response = await api.get(`/budgets`, {
+    //         headers: {
+    //           'Authorization': `Bearer ${token}`,
+    //         },
+    //       });
+      
+    //       setAccounts(response.data); // Update the state with fetched accounts
+    //     } catch (error) {
+    //       console.error(error);
+    //     }
+    //   };
+    
 
 
     const BudgetCard = ({ type, value }) => {
@@ -90,10 +106,11 @@ export default function Home() {
     return (
         <ScrollView style={styles.container}>
             <FlatList
-                data={budgets}
+                data={accounts}
                 horizontal={true}
+                // keyExtractor={item => item.id.toString()} // Add this line
                 renderItem={({ item }) => <BudgetCard style={styles.card2}
-                    type={item.type} value={item.value} />}
+                    type={item.account_type} value={item.value} />}
             />
 
             <View style={styles.card}>

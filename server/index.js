@@ -17,11 +17,11 @@ const connection = mysql.createConnection({
 app.use(cors());
 app.use(bodyParser.json());
 
-//for register with tokens
+//for register with tokens (works)
 app.post('/register', (req, res) => {
   const { firstName, lastName, email, userPassword } = req.body;
   const checkEmailQuery = 'SELECT * FROM Users WHERE LOWER(emailAddress) = LOWER(?)';
-  
+
   connection.query(checkEmailQuery, [email], (err, results) => {
     if (err) {
       console.log(err);
@@ -46,7 +46,6 @@ app.post('/register', (req, res) => {
     }
   });
 });
-
 
 //Login with tokens (works)
 app.post('/login', (req, res) => {
@@ -77,12 +76,12 @@ app.post('/login', (req, res) => {
     const user = results[0];
     if (results.length === 0) {
       res.status(401).json({ error: 'User not found. Please sign up.' });
- 
+
       return;
     } else if (user.userPassword !== password) {
       console.log(password + " " + user.userPassword);
       res.status(401).json({ error: 'Incorrect password' });
-     
+
       return;
     } else {
       // Sign the JWT token with user's email and user's ID
@@ -91,7 +90,7 @@ app.post('/login', (req, res) => {
           email: user.emailAddress,
           id: user.id,
         },
-        process.env.JWT_SECRET || 'your_jwt_secret', // Use an environment variable or replace with your secret key
+        process.env.JWT_SECRET || 'jwt_secret', 
         { expiresIn: '1d' } // Token expires in 1 day
       );
       res.json({ user, token }); // Return the user data and JWT token
@@ -99,11 +98,27 @@ app.post('/login', (req, res) => {
   });
 });
 
+//to verify the JWT
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
+  if (!token) {
+    return res.sendStatus(401); // Unauthorized
+  }
+
+  jwt.verify(token, jwt_secret, (err, user) => {
+    if (err) {
+      return res.sendStatus(403); // Forbidden
+    }
+    req.user = user;
+    next();
+  });
+};
 
 //idk why its here
 router.get('/user', async (req, res) => {
-  const {email, password} = req.body
+  const { email, password } = req.body
   const getQuery = `SELECT password FROM Users WHERE emailAddress=?`;
   connection.query(getQuery, [email], (err, result) => {
     if (err) {
@@ -112,7 +127,7 @@ router.get('/user', async (req, res) => {
     } else {
       res.status(200).json(result);
     }
-    });
+  });
 });
 
 //for the Categories
@@ -125,11 +140,11 @@ app.get('/categories', async (req, res) => {
     } else {
       res.status(200).json(result);
     }
-    });
+  });
 });
 
 //to add a new category
-app.post('/categories/add', async(req,res)=> {
+app.post('/categories/add', async (req, res) => {
   const { name, color } = req.body;
   const postQuery = 'INSERT INTO Categories(categoryName, color) VALUES (?,?)';
 
@@ -140,11 +155,11 @@ app.post('/categories/add', async(req,res)=> {
     } else {
       res.status(200).send('Success!');
     }
-    });
+  });
 })
 
 
-app.use('/',router);
+app.use('/', router);
 
 //for the transactions, (it works) 
 app.post('/transactions', (req, res) => {
@@ -163,6 +178,8 @@ app.post('/transactions', (req, res) => {
     }
   );
 });
+
+
 app.get('/transactions', (req, res) => {
   connection.query(
     'SELECT * FROM Transactions',
@@ -179,17 +196,33 @@ app.get('/transactions', (req, res) => {
 
 
 //PATCH request to change details about a specific transaction
-app.patch('/transactions/update',(req,res) => {
+app.patch('/transactions/update', (req, res) => {
   const { data } = req.body;
 })
 const updateQuery = 'UPDATE Transactions SET (amount=?, categoryID=?, transactionDate=?, transactionSource=?, payee=?, payer=?, location=?, transactionType=?, note=?) WHERE transactionID=?';
 
 
 //for the accounts (budgets)
+// app.get('/budgets', (req, res) => {
+//   const { userId } = req.body;
+//   connection.query(
+//     'SELECT * FROM budgets WHERE userId =?', [userId],
+//     (err, results) => {
+//       if (err) {
+//         console.error('Error fetching budgets:', err);
+//         res.status(500).send('Error fetching budgets.');
+//         return;
+//       }
+//       res.status(200).json(results);
+//     }
+//   );
+// });
+
+
 app.get('/budgets', (req, res) => {
   const { userId } = req.body;
   connection.query(
-    'SELECT * FROM budgets WHERE userId =?',[userId],
+    'SELECT account_type, balance FROM budgets WHERE userId = ?', [userId],
     (err, results) => {
       if (err) {
         console.error('Error fetching budgets:', err);
@@ -201,8 +234,61 @@ app.get('/budgets', (req, res) => {
   );
 });
 
+
+// app.get('/budgets', (req, res) => {
+//   const { userId } = req.query;
+//   connection.query(
+//     'SELECT * FROM budgets WHERE userId = ?', [userId],
+//     (err, results) => {
+//       if (err) {
+//         console.error('Error fetching budgets:', err);
+//         res.status(500).send('Error fetching budgets.');
+//         return;
+//       }
+//       res.status(200).json(results);
+//     }
+//   );
+// });
+
+
+
+// app.get('/budgets', (req, res) => {
+//   const { userId } = req.query;
+//   connection.query(
+//       'SELECT * FROM budgets WHERE userId =?', [userId],
+//       (err, results) => {
+//           if (err) {
+//               console.error('Error fetching budgets:', err);
+//               res.status(500).send('Error fetching budgets.');
+//               return;
+//           }
+//           res.status(200).json(results);
+//       }
+//   );
+// });
+
+
+//for the accounts (salary + balance) with tokens (doesnt work)
+// app.get('/budgets', verifyToken, async (req, res) => {
+//   const userId = req.user.id;
+//   console.log("userId index" + userId);
+
+//   try {
+//     const [accounts] = await db.execute('SELECT * FROM budgets WHERE userID = ?', [userId]);
+//     res.json(accounts);
+//   } catch (error) {
+//     console.log("Hello")
+
+//     console.error(error);
+//     res.status(500).send('Error fetching accounts');
+//     console.log("Error fetching accounts")
+//   }
+// });
+
+
 //for the Balance Trend
-app.get('/balance-trend', (req, res) => {
+  app.get('balance-trend', verifyToken, async (req, res) => {
+    const userId = req.user.id;
 
   connection.query('SELECT * FROM BalanceHistory', (err, results) => {
     if (err) {
