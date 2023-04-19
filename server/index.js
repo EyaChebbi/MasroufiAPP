@@ -10,7 +10,7 @@ const jwtSecretKey = 'your-secret-key';
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'root',
+  password: '29216124',
   database: 'masroufiDB'
 });
 
@@ -162,12 +162,13 @@ app.post('/categories/add', async (req, res) => {
 app.use('/', router);
 
 //for the transactions, (it works) 
-app.post('/transactions', (req, res) => {
-  const { userid, date, time, source, location, payee, amount, category } = req.body;
+app.post('/transactions', async(req, res) => {
+  const { userId, amount, category, selectedDate, source, payee, payer, location,  time, type  } = req.body;
+  const AddSpendingQuery = 'INSERT INTO Transactions (userID, amount, categoryID, transactionDate, transactionSource, payee, payer, location, transactionTime, transactionType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ';
 
   connection.query(
-    'INSERT INTO Transactions(userID, transactionDate, transactionTime, transactionSource, location, payee, amount, categoryID) VALUES (?, ?, ?, ?)',
-    [userid, date, amount, category],
+    AddSpendingQuery,
+    [ userId, amount, category, selectedDate, source, payee, payer, location,  time, type],
     (err, result) => {
       if (err) {
         console.error('Error adding transaction:', err);
@@ -178,8 +179,6 @@ app.post('/transactions', (req, res) => {
     }
   );
 });
-
-
 app.get('/transactions', (req, res) => {
   connection.query(
     'SELECT * FROM Transactions',
@@ -219,20 +218,20 @@ const updateQuery = 'UPDATE Transactions SET (amount=?, categoryID=?, transactio
 // });
 
 
-app.get('/budgets', (req, res) => {
-  const { userId } = req.body;
-  connection.query(
-    'SELECT account_type, balance FROM budgets WHERE userId = ?', [userId],
-    (err, results) => {
-      if (err) {
-        console.error('Error fetching budgets:', err);
-        res.status(500).send('Error fetching budgets.');
-        return;
-      }
-      res.status(200).json(results);
-    }
-  );
-});
+// app.get('/budgets', (req, res) => {
+//   const { userId } = req.body;
+//   connection.query(
+//     'SELECT account_type, balance FROM budgets WHERE userId = ?', [userId],
+//     (err, results) => {
+//       if (err) {
+//         console.error('Error fetching budgets:', err);
+//         res.status(500).send('Error fetching budgets.');
+//         return;
+//       }
+//       res.status(200).json(results);
+//     }
+//   );
+// });
 
 
 // app.get('/budgets', (req, res) => {
