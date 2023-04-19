@@ -1,53 +1,153 @@
 import React, { Component, useState, useEffect} from 'react'
-import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native'
+import { Alert, StyleSheet, Text, View, Pressable, TextInput } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import CalendarComponent from '../components/CalendarComponent';
 import Categories from './Categories';
+import Modal from 'react-native-modal';
+// import jwtDecode from 'jwt-decode';
+
+import { Calendar } from 'react-native-calendars';
+
 import { useNavigation } from "@react-navigation/native";
 import api from '../api';
-export default function AddTrasaction(props) {
+// import CalendarModal from '../components/CalendarModal';
 
+export default function AddTrasaction(route) {
+
+    function CalendarModal(props) {
+        const { isVisible, onDayPress, selectedDate } = props;
+        return (
+          <Modal isVisible={isVisible}>
+            <View style={styles.containerModal}>
+              <Calendar onDayPress={onDayPress} markedDates={{ [selectedDate]: { selected: true } }} />
+            </View>
+          </Modal>
+        );
+    }
+      
+    function CalendarComponent(props) {
+        const [selectedDate, setSelectedDate] = useState('');
+        const [showCalendar, setShowCalendar] = useState(false);
+      
+        const handleDayPress = (day) => {
+        //   setSelectedDate(day.dateString);
+        //   setShowCalendar(false);
+        props.selectedDate(day.dateString); 
+        setShowCalendar(false);
+        };
+      
+        const toggleCalendar = () => {
+          setShowCalendar(!showCalendar);
+        };
+      
+        return (
+          <View>
+            <Pressable onPress={toggleCalendar}>
+              <Text style={styles.optionsCalendar}>
+                {selectedDate ? selectedDate : 'Select Date'}
+              </Text>
+            </Pressable>
+            <CalendarModal
+              isVisible={showCalendar}
+              onDayPress={handleDayPress}
+              selectedDate={selectedDate}
+            />
+          </View>
+        );
+    }
+
+    // const { token } = route.params; 
+    // const { userId } = route.params;
+    const [loading, setLoading] = useState(false);
+    const [userId, setUserId] = useState('3');
+    const [selectedDate, setSelectedDate] = useState('Hey there');
     const [errors, setErrors] = useState([]);
     const [source, setSource] = useState('');
     const [amount, setAmount] = useState('000');
     const [location, setLocation] = useState('');
+    const [isFocusedTime, setIsFocusedTime] = useState(false);
     const [time, setTime] = useState('');
-    const [selectedDate, setSelectedDate] = useState('');    
+    const [category, setCategory] = useState('2');
     const [payee, setPayee] = useState('');
+    const [payer, setPayer] = useState('');
     const [type, setType] = useState('Spending');
 
-    const handleAddTransaction = async () => {
+    const handleFocus = () => {
+        setIsFocusedTime(true);
+      };
+    
+      const handleBlur = () => {
+        setIsFocusedTime(false);
+      };
+    
+
+    const handleAddSpending = async () => {
         console.log(amount);
         console.log(type);
         console.log(selectedDate);
 
-        //     try {
-    //         const url = '/transactions';
-    //         const response = await api.post(url, { userid, date, time, source, location, payee, amount, category });
-    //         console.log(response.data.token);
-    //         Alert.alert(
-    //           'Success!',
-    //           'Your transaction has been added',
-    //           [
-    //             {
-    //               text: 'Ok', onPress: () => {
-    //                 navigation.navigate('Home')
-    //               }
-    //             }
-    //           ],
-    //           { cancelable: false }
-    //         );
-    //       } catch (error) {
-    //         if (error.response && error.response.data) {
-    //           setErrors(error.response.data.errors);
-    //           console.log(error.response.data);
-    //         } else {
-    //           console.log(error);
-    //         }
-    //       } finally {
-    //         setLoading(false);
-    //       }
-     };
+        // setSelectedDate('2023-04-14');
+        try {
+        const url = '/transactions';
+        const response = await api.post(url, { userId, amount, category, selectedDate, source, payee, payer, location,  time, type }); 
+        console.log(response.data.token);
+        Alert.alert(
+            'Success!',
+            'Your transaction has been added',
+            [
+            {
+                text: 'Ok', onPress: () => {
+                navigation.navigate('Home')
+                }
+            }
+            ],
+            { cancelable: false }
+        );
+        } catch (error) {
+        if (error.response && error.response.data) {
+            setErrors(error.response.data.errors);
+            console.log(error.response.data);
+        } else {
+            console.log(error);
+        }
+        } finally {
+        setLoading(false);
+        }
+    };
+
+    const handleAddExpense = async () => {
+        console.log(amount);
+        console.log(type);
+        console.log(selectedDate);
+        console.log(userId);
+
+        // setSelectedDate('2023-04-14');
+        try {
+        const url = '/transactions';
+        const response = await api.post(url, { userId, amount, category, selectedDate, source, payee, payer, location,  time, type }); 
+        console.log(response.data.token);
+        Alert.alert(
+            'Success!',
+            'Your transaction has been added',
+            [
+            {
+                text: 'Ok', onPress: () => {
+                navigation.navigate('Home')
+                }
+            }
+            ],
+            { cancelable: false }
+        );
+        } catch (error) {
+        if (error.response && error.response.data) {
+            setErrors(error.response.data.errors);
+            console.log(error.response.data);
+        } else {
+            console.log(error);
+        }
+        } finally {
+        setLoading(false);
+        }
+    };
     // const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
 
     const navigation = useNavigation();
@@ -62,7 +162,7 @@ export default function AddTrasaction(props) {
     
     return(          
             <View  style={styles.container} keyboardDismissMode='on-drag'>
-                <View style={styles.containerHeader}>
+                {/* <View style={styles.containerHeader}>
                     <Text style={styles.title}>
                         Add Transaction
                     </Text>
@@ -90,10 +190,59 @@ export default function AddTrasaction(props) {
                             keyboardType="numeric"
                             keyboardDismissMode = "on-drag"
                             style={styles.amount}
+                            onFocus={() => {
+                                if (amount === '000') {
+                                  setAmount(''); // Update TextInput value to empty string when focused
+                                }
+                              }
+                            }
                         />        
                     </View>     
+                </View> */}
+                <View style={styles.containerHeader}>
+                    <View style={{marginLeft: 50,}}>
+                        <Text style={styles.title}>
+                            Add Transaction
+                        </Text>
+                        {/* <View style={styles.transaction}> */}
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between',   }}>
+                            <View style={{flexDirection: 'column', alignItems: 'flex-start', }}>
+                                <Pressable onPress={() => setType('Spending')} style={[styles.boxExpense, {backgroundColor: type === 'Spending' ? '#fff' : '#41837A',}]}>
+                                    <Text style={[styles.text, {color: type === 'Spending' ? '#000000' : '#ffffff'}]}>
+                                        Spending
+                                    </Text>
+                                </Pressable>
+                                <Text style={styles.tnd}>
+                                    TND
+                                </Text>
+                            </View>
+                            <View style={{flexDirection: 'column', alignItems: 'center', alignContent: 'center', marginRight: 40,}}>
+                                <Pressable onPress={() => setType('Earning')} style={[styles.boxIncome, {backgroundColor: type === 'Earning' ? '#fff' : '#41837A',
+                                color: type ==='Spending' ? '#000' : '#fff',}]}>
+                                    <Text style={[styles.text, {color: type === 'Earning' ? '#000000' : '#ffffff'}]}>
+                                        Earning
+                                    </Text>
+                                </Pressable>
+                                <TextInput
+                                    value={amount}
+                                    onChangeText={(value) => setAmount(value)}
+                                    placeholder="Amount"
+                                    keyboardType="numeric"
+                                    keyboardDismissMode = "on-drag"
+                                    style={styles.amount}
+                                    onFocus={() => {
+                                        if (amount === '000') {
+                                        setAmount(''); // Update TextInput value to empty string when focused
+                                        }
+                                    }
+                                    }
+                                />
+                            </View>
+                        </View>    
+                        {/* </View> */} 
+                    </View>     
                 </View>
-                <Text style={{ flex:0.065, paddingTop: 15, marginLeft: 50, fontWeight: '600', fontSize: 20,}}>
+                <Text style={{ flex:0.065, paddingTop: 20, marginLeft: 50, fontWeight: '600', fontSize: 20,}}>
                     Transaction Details
                 </Text>
                 
@@ -119,7 +268,7 @@ export default function AddTrasaction(props) {
                             Date
                         </Text>
                     </View>
-                    <CalendarComponent selectedDate={selectedDate}/>
+                    <CalendarComponent selectedDate={selectedDate => setSelectedDate(selectedDate)}/>
                 </View>
 
                 <View style={styles.containerRow} >
@@ -132,66 +281,102 @@ export default function AddTrasaction(props) {
                     <TextInput
                     value={time}
                     onChangeText={(value) => setTime(value)}
-                    placeholder="Insert XX:XX"
-                    placeholderTextColor='black'
+                    placeholder="Insert 00:00"
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    placeholderTextColor={isFocusedTime ? '#cccccc' : 'black'}
                     // clearButtonMode='while-editing'
                     style={styles.options}
                     />  
                 </View>
+                {
+                    type === 'Spending' ? 
 
-                <View style={styles.containerRow} >
-                    <View style={styles.type}>
-                        <Ionicons name="arrow-undo" size={25} style={styles.icon}/>
-                        <Text style={styles.typeText}> 
-                            Source
-                        </Text>
+                    <View style={styles.containerRow} >
+                        <View style={styles.type}>
+                            <Ionicons name="location" size={25} style={styles.icon}/>
+                            <Text style={styles.typeText}> 
+                                Location
+                            </Text>
+                        </View>
+                        <TextInput
+                        value={location}
+                        onChangeText={(value) => setLocation(value)}
+                        placeholder="Insert Location"
+                        keyboardType="default"
+                        placeholderTextColor='black'
+                        style={styles.options}
+                        />   
                     </View>
-                    <TextInput
-                    value={source}
-                    onChangeText={(value) => setSource(value)}
-                    placeholder="Insert Source"
-                    placeholderTextColor='black'
-                    // clearButtonMode='while-editing'
-                    style={styles.options}
-                    />   
-                </View>
 
-                <View style={styles.containerRow} >
-                    <View style={styles.type}>
-                        <Ionicons name="location" size={25} style={styles.icon}/>
-                        <Text style={styles.typeText}> 
-                            Location
-                        </Text>
-                    </View>
-                    <TextInput
-                    value={location}
-                    onChangeText={(value) => setLocation(value)}
-                    placeholder="Insert Location"
-                    keyboardType="default"
-                    placeholderTextColor='black'
-                    style={styles.options}
-                    />   
-                </View>
+                    :
 
-                <View style={styles.containerRow} >
-                    <View style={styles.type}>
-                        <Ionicons name="person" size={25} style={styles.icon}/>
-                        <Text style={styles.typeText}> 
-                            Payee
-                        </Text>
+                    <View style={styles.containerRow} >
+                        <View style={styles.type}>
+                            <Ionicons name="arrow-undo" size={25} style={styles.icon}/>
+                            <Text style={styles.typeText}> 
+                                Source
+                            </Text>
+                        </View>
+                        <TextInput
+                        value={source}
+                        onChangeText={(value) => setSource(value)}
+                        placeholder="Insert Source"
+                        placeholderTextColor='black'
+                        // clearButtonMode='while-editing'
+                        style={styles.options}
+                        />   
                     </View>
-                    <TextInput
-                    value={payee}
-                    onChangeText={(value) => setPayee(value)}
-                    placeholder="Insert Payee"
-                    keyboardType="default"
-                    placeholderTextColor='black'
-                    style={styles.options}
-                    />   
-                </View>
+
+                }
+                
+                {
+                    type === 'Spending' ? 
+
+                    <View style={styles.containerRow} >
+                        <View style={styles.type}>
+                            <Ionicons name="person" size={25} style={styles.icon}/>
+                            <Text style={styles.typeText}> 
+                                Payee
+                            </Text>
+                        </View>
+                        <TextInput
+                        value={payee}
+                        onChangeText={(value) => setPayee(value)}
+                        placeholder="Insert Payee"
+                        keyboardType="default"
+                        placeholderTextColor='black'
+                        style={styles.options}
+                        />   
+                    </View>
+
+                    :
+
+                    <View style={styles.containerRow} >
+                        <View style={styles.type}>
+                            <Ionicons name="person" size={25} style={styles.icon}/>
+                            <Text style={styles.typeText}> 
+                                Payer
+                            </Text>
+                        </View>
+                        <TextInput
+                        value={payer}
+                        onChangeText={(value) => setPayer(value)}
+                        placeholder="Insert Payer"
+                        keyboardType="default"
+                        placeholderTextColor='black'
+                        style={styles.options}
+                        />   
+                    </View>
+
+                
+
+                }
+
+                
                 <View style={{flex: 0.04}}>
                 </View>
-                <Pressable onPress={() => handleAddTransaction()} style={styles.savePressable}>
+                <Pressable onPress={() => handleAddExpense()} style={styles.savePressable}>
                     <Text style={styles.saveButton}>
                         Save
                     </Text>
@@ -200,13 +385,12 @@ export default function AddTrasaction(props) {
     )   
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex:1,
     },
     containerRow:{
-        flex:0.08,
+        flex:0.09,
         flexDirection: 'row',
         alignItems: 'center',
         marginLeft: 50,
@@ -248,36 +432,38 @@ const styles = StyleSheet.create({
         flex:0.34,
         backgroundColor: '#4FA095',
         justifyContent: 'center',
+        
+        // alignItems: 'center'
     },
     title:{
         fontSize: 28,   
         color: 'white',
         justifyContent: 'center',
-        marginLeft: 50,
+        // marginLeft: 50,
         fontWeight: '700',
     },
     boxExpense:{
         marginTop: 30, 
-        marginLeft:50,
-        width: 120,
+        // marginLeft:50,
+        width: 140,
         backgroundColor: '#fff',
         borderRadius: 10,
         padding: 8,
     },
     boxIncome:{
         marginTop: 30, 
-        marginRight:50,
-        width: 120,
+        // marginRight:50,
+        width: 140,
         borderRadius: 10,
         padding: 8,
-        textAlign: 'center',
-        justifyContent: 'center',
+        // textAlign: 'center',
+        // justifyContent: 'center',
     },
     tnd:{
         marginTop: 17,
-        marginLeft: 50,
+        // marginLeft: 50,
         textAlign: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
         fontWeight: '600',
         borderRadius: 10,
         padding: 8,
@@ -292,7 +478,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         
 
-    },
+    }, 
     transaction:{
         flexDirection: 'row', 
         justifyContent: 'space-between',
@@ -302,6 +488,16 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 30,
         marginTop: 17, 
-        marginLeft: 120,
-    }
+        // marginLeft: 120,
+        textAlign: 'center',
+    },
+    optionsCalendar: {
+        marginRight: 60,
+        fontWeight: '600',
+      },
+      containerModal: {
+        backgroundColor: 'white',
+        padding: 16,
+        borderRadius: 8,
+      },
 })

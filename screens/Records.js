@@ -22,8 +22,8 @@ export default function Records() {
       { id: '5', month: 'May', amount: '$2500', description: 'Contract work' },
     ];
     
-    // setExpenses(sampleExpenses);
-    // setIncomes(sampleIncomes);
+    setExpenses(sampleExpenses);
+    setIncomes(sampleIncomes);
   }, []);
 
   const renderExpense = ({ item }) => (

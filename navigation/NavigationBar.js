@@ -6,14 +6,18 @@ import Statistics from "../screens/Statistics";
 import Home from '../screens/Home';
 import Records from "../screens/Records";
 import Settings from "../screens/Settings";
-import AddExpense from "../screens/AddTransaction";
+import AddTransaction from "../screens/AddTransaction";
 import { NavigationContainer } from '@react-navigation/native';
 import BalanceTrend from '../screens/BalanceTrend';
 
 
 const Tab = createBottomTabNavigator();
 
-function NavigationBar() {
+function NavigationBar(route) {
+
+  // const { token } = route.params; // Extract the JWT token from navigation parameters
+
+  // const { userId } = route.params;
   return (
 
 <View style={styles.footer}>
@@ -47,7 +51,7 @@ function NavigationBar() {
     >
       <Tab.Screen name="Home" component={Home} options={{headerShown: false}} />
       <Tab.Screen name="Records" component={Records} options={{headerShown: false}} />
-      <Tab.Screen name="Add" component={AddExpense} options={{ tabBarLabel : () => null, headerShown: false}}/>
+      <Tab.Screen name="Add" component={AddTransaction} options={{ tabBarLabel : () => null, headerShown: false, }}/>
       <Tab.Screen name="Stats" component={BalanceTrend} options={{headerShown: false}} />
       <Tab.Screen name="Settings" component={Settings} options={{headerShown: false}}/>
     </Tab.Navigator>

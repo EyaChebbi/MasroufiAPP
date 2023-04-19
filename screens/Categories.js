@@ -5,6 +5,20 @@ import api from "../api";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Categories() {
+
+    const onRefresh = async () => {
+        // Function to handle refresh event
+        setRefreshing(true); // Set refreshing state to true
+    
+        // Perform refresh logic here, e.g., fetch new data from API
+        console.log("hi");
+        // Simulate asynchronous task with setTimeout
+        setTimeout(() => {
+          // After refreshing is done, set refreshing state back to false
+          setRefreshing(false);
+        }, 2000); // Adjust duration to suit your needs
+      };
+    
     //this function is created because I wanted to base my sizes on each user's screen, but I'm unable
     //to get the dimensions from a separate hook call, it needs to be integrated in the styles function
     const { styles } = useStyle(); 
@@ -54,6 +68,12 @@ export default function Categories() {
             <View style={styles.categSectionContainer}>
                 {CategData.length > 0 ?
                     <FlatList 
+                        // refreshControl={
+                        //     <RefreshControl
+                        //     refreshing={refreshing} // Set refreshing state
+                        //     onRefresh={onRefresh} // Set onRefresh callback function
+                        //     />
+                        // }
                         data={CategData}
                         renderItem={({item}) => <Category name={item.categoryName} catColor={item.color}/>}
                         keyExtractor={category => category.id}

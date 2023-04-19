@@ -24,10 +24,11 @@ const RootNavigator = () => {
    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Home"
+          name="Welcome"
           component={Welcome}
           options={{ title: 'Welcome' }}
         />
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Browse" component={NavigationBar} />
         <Stack.Screen name="Explore" component={Explore} />
         <Stack.Screen name="Forgot" component={Forgot} />

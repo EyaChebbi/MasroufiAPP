@@ -1,4 +1,4 @@
-import { View, TextInput, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, TextInput, StyleSheet, useWindowDimensions, RefreshControl  } from 'react-native';
 import { Button } from '../components';
 import { Text } from '../components';
 import ColorPicker from 'react-native-wheel-color-picker';
@@ -9,6 +9,10 @@ import axios from 'axios';
 import api from '../api';
 
 export default function AddCategory() {
+
+    const [refreshing, setRefreshing] = useState(false); // State to keep track of refresh status
+
+  
     //used useState to change the color of the "preview" color after selecting a color
     const [categName, setCategName] = useState("");
     const [selectedColor, setSelectedColor] = useState("#DEDEDE");
