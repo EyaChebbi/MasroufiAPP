@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from "@react-navigation/native";
 import Welcome from "../screens/Welcome";
@@ -14,13 +14,18 @@ import BalanceTrend from "../screens/BalanceTrend";
 import Categories from "../screens/Categories";
 import AddCategory from "../screens/AddCategory"
 import Records from "../screens/Records";
+import UserContext from '../server/UserContext';
+
 
 const Stack = createNativeStackNavigator();
 
 
 const RootNavigator = () => {
-  const isLoggedIn = false;
+  const [user, setUser] = useState(null);
+
   return (
+    <UserContext.Provider value={{ user, setUser }}>
+
    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -42,6 +47,8 @@ const RootNavigator = () => {
         <Stack.Screen name="AddCategory" component={AddCategory}/>
       </Stack.Navigator>
       </NavigationContainer>
+      </UserContext.Provider>
+
   );
 }
 

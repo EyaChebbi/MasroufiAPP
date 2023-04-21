@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     Dimensions,
     StyleSheet,
@@ -15,41 +15,46 @@ import BalanceTrend from "./BalanceTrend";
 import axios from 'axios';
 import api from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import UserContext from "../server/UserContext";
 
 export default function Home() {
     const budget = 1500;
 
+    const { user } = useContext(UserContext);
+    const userId = user?.userId;
+    console.log("userId Home " + userId)
 
+  
     const [salaryAccountBalance, setSalaryAccountBalance] = useState(0);
     const [balanceAccountBalance, setBalanceAccountBalance] = useState(0);
     
-    const accounts = [
+    // const accounts = [
 
-        { type: 'Cash', value: 500 },
-        { type: 'Bank Account', value: 1000 },
-        { type: 'Crypto Account', value: -200 }
-    ]
+    //     { type: 'Cash', value: 500 },
+    //     { type: 'Bank Account', value: 1000 },
+    //     { type: 'Crypto Account', value: -200 }
+    // ]
 
-     // const [accounts, setAccounts] = useState([]);
-    // useEffect(() => {
-    //     fetchAccounts();
-    // }, []);
-    // const fetchAccounts = async () => {
-    //     try {
-    //       const token = await AsyncStorage.getItem('token'); // Retrieve the stored JWT
-    //       console.log("token home " + token)
-    //       const response = await api.get(`/budgets`, {
-    //         headers: {
-    //           'Authorization': `Bearer ${token}`,
-    //         },
-    //       });
+     const [accounts, setAccounts] = useState([]);
+    useEffect(() => {
+        fetchAccounts();
+    }, []);
+    const fetchAccounts = async () => {
+        try {
+          if (userId) {
+            const response = await api.get(`/budgets`, { params: { userId } });
+            const formattedAccounts = response.data.map((account) => ({
+              id: account.id,
+              type: account.account_type,
+              value: parseFloat(account.balance),
+            }));
+            setAccounts(formattedAccounts);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
       
-    //       setAccounts(response.data); // Update the state with fetched accounts
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   };
     
 
 
@@ -105,13 +110,14 @@ export default function Home() {
 
     return (
         <ScrollView style={styles.container}>
-            <FlatList
-                data={accounts}
-                horizontal={true}
-                // keyExtractor={item => item.id.toString()} // Add this line
-                renderItem={({ item }) => <BudgetCard style={styles.card2}
-                    type={item.account_type} value={item.value} />}
-            />
+       <FlatList
+  data={accounts}
+  horizontal={true}
+  renderItem={({ item }) => (
+    <BudgetCard style={styles.card2} type={item.type} value={item.value} />
+  )}
+/>
+
 
             <View style={styles.card}>
                 <Text style={styles.title}>Top Expenses</Text>

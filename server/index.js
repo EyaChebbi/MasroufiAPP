@@ -88,44 +88,12 @@ app.post('/login', (req, res) => {
       const token = jwt.sign(
         {
           email: user.emailAddress,
-          id: user.id,
+          id: user.userID,
         },
         process.env.JWT_SECRET || 'jwt_secret', 
         { expiresIn: '1d' } // Token expires in 1 day
       );
       res.json({ user, token }); // Return the user data and JWT token
-    }
-  });
-});
-
-//to verify the JWT
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.sendStatus(401); // Unauthorized
-  }
-
-  jwt.verify(token, jwt_secret, (err, user) => {
-    if (err) {
-      return res.sendStatus(403); // Forbidden
-    }
-    req.user = user;
-    next();
-  });
-};
-
-//idk why its here
-router.get('/user', async (req, res) => {
-  const { email, password } = req.body
-  const getQuery = `SELECT password FROM Users WHERE emailAddress=?`;
-  connection.query(getQuery, [email], (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send('Error fetching users');
-    } else {
-      res.status(200).json(result);
     }
   });
 });
@@ -199,6 +167,28 @@ app.patch('/transactions/update', (req, res) => {
   const { data } = req.body;
 })
 const updateQuery = 'UPDATE Transactions SET (amount=?, categoryID=?, transactionDate=?, transactionSource=?, payee=?, payer=?, location=?, transactionType=?, note=?) WHERE transactionID=?';
+
+
+
+//newest accounts
+app.get('/budgets', (req, res) => {
+  const { userId } = req.query;
+  connection.query(
+    'SELECT * FROM budgets WHERE userId = ?', [userId],
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching budgets:', err);
+        res.status(500).send('Error fetching budgets.');
+        return;
+      }
+      res.status(200).json(results);
+    }
+  );
+});
+
+
+
+
 
 
 //for the accounts (budgets)
@@ -286,28 +276,28 @@ const updateQuery = 'UPDATE Transactions SET (amount=?, categoryID=?, transactio
 
 
 //for the Balance Trend
-  app.get('balance-trend', verifyToken, async (req, res) => {
-    const userId = req.user.id;
+//   app.get('balance-trend', verifyToken, async (req, res) => {
+//     const userId = req.user.id;
 
-  connection.query('SELECT * FROM BalanceHistory', (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Error retrieving balance trend data');
-    }
+//   connection.query('SELECT * FROM BalanceHistory', (err, results) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).send('Error retrieving balance trend data');
+//     }
 
-    const chartData = {
-      labels: results.map(result => result.month),
-      datasets: [
-        {
-          data: results.map(result => result.amount),
-          color: () => '#405457',
-          strokeWidth: 2,
-        },
-      ],
-    };
-    res.json(chartData);
-  });
-});
+//     const chartData = {
+//       labels: results.map(result => result.month),
+//       datasets: [
+//         {
+//           data: results.map(result => result.amount),
+//           color: () => '#405457',
+//           strokeWidth: 2,
+//         },
+//       ],
+//     };
+//     res.json(chartData);
+//   });
+// });
 
 
 // Define more routes here

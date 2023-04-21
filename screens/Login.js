@@ -1,79 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Button, Block, Input, Text } from '../components';
 import { theme } from '../constants';
 import { Platform } from 'react-native';
 import api from '../api';
-// import jwtDecode from 'jwt-decode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
+import UserContext from '../server/UserContext';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('test@gmail.com');
   const [password, setPassword] = useState('*********');
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  //  const handleLogin = async () => {
-
-  //   const errors = [];
-  //   Keyboard.dismiss();
-  //   setLoading(true);
-  
-  //   try {
-  //     const url = '/login';
-  //     const response = await api.post(url, { email, password });
-  //     const token = response.data.token;
-  //     await AsyncStorage.setItem('jwtToken', token); // Store the token in AsyncStorage
-  //      //console.log(response.data.token);
-  //      //console.log('Login Response:', response);
-  //    navigation.navigate('Browse')
-        
-  //   } catch (error) {
-  //     if (error.response && error.response.data) {
-  //       setErrors(error.response.data.errors);
-  //       console.log(error.response.data);
-
-  //       const errorSignUp= '{"error":"User not found. Please sign up."}' ;
-  //       const errorLogin= '{"error":"Incorrect password"}' ;
-
-  //      if(JSON.stringify(error.response.data) === errorSignUp) {
-
-  //       Alert.alert(
-  //         'Error!',
-  //         'Please Sign Up',
-  //         [
-  //           {
-  //             text: 'Continue', onPress: () => {
-  //               navigation.navigate('SignUp')
-  //             }
-  //           }
-  //         ],
-  //         { cancelable: false }
-  //       );
-  //      } else if (JSON.stringify(error.response.data) === errorLogin){
-  //       Alert.alert(
-  //         'Incorrect Password',
-  //         'Please try again',
-  //         [
-  //           {
-  //             text: 'Continue', onPress: () => {
-  //               navigation.navigate('Login')
-  //             }
-  //           }
-  //         ],
-  //         { cancelable: false }
-  //       );
-  //      }
-        
-  //     } else {
-  //       console.log(error);
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };  
+  const { setUser } = useContext(UserContext);
 
   const handleLogin = async () => {
     const errors = [];
@@ -84,17 +23,22 @@ export default function Login({ navigation }) {
       const url = '/login';
       const response = await api.post(url, { email, password });
       const token = response.data.token;
+      const userId = response.data.user.userID;
        console.log("user token " + response.data.token);
-      console.log('Login Response:', response);
-      await AsyncStorage.setItem('jwtToken', token); // Store the token in AsyncStorage
+      //console.log('Login Response:', response);
+      console.log('User ID login:', userId);
+      const user = {
+        userId: userId,
+        token: token,
+      };
+
+      await AsyncStorage.setItem('jwtToken', token);
+      setUser(user); // Set user state in UserContext
 
 
-      // // Extract user ID from token
-      // const decodedToken = jwtDecode(token);
-      // const userId = decodedToken.userId; // Assuming the user ID is stored in the token as 'userId'
-  
-      // // Navigate to the 'Browse' screen with user ID as a parameter
-      navigation.navigate('Browse'); // Pass the user ID as a parameter
+      // navigation.navigate('Browse'); 
+      navigation.navigate('Browse', { userId });
+
   
     } catch (error) {
       if (error.response && error.response.data) {
@@ -233,6 +177,9 @@ const styles = StyleSheet.create({
 
 
 /*
+
+
+
 import React, { useState } from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Button, Block, Input, Text } from '../components';
@@ -250,6 +197,79 @@ export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
 
    console.log();
+
+
+  //with tokens works fine
+  
+  //  const handleLogin = async () => {
+
+  //   const errors = [];
+  //   Keyboard.dismiss();
+  //   setLoading(true);
+  
+  //   try {
+  //     const url = '/login';
+  //     const response = await api.post(url, { email, password });
+  //     const token = response.data.token;
+  //     await AsyncStorage.setItem('jwtToken', token); // Store the token in AsyncStorage
+  //      //console.log(response.data.token);
+  //      //console.log('Login Response:', response);
+  //    navigation.navigate('Browse')
+        
+  //   } catch (error) {
+  //     if (error.response && error.response.data) {
+  //       setErrors(error.response.data.errors);
+  //       console.log(error.response.data);
+
+  //       const errorSignUp= '{"error":"User not found. Please sign up."}' ;
+  //       const errorLogin= '{"error":"Incorrect password"}' ;
+
+  //      if(JSON.stringify(error.response.data) === errorSignUp) {
+
+  //       Alert.alert(
+  //         'Error!',
+  //         'Please Sign Up',
+  //         [
+  //           {
+  //             text: 'Continue', onPress: () => {
+  //               navigation.navigate('SignUp')
+  //             }
+  //           }
+  //         ],
+  //         { cancelable: false }
+  //       );
+  //      } else if (JSON.stringify(error.response.data) === errorLogin){
+  //       Alert.alert(
+  //         'Incorrect Password',
+  //         'Please try again',
+  //         [
+  //           {
+  //             text: 'Continue', onPress: () => {
+  //               navigation.navigate('Login')
+  //             }
+  //           }
+  //         ],
+  //         { cancelable: false }
+  //       );
+  //      }
+        
+  //     } else {
+  //       console.log(error);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };  
+
+
+
+
+
+
+
+
+
+   //without tokens, works fine
    const handleLogin = async () => {
 
     const errors = [];
