@@ -86,7 +86,8 @@ export default function Login({ navigation }) {
       const response = await api.post(url, { email, password });
       const token = response.data.token;
       await AsyncStorage.setItem('jwtToken', token); // Store the token in AsyncStorage
-  
+      console.log('hey there')
+
       // // Extract user ID from token
       // const decodedToken = jwtDecode(token);
       // const userId = decodedToken.userId; // Assuming the user ID is stored in the token as 'userId'
