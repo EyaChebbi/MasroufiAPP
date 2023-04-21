@@ -10,7 +10,7 @@ const jwtSecretKey = 'your-secret-key';
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '29216124',
+  password: 'root',
   database: 'masroufiDB'
 });
 

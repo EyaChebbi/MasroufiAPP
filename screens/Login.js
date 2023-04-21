@@ -76,7 +76,6 @@ export default function Login({ navigation }) {
   // };  
 
   const handleLogin = async () => {
-    console.log('hey there')
     const errors = [];
     Keyboard.dismiss();
     setLoading(true);
@@ -85,8 +84,10 @@ export default function Login({ navigation }) {
       const url = '/login';
       const response = await api.post(url, { email, password });
       const token = response.data.token;
+       console.log("user token " + response.data.token);
+      console.log('Login Response:', response);
       await AsyncStorage.setItem('jwtToken', token); // Store the token in AsyncStorage
-      console.log('hey there')
+
 
       // // Extract user ID from token
       // const decodedToken = jwtDecode(token);
