@@ -10,7 +10,7 @@ const jwtSecretKey = 'your-secret-key';
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'root',
+  password: '29216124',
   database: 'masroufiDB'
 });
 
@@ -98,7 +98,7 @@ app.post('/login', (req, res) => {
   });
 });
 
-//for the Categories
+//for the Categories (it works)
 app.get('/categories', async (req, res) => {
   const getQuery = `SELECT * FROM Categories`;
   connection.query(getQuery, [], (err, result) => {
@@ -110,7 +110,24 @@ app.get('/categories', async (req, res) => {
     }
   });
 });
+// select category with specific id (it works)
+app.get('/categories/return', async (req, res) => {
+  const { id } = req.query;
+  // id = 5;
+  const params = [id];
+  const query = `SELECT * FROM categories WHERE id = ?`;
 
+  connection.query(query, params, (err, results) => {
+    if (err) {
+      console.error('Error querying MySQL:', err);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+    console.error(results);
+    res.status(200).json(results);
+  });
+  
+}); 
 //to add a new category
 app.post('/categories/add', async (req, res) => {
   const { name, color } = req.body;
@@ -126,17 +143,16 @@ app.post('/categories/add', async (req, res) => {
   });
 })
 
-
 app.use('/', router);
 
 //for the transactions, (it works) 
 app.post('/transactions', async(req, res) => {
-  const { userId, amount, category, selectedDate, source, payee, payer, location,  time, type  } = req.body;
-  const AddSpendingQuery = 'INSERT INTO Transactions (userID, amount, categoryID, transactionDate, transactionSource, payee, payer, location, transactionTime, transactionType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ';
+  const { userId, amount, category, selectedDate, source, payee, location,  time, type  } = req.body;
+  const AddSpendingQuery = 'INSERT INTO Transactions (userID, amount, categoryID, transactionDate, transactionSource, payee, location, transactionTime, transactionType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ';
 
   connection.query(
     AddSpendingQuery,
-    [ userId, amount, category, selectedDate, source, payee, payer, location,  time, type],
+    [ userId, amount, category, selectedDate, source, payee, location,  time, type],
     (err, result) => {
       if (err) {
         console.error('Error adding transaction:', err);
@@ -147,9 +163,11 @@ app.post('/transactions', async(req, res) => {
     }
   );
 });
+//transactions (it works)
 app.get('/transactions', (req, res) => {
+  const { userId } = req.query;
   connection.query(
-    'SELECT * FROM Transactions',
+    'SELECT t.transactionID, t.amount, t.categoryID, c.categoryName as categoryName, t.transactionDate, t.transactionType FROM transactions t JOIN categories c ON t.categoryID = c.id WHERE t.userId = ?', [userId],
     (err, results) => {
       if (err) {
         console.error('Error fetching transactions:', err);
@@ -161,16 +179,13 @@ app.get('/transactions', (req, res) => {
   );
 });
 
-
 //PATCH request to change details about a specific transaction
 app.patch('/transactions/update', (req, res) => {
   const { data } = req.body;
 })
-const updateQuery = 'UPDATE Transactions SET (amount=?, categoryID=?, transactionDate=?, transactionSource=?, payee=?, payer=?, location=?, transactionType=?, note=?) WHERE transactionID=?';
+const updateQuery = 'UPDATE Transactions SET (amount=?, categoryID=?, transactionDate=?, transactionSource=?, payee=?, location=?, transactionType=?, note=?) WHERE transactionID=?';
 
-
-
-//newest accounts
+//newest accounts (it works)
 app.get('/budgets', (req, res) => {
   const { userId } = req.query;
   connection.query(
@@ -186,119 +201,27 @@ app.get('/budgets', (req, res) => {
   );
 });
 
+//add account (Home screen)
+app.post("/budgets/add", async (req, res) => {
+  try {
+    const { userId, account_type, balance } = req.body;
 
+    if (!userId || !account_type || !balance) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
 
+    const newAccount = await Budget.create({
+      userId,
+      account_type,
+      balance,
+    });
 
-
-
-//for the accounts (budgets)
-// app.get('/budgets', (req, res) => {
-//   const { userId } = req.body;
-//   connection.query(
-//     'SELECT * FROM budgets WHERE userId =?', [userId],
-//     (err, results) => {
-//       if (err) {
-//         console.error('Error fetching budgets:', err);
-//         res.status(500).send('Error fetching budgets.');
-//         return;
-//       }
-//       res.status(200).json(results);
-//     }
-//   );
-// });
-
-
-// app.get('/budgets', (req, res) => {
-//   const { userId } = req.body;
-//   connection.query(
-//     'SELECT account_type, balance FROM budgets WHERE userId = ?', [userId],
-//     (err, results) => {
-//       if (err) {
-//         console.error('Error fetching budgets:', err);
-//         res.status(500).send('Error fetching budgets.');
-//         return;
-//       }
-//       res.status(200).json(results);
-//     }
-//   );
-// });
-
-
-// app.get('/budgets', (req, res) => {
-//   const { userId } = req.query;
-//   connection.query(
-//     'SELECT * FROM budgets WHERE userId = ?', [userId],
-//     (err, results) => {
-//       if (err) {
-//         console.error('Error fetching budgets:', err);
-//         res.status(500).send('Error fetching budgets.');
-//         return;
-//       }
-//       res.status(200).json(results);
-//     }
-//   );
-// });
-
-
-
-// app.get('/budgets', (req, res) => {
-//   const { userId } = req.query;
-//   connection.query(
-//       'SELECT * FROM budgets WHERE userId =?', [userId],
-//       (err, results) => {
-//           if (err) {
-//               console.error('Error fetching budgets:', err);
-//               res.status(500).send('Error fetching budgets.');
-//               return;
-//           }
-//           res.status(200).json(results);
-//       }
-//   );
-// });
-
-
-//for the accounts (salary + balance) with tokens (doesnt work)
-// app.get('/budgets', verifyToken, async (req, res) => {
-//   const userId = req.user.id;
-//   console.log("userId index" + userId);
-
-//   try {
-//     const [accounts] = await db.execute('SELECT * FROM budgets WHERE userID = ?', [userId]);
-//     res.json(accounts);
-//   } catch (error) {
-//     console.log("Hello")
-
-//     console.error(error);
-//     res.status(500).send('Error fetching accounts');
-//     console.log("Error fetching accounts")
-//   }
-// });
-
-
-//for the Balance Trend
-//   app.get('balance-trend', verifyToken, async (req, res) => {
-//     const userId = req.user.id;
-
-//   connection.query('SELECT * FROM BalanceHistory', (err, results) => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(500).send('Error retrieving balance trend data');
-//     }
-
-//     const chartData = {
-//       labels: results.map(result => result.month),
-//       datasets: [
-//         {
-//           data: results.map(result => result.amount),
-//           color: () => '#405457',
-//           strokeWidth: 2,
-//         },
-//       ],
-//     };
-//     res.json(chartData);
-//   });
-// });
-
+    res.status(201).json(newAccount);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while adding the account" });
+  }
+});
 
 // Define more routes here
 
@@ -313,11 +236,6 @@ app.get('/api/data', (req, res) => {
 });
 
 module.exports = router;
-
-
-
-
-
 
 //old code that works fine, to retrieve in case of errors in new code
 //for the register (works fine to keep in case of errors)
