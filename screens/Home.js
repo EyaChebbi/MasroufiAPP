@@ -5,7 +5,11 @@ import {
     FlatList,
     ScrollView,
     TouchableOpacity,
+    Modal,
     View,
+    TextInput,
+    Alert,
+    Button
 } from "react-native";
 import { Text } from "../components";
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -24,9 +28,13 @@ export default function Home() {
     const userId = user?.userId;
     console.log("userId Home " + userId)
 
-  
-    const [salaryAccountBalance, setSalaryAccountBalance] = useState(0);
-    const [balanceAccountBalance, setBalanceAccountBalance] = useState(0);
+    // New state for controlling the visibility of the Add Account Modal
+    const [isAddAccountModalVisible, setIsAddAccountModalVisible] = useState(false);
+    
+    // New state for storing the input values for account_type and balance
+    const [newAccountType, setNewAccountType] = useState('');
+    const [newAccountBalance, setNewAccountBalance] = useState('');
+
     
     // const accounts = [
 
@@ -54,8 +62,86 @@ export default function Home() {
           console.error(error);
         }
       };
+
+      const AddAccountCard = () => {
+        const handleAddAccount = () => {
+            console.log("Add account");
+            setIsAddAccountModalVisible(true);
+        };
       
+        return (
+            <TouchableOpacity onPress={handleAddAccount} style={styles.card2}>
+                <FontAwesome5 name="plus" size={24} color="blue" />
+                <Text style={styles.title}>Add Account</Text>
+            </TouchableOpacity>
+        );
+    };
     
+
+
+    const handleAddAccountSubmit = async () => {
+        try {
+          const response = await api.post("/budgets/add", {
+            userId,
+            account_type: newAccountType,
+            balance: newAccountBalance,
+          });
+      
+          const newAccount = response.data;
+          setAccounts([...accounts, newAccount]);
+          setNewAccountType("");
+          setNewAccountBalance("");
+          setIsAddAccountModalVisible(false);
+        } catch (error) {
+          console.error(error);
+          Alert.alert("Error", "An error occurred while adding the account.");
+        }
+      };
+      
+
+
+
+
+    // const handleAddAccountSubmit = async () => {
+    //     // Validate new account input values
+    //     if (newAccountType.trim() === '' || newAccountBalance.trim() === '') {
+    //         alert('Please enter both account type and balance');
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await api.post('/budgets', {
+    //             userId,
+    //             account_type: newAccountType,
+    //             balance: newAccountBalance,
+    //         });
+
+    //         // Update the accounts state to include the newly added account
+    //         setAccounts([
+    //             ...accounts,
+    //             {
+    //                 id: response.data.id,
+    //                 type: response.data.account_type,
+    //                 value: parseFloat(response.data.balance),
+    //             },
+    //         ]);
+
+    //         // Reset input values and close the modal
+    //         setNewAccountType('');
+    //         setNewAccountBalance('');
+    //         setIsAddAccountModalVisible(false);
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert('Failed to add account. Please try again.');
+    //     }
+    // };
+
+    const handleAddAccountCancel = () => {
+        // Reset input values and close the modal
+        setNewAccountType('');
+        setNewAccountBalance('');
+        setIsAddAccountModalVisible(false);
+    };
 
 
     const BudgetCard = ({ type, value }) => {
@@ -110,13 +196,52 @@ export default function Home() {
 
     return (
         <ScrollView style={styles.container}>
+   <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isAddAccountModalVisible}
+        >
+            <View style={styles.modalBackdrop}>
+                <View style={styles.modalContainer}>
+                    <Text style={styles.modalTitle}>Add Account</Text>
+                    <TextInput
+                        style={styles.modalInput}
+                        onChangeText={setNewAccountType}
+                        value={newAccountType}
+                        placeholder="Account Type"
+                    />
+                    <TextInput
+                        style={styles.modalInput}
+                        onChangeText={setNewAccountBalance}
+                        value={newAccountBalance}
+                        placeholder="Balance"
+                        keyboardType="numeric"
+                    />
+                    <View style={styles.modalButtons}>
+                        <Button onPress={handleAddAccountSubmit} title="Submit" />
+                        <Button
+                            onPress={handleAddAccountCancel}
+                            title="Cancel"
+                            color="red"
+                        />
+                    </View>
+                </View>
+            </View>
+        </Modal>
+
+
        <FlatList
-  data={accounts}
-  horizontal={true}
-  renderItem={({ item }) => (
-    <BudgetCard style={styles.card2} type={item.type} value={item.value} />
-  )}
-/>
+            data={[...accounts, { isAddAccountCard: true }]}
+            horizontal={true}
+            renderItem={({ item }) => {
+                if (item.isAddAccountCard) {
+                    return <AddAccountCard />;
+                }
+                return (
+                    <BudgetCard style={styles.card2} type={item.type} value={item.value} />
+                );
+            }}
+        />
 
 
             <View style={styles.card}>
@@ -213,6 +338,44 @@ const styles = StyleSheet.create({
     value: {
         fontSize: 18,
         color: '#666',
+    },
+
+
+    modalBackdrop: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContainer: {
+        width: '80%',
+        backgroundColor: "#6eccaf",
+        borderRadius: 10,
+        padding: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    modalTitle: {
+        fontWeight: "bold",
+        fontSize: 20,
+        textAlign: "center",
+        marginBottom: 20,
+    },
+    modalInput: {
+        height: 40,
+        borderColor: "gray",
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        backgroundColor: "#feffff",
+        marginBottom: 10,
+    },
+    modalButtons: {
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     chart: {
         backgroundColor: '#feffff',

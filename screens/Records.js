@@ -1,30 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, ScrollView, FlatList, Image } from 'react-native';
 import axios from 'axios';
+import UserContext from '../server/UserContext'
+import api from '../api';
+
 
 export default function Records() {
   const [expenses, setExpenses] = useState([]);
   const [incomes, setIncomes] = useState([]);
+  const { user } = useContext(UserContext);
+  const userId = user?.userId;
+
+
+  console.log("userId records " + userId)
+
+  // useEffect(() => {
+  //   const sampleExpenses = [
+  //     { id: '1', month: 'January', amount: '$100', categoryName: 'Rent' },
+  //     { id: '2', month: 'February', amount: '$50', categoryName: 'Groceries' },
+  //     { id: '3', month: 'March', amount: '$20', categoryName: 'Transportation' },
+  //     { id: '4', month: 'April', amount: '$80', categoryName: 'Dining out' },
+  //     { id: '5', month: 'May', amount: '$120', categoryName: 'Utilities' },
+  //   ];
+  //   const sampleIncomes = [
+  //     { id: '1', month: 'January', amount: '$2000', categoryName: 'Salary' },
+  //     { id: '2', month: 'February', amount: '$1500', categoryName: 'Freelance work' },
+  //     { id: '3', month: 'March', amount: '$1800', categoryName: 'Bonus' },
+  //     { id: '4', month: 'April', amount: '$1000', categoryName: 'Investment income' },
+  //     { id: '5', month: 'May', amount: '$2500', categoryName: 'Contract work' },
+  //   ];
+    
+  //   setExpenses(sampleExpenses);
+  //   setIncomes(sampleIncomes);
+  // }, []);
+
 
   useEffect(() => {
-    const sampleExpenses = [
-      { id: '1', month: 'January', amount: '$100', description: 'Rent' },
-      { id: '2', month: 'February', amount: '$50', description: 'Groceries' },
-      { id: '3', month: 'March', amount: '$20', description: 'Transportation' },
-      { id: '4', month: 'April', amount: '$80', description: 'Dining out' },
-      { id: '5', month: 'May', amount: '$120', description: 'Utilities' },
-    ];
-    const sampleIncomes = [
-      { id: '1', month: 'January', amount: '$2000', description: 'Salary' },
-      { id: '2', month: 'February', amount: '$1500', description: 'Freelance work' },
-      { id: '3', month: 'March', amount: '$1800', description: 'Bonus' },
-      { id: '4', month: 'April', amount: '$1000', description: 'Investment income' },
-      { id: '5', month: 'May', amount: '$2500', description: 'Contract work' },
-    ];
-    
-    setExpenses(sampleExpenses);
-    setIncomes(sampleIncomes);
-  }, []);
+
+    if (!userId) {
+      return;
+    }
+
+    const fetchTransactions = async () => {
+      try {
+        const response = await api.get(`/transactions?userId=${userId}`);
+  
+        const transactions = response.data;
+        const expenses = [];
+        const incomes = [];
+  
+        transactions.forEach(transaction => {
+          const month = new Date(transaction.transactionDate).toLocaleString('default', { month: 'long' });
+  
+          if (transaction.transactionType === 'Spending') {
+            expenses.push({
+              month: month,
+              amount: `$${transaction.amount}`,
+              categoryName: transaction.categoryName
+            });
+          } else {
+            incomes.push({
+              month: month,
+              amount: `$${transaction.amount}`,
+              categoryName: transaction.categoryName
+            });
+          }
+        });
+  
+        setExpenses(expenses);
+        setIncomes(incomes);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+  
+    fetchTransactions();
+  }, [userId]);
+  
+
 
   const renderExpense = ({ item }) => (
     <View style={styles.expenseContainer}>
@@ -32,7 +85,7 @@ export default function Records() {
         <Text style={styles.expenseMonthText}>{item.month}</Text>
       </View>
       <View style={styles.expenseAmountDescr}>
-        <Text style={styles.expenseDescription}>{item.description}</Text>
+        <Text style={styles.expenscategoryName}>{item.categoryName}</Text>
         <Text style={styles.expenseAmountText}>{item.amount}</Text>
       </View>
       
@@ -156,7 +209,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     //width: 100,
   },
-  expenseDescription: {
+  expenscategoryName: {
     //fontWeight: 'bold',
     fontSize: 16,
   },
