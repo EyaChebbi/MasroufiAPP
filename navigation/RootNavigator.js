@@ -15,17 +15,17 @@ import Categories from "../screens/Categories";
 import AddCategory from "../screens/AddCategory"
 import Records from "../screens/Records";
 import UserContext from '../server/UserContext';
-
+import CategoryContext from "../server/CategoryContext";
 
 const Stack = createNativeStackNavigator();
 
 
 const RootNavigator = () => {
   const [user, setUser] = useState(null);
-
+  const [categories, setCategories] = useState(null);
   return (
     <UserContext.Provider value={{ user, setUser }}>
-
+    <CategoryContext.Provider value={{categories, setCategories}}>
    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -47,6 +47,7 @@ const RootNavigator = () => {
         <Stack.Screen name="AddCategory" component={AddCategory}/>
       </Stack.Navigator>
       </NavigationContainer>
+      </CategoryContext.Provider>
       </UserContext.Provider>
 
   );
