@@ -1,17 +1,28 @@
-import React, { Component, useState, useEffect} from 'react'
-import { Alert, StyleSheet, Text, View, Pressable, TextInput } from 'react-native'
+import React, { Component, useState, useEffect, useContext} from 'react'
+import { Platform, KeyboardAvoidingView, Alert, StyleSheet, Text, View, Pressable, TextInput } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import Categories from './Categories';
 import Modal from 'react-native-modal';
-// import jwtDecode from 'jwt-decode';
-
+import { theme } from '../constants';
+import UserContext from '../server/UserContext';
 import { Calendar } from 'react-native-calendars';
-
 import { useNavigation } from "@react-navigation/native";
 import api from '../api';
+import { ScrollView } from 'react-native-gesture-handler';
 // import CalendarModal from '../components/CalendarModal';
-
+import CategoryContext from '../server/CategoryContext';
 export default function AddTrasaction(route) {
+
+
+    const setEarning = () =>{
+        setType('Earning');
+        setLocation('');
+        setPayee('');
+    }
+    const setSpending = () =>{
+        setType('Spending');
+        setSource('');
+    }
 
     function CalendarModal(props) {
         const { isVisible, onDayPress, selectedDate } = props;
@@ -24,6 +35,11 @@ export default function AddTrasaction(route) {
         );
     }
       
+    const { user } = useContext(UserContext);
+    const userId = user?.userId;
+    console.log("userId Home " + userId)
+
+    
     function CalendarComponent(props) {
         const [selectedDate, setSelectedDate] = useState('');
         const [showCalendar, setShowCalendar] = useState(false);
@@ -35,6 +51,8 @@ export default function AddTrasaction(route) {
         setShowCalendar(false);
         };
       
+        
+        
         const toggleCalendar = () => {
           setShowCalendar(!showCalendar);
         };
@@ -58,7 +76,7 @@ export default function AddTrasaction(route) {
     // const { token } = route.params; 
     // const { userId } = route.params;
     const [loading, setLoading] = useState(false);
-    const [userId, setUserId] = useState('3');
+    // const [userId, setUserId] = useState('3');
     const [selectedDate, setSelectedDate] = useState('Hey there');
     const [errors, setErrors] = useState([]);
     const [source, setSource] = useState('');
@@ -66,11 +84,12 @@ export default function AddTrasaction(route) {
     const [location, setLocation] = useState('');
     const [isFocusedTime, setIsFocusedTime] = useState(false);
     const [time, setTime] = useState('');
-    const [category, setCategory] = useState('2');
+    const { categories } = useContext(CategoryContext);
+    // const [category, setCategory] = useState('');
     const [payee, setPayee] = useState('');
-    const [payer, setPayer] = useState('');
+    // const [payer, setPayer] = useState('');
     const [type, setType] = useState('Spending');
-
+    
     const handleFocus = () => {
         setIsFocusedTime(true);
       };
@@ -80,50 +99,48 @@ export default function AddTrasaction(route) {
       };
     
 
-    const handleAddSpending = async () => {
-        console.log(amount);
-        console.log(type);
-        console.log(selectedDate);
+    // const handleAddSpending = async () => {
+    //     console.log(amount);
+    //     console.log(type);
+    //     console.log(selectedDate);
 
-        // setSelectedDate('2023-04-14');
-        try {
-        const url = '/transactions';
-        const response = await api.post(url, { userId, amount, category, selectedDate, source, payee, payer, location,  time, type }); 
-        console.log(response.data.token);
-        Alert.alert(
-            'Success!',
-            'Your transaction has been added',
-            [
-            {
-                text: 'Ok', onPress: () => {
-                navigation.navigate('Home')
-                }
-            }
-            ],
-            { cancelable: false }
-        );
-        } catch (error) {
-        if (error.response && error.response.data) {
-            setErrors(error.response.data.errors);
-            console.log(error.response.data);
-        } else {
-            console.log(error);
-        }
-        } finally {
-        setLoading(false);
-        }
-    };
+    //     // setSelectedDate('2023-04-14');
+    //     try {
+    //     const url = '/transactions';
+    //     const response = await api.post(url, { userId, amount, category, selectedDate, source, payee, payer, location,  time, type }); 
+    //     console.log(response.data.token);
+    //     Alert.alert(
+    //         'Success!',
+    //         'Your transaction has been added',
+    //         [
+    //         {
+    //             text: 'Ok', onPress: () => {
+    //             navigation.navigate('Home')
+    //             }
+    //         }
+    //         ],
+    //         { cancelable: false }
+    //     );
+    //     } catch (error) {
+    //     if (error.response && error.response.data) {
+    //         setErrors(error.response.data.errors);
+    //         console.log(error.response.data);
+    //     } else {
+    //         console.log(error);
+    //     }
+    //     } finally {
+    //     setLoading(false);
+    //     }
+    // };
 
     const handleAddExpense = async () => {
         console.log(amount);
         console.log(type);
         console.log(selectedDate);
         console.log(userId);
-
-        // setSelectedDate('2023-04-14');
         try {
         const url = '/transactions';
-        const response = await api.post(url, { userId, amount, category, selectedDate, source, payee, payer, location,  time, type }); 
+        const response = await api.post(url, { userId, amount, category, selectedDate, source, payee, location,  time, type }); 
         console.log(response.data.token);
         Alert.alert(
             'Success!',
@@ -151,17 +168,19 @@ export default function AddTrasaction(route) {
     // const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
 
     const navigation = useNavigation();
-
     const toggleExpanded = () => {
-        navigation.navigate('Categories');
+        console.log("Category ID " + category)
+        navigation.navigate('Categories');  
+        // setCategory(categories?.category);      
     };
-    // const savePress = () =>{
-    //     console.log('saved');
-    //     // to be continued
-    // }
-    
+    const category = categories?.category;
+
+
     return(          
             <View  style={styles.container} keyboardDismissMode='on-drag'>
+            {/* // <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'position' : null} enabled> */}
+                {/* // <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">         */}
+      
                 {/* <View style={styles.containerHeader}>
                     <Text style={styles.title}>
                         Add Transaction
@@ -207,7 +226,7 @@ export default function AddTrasaction(route) {
                         {/* <View style={styles.transaction}> */}
                         <View style={{flexDirection: 'row', justifyContent: 'space-between',   }}>
                             <View style={{flexDirection: 'column', alignItems: 'flex-start', }}>
-                                <Pressable onPress={() => setType('Spending')} style={[styles.boxExpense, {backgroundColor: type === 'Spending' ? '#fff' : '#41837A',}]}>
+                                <Pressable onPress={() => setSpending()} style={[styles.boxExpense, {backgroundColor: type === 'Spending' ? '#fff' : '#41837A',}]}>
                                     <Text style={[styles.text, {color: type === 'Spending' ? '#000000' : '#ffffff'}]}>
                                         Spending
                                     </Text>
@@ -217,7 +236,7 @@ export default function AddTrasaction(route) {
                                 </Text>
                             </View>
                             <View style={{flexDirection: 'column', alignItems: 'center', alignContent: 'center', marginRight: 40,}}>
-                                <Pressable onPress={() => setType('Earning')} style={[styles.boxIncome, {backgroundColor: type === 'Earning' ? '#fff' : '#41837A',
+                                <Pressable onPress={() => setEarning()} style={[styles.boxIncome, {backgroundColor: type === 'Earning' ? '#fff' : '#41837A',
                                 color: type ==='Spending' ? '#000' : '#fff',}]}>
                                     <Text style={[styles.text, {color: type === 'Earning' ? '#000000' : '#ffffff'}]}>
                                         Earning
@@ -254,11 +273,13 @@ export default function AddTrasaction(route) {
                             Category
                         </Text>
                     </View>
-                    <Pressable onPress={toggleExpanded}>
+                    <Pressable onPress={toggleExpanded} >
                         <Text style={styles.options}>
                             Transportation
                         </Text>
                     </Pressable>
+                    
+                    
                 </View>
 
                 <View style={styles.containerRow} >
@@ -352,22 +373,24 @@ export default function AddTrasaction(route) {
 
                     :
 
-                    <View style={styles.containerRow} >
-                        <View style={styles.type}>
-                            <Ionicons name="person" size={25} style={styles.icon}/>
-                            <Text style={styles.typeText}> 
-                                Payer
-                            </Text>
-                        </View>
-                        <TextInput
-                        value={payer}
-                        onChangeText={(value) => setPayer(value)}
-                        placeholder="Insert Payer"
-                        keyboardType="default"
-                        placeholderTextColor='black'
-                        style={styles.options}
-                        />   
-                    </View>
+                    null
+
+                    // <View style={styles.containerRow} >
+                    //     <View style={styles.type}>
+                    //         <Ionicons name="person" size={25} style={styles.icon}/>
+                    //         <Text style={styles.typeText}> 
+                    //             Payer
+                    //         </Text>
+                    //     </View>
+                    //     <TextInput
+                    //     value={payer}
+                    //     onChangeText={(value) => setPayer(value)}
+                    //     placeholder="Insert Payer"
+                    //     keyboardType="default"
+                    //     placeholderTextColor='black'
+                    //     style={styles.options}
+                    //     />   
+                    // </View>
 
                 
 
@@ -376,18 +399,24 @@ export default function AddTrasaction(route) {
                 
                 <View style={{flex: 0.04}}>
                 </View>
-                <Pressable onPress={() => handleAddExpense()} style={styles.savePressable}>
-                    <Text style={styles.saveButton}>
-                        Save
-                    </Text>
-                </Pressable>
-            </View>  
+                <View style={styles.saveBox}>
+                    <Pressable onPress={() => handleAddExpense()} >
+                        <Text style={styles.saveButton}>
+                            Save
+                        </Text>
+                    </Pressable>
+                </View>
+                {/* </ScrollView> */}
+            {/* // </KeyboardAvoidingView> */}
+            </View>                  
     )   
 }
 
 const styles = StyleSheet.create({
     container: {
         flex:1,
+        // justifyContent: 'center',
+
     },
     containerRow:{
         flex:0.09,
@@ -395,6 +424,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 50,
         justifyContent: 'space-between',
+        // marginRight: 60,
+        // paddingRight: 5,
     },
     type:{
         flexDirection: 'row',
@@ -409,25 +440,63 @@ const styles = StyleSheet.create({
         marginRight: 60,
         fontWeight: '600',
         textAlign: 'right',
+        flex: 1,
     },
     icon: {
     },
-    savePressable:{
-        flex: 0.01,
+    saveBox:{
+        backgroundColor: 'black',
+        flex: 0.06,
+        width: 120, 
+        height: 35,
+        backgroundColor: '#4FA095',
+        borderRadius: 10,
         justifyContent: 'center',
-        alignItems: 'center',         
+        // alignItems: 'center',
+        // alignContent: 'center',
+        alignSelf: 'center',
     },
     saveButton:{
         color: 'white',
-        fontWeight: '600',
-        backgroundColor: '#4FA095',
-        width: 110,
         textAlign: 'center',
-        padding: 3,
-        height: 35, 
-        borderRadius: 7,
-        fontSize: 17,
+        textAlignVertical: 'center',
+        fontWeight: '600',
+        fontSize: 17, 
     },
+    // savePressable:{
+    //     flex: 0.04,
+    //     justifyContent: 'center',
+    //     alignContent: 'center',
+    //     alignItems: 'center',
+    //     // alignSelf: 'center',
+    //     // alignItems: 'center',      
+    //     // overflow: 'hidden',
+    //     // alignSelf: 'center',
+    // },
+    // // saveBox:{
+    // //     alignItems: 'center',
+    // //     justifyContent: 'center',
+    // // },
+    // saveButton:{
+    //     color: 'white',
+    //     fontWeight: '600',
+    //     backgroundColor: '#4FA095',
+    //     width: 110,
+    //     textAlign: 'center',
+    //     textAlignVertical: 'center',
+    //     // textAlignV: 'center',
+    //     // padding: 3,
+    //     height: 35, 
+    //     borderRadius: 7,
+    //     fontSize: 17,
+    //     // justifyContent: 'center',
+    //     overflow: 'hidden',
+    //     // alignSelf: 'center',
+    //     // display: 'flex',
+    //     // alignItems: 'center',
+    //     // alignSelf: 'center',
+    //     // alignItems: 
+    // },
     containerHeader:{
         flex:0.34,
         backgroundColor: '#4FA095',
@@ -441,6 +510,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         // marginLeft: 50,
         fontWeight: '700',
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        // justifyContent: 'center',
+        // paddingHorizontal: theme.sizes.base * 2,
     },
     boxExpense:{
         marginTop: 30, 
@@ -463,15 +537,17 @@ const styles = StyleSheet.create({
         marginTop: 17,
         // marginLeft: 50,
         textAlign: 'center',
+        textAlignVertical: 'center',
         // justifyContent: 'center',
         fontWeight: '600',
         borderRadius: 10,
-        padding: 8,
+        // padding: 8,
         width: 80,
         height: 40,
         color: '#000',
         backgroundColor: '#fff',
-        
+        overflow: 'hidden',
+
     },
     text: {
         textAlign: 'center',
