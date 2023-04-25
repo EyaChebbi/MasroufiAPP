@@ -10,7 +10,7 @@ const jwtSecretKey = 'your-secret-key';
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '29216124',
+  password: 'root',
   database: 'masroufiDB'
 });
 
@@ -39,7 +39,7 @@ app.post('/register', (req, res) => {
             const userId = result.insertId; // Get the user ID from the result of the INSERT operation
             const token = jwt.sign({ id: userId, email }, jwtSecretKey, { expiresIn: '1h' });
             console.log("token" + token);
-            res.status(200).json({ token });
+            res.status(200).json({ token, userID});
           }
         });
       }
@@ -203,25 +203,47 @@ app.get('/budgets', (req, res) => {
 
 //add account (Home screen)
 app.post("/budgets/add", async (req, res) => {
-  try {
-    const { userId, account_type, balance } = req.body;
+    const {userId, account_number, account_type, balance } = req.body;
+    const postQuery = 'INSERT INTO budgets(userId, account_number, account_type, balance) VALUES (?,?,?,?)';
+    connection.query(postQuery, [userId, account_number, account_type, balance], (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Error adding account');
+      } else {
+        res.status(200).send('Success!');
+      }
+    })
+  });
 
-    if (!userId || !account_type || !balance) {
-      return res.status(400).json({ error: "Missing required fields" });
+  //   if (!account_type || !balance) {
+  //     return res.status(400).json({ error: "Missing required fields" });
+  //   }
+
+  //   const newAccount = await budgets.create({
+  //     account_type,
+  //     balance,
+  //   });
+
+  //   res.status(201).json(newAccount);
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ error: "An error occurred while adding the account" });
+
+
+app.post('/categories/add', async (req, res) => {
+  const { name, color } = req.body;
+  const postQuery = 'INSERT INTO Categories(categoryName, color) VALUES (?,?)';
+
+  connection.query(postQuery, [name, color], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error adding category');
+    } else {
+      res.status(200).send('Success!');
     }
+  });
+})
 
-    const newAccount = await Budget.create({
-      userId,
-      account_type,
-      balance,
-    });
-
-    res.status(201).json(newAccount);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "An error occurred while adding the account" });
-  }
-});
 
 // Define more routes here
 

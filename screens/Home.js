@@ -33,15 +33,9 @@ export default function Home() {
     
     // New state for storing the input values for account_type and balance
     const [newAccountType, setNewAccountType] = useState('');
+    const [newAccountNumber, setNewAccountNumber] = useState('');
+
     const [newAccountBalance, setNewAccountBalance] = useState('');
-
-    
-    // const accounts = [
-
-    //     { type: 'Cash', value: 500 },
-    //     { type: 'Bank Account', value: 1000 },
-    //     { type: 'Crypto Account', value: -200 }
-    // ]
 
      const [accounts, setAccounts] = useState([]);
     useEffect(() => {
@@ -83,15 +77,19 @@ export default function Home() {
         try {
           const response = await api.post("/budgets/add", {
             userId,
+            account_number: newAccountNumber,
             account_type: newAccountType,
             balance: newAccountBalance,
           });
       
           const newAccount = response.data;
+          console.log("new account" + newAccount);
           setAccounts([...accounts, newAccount]);
           setNewAccountType("");
           setNewAccountBalance("");
           setIsAddAccountModalVisible(false);
+          Alert.alert("Account successfully added.");
+          fetchAccounts();
         } catch (error) {
           console.error(error);
           Alert.alert("Error", "An error occurred while adding the account.");
@@ -139,6 +137,7 @@ export default function Home() {
     const handleAddAccountCancel = () => {
         // Reset input values and close the modal
         setNewAccountType('');
+        setNewAccountNumber('');
         setNewAccountBalance('');
         setIsAddAccountModalVisible(false);
     };
@@ -209,6 +208,13 @@ export default function Home() {
                         onChangeText={setNewAccountType}
                         value={newAccountType}
                         placeholder="Account Type"
+                    />
+                     <TextInput
+                        style={styles.modalInput}
+                        onChangeText={setNewAccountNumber}
+                        value={newAccountNumber}
+                        placeholder="Number"
+                        keyboardType="numeric"
                     />
                     <TextInput
                         style={styles.modalInput}
