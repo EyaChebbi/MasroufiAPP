@@ -77,7 +77,7 @@ export default function AddTrasaction(route) {
     // const { userId } = route.params;
     const [loading, setLoading] = useState(false);
     // const [userId, setUserId] = useState('3');
-    const [selectedDate, setSelectedDate] = useState('Hey there');
+    const [selectedDate, setSelectedDate] = useState('24-04-2023');
     const [errors, setErrors] = useState([]);
     const [source, setSource] = useState('');
     const [amount, setAmount] = useState('000');
@@ -134,36 +134,74 @@ export default function AddTrasaction(route) {
     // };
 
     const handleAddExpense = async () => {
-        console.log(amount);
-        console.log(type);
-        console.log(selectedDate);
-        console.log(userId);
-        try {
-        const url = '/transactions';
-        const response = await api.post(url, { userId, amount, category, selectedDate, source, payee, location,  time, type }); 
+      console.log(amount);
+      console.log(type);
+      console.log(selectedDate);
+      console.log(userId);
+
+      const calculateBalance = () => {
+            const fetchData = async () => {
+                try {
+                    const response = await api.get('/balance');
+                    const oldBalance = parseFloat(response.data);
+                    let newBalance = oldBalance;
+                    if (type == "Spending") {
+                        newBalance -= amount;
+                    }
+                    else {
+                        newBalance += amount;
+                    }
+                    const update = await api.post('/balance/update', {
+                        id: userId,
+                        amount: newBalance
+                    });
+                    console.log(update.data.token)
+                    navigation.navigate("Home")
+
+                } catch (error) {
+                    console.error('Error fetching categories:', error);
+                }
+            };
+            fetchData();
+      }
+
+      try {
+        const url = "/transactions";
+        const response = await api.post(url, {
+          userId,
+          amount,
+          category,
+          selectedDate,
+          source,
+          payee,
+          location,
+          time,
+          type,
+        });
         console.log(response.data.token);
         Alert.alert(
-            'Success!',
-            'Your transaction has been added',
-            [
+          "Success!",
+          "Your transaction has been added",
+          [
             {
-                text: 'Ok', onPress: () => {
-                navigation.navigate('Home')
-                }
-            }
-            ],
-            { cancelable: false }
+              text: "Ok",
+              onPress: () => {
+                calculateBalance()
+              },
+            },
+          ],
+          { cancelable: false }
         );
-        } catch (error) {
+      } catch (error) {
         if (error.response && error.response.data) {
-            setErrors(error.response.data.errors);
-            console.log(error.response.data);
+          setErrors(error.response.data.errors);
+          console.log(error.response.data);
         } else {
-            console.log(error);
+          console.log(error);
         }
-        } finally {
+      } finally {
         setLoading(false);
-        }
+      }
     };
     // const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
 
