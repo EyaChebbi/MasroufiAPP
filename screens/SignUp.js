@@ -1,4 +1,4 @@
-import React, { Component, useState, useContext} from 'react';
+import React, { Component, useState} from 'react';
 import { Alert, ActivityIndicator, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Block, Input, Button, Text } from '../components';
 import { theme } from '../constants';
@@ -6,45 +6,36 @@ import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
 import api from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import UserContext from '../server/UserContext';
-
-
+    
 export default function SignUp({ navigation })  {
-
   const [email, setEmail] = useState('email@email.com');
   const [firstName, setFirstName] = useState('First Name');
   const [lastName, setLastName] = useState('Last Name');
   const [userPassword, setUserPassword] = useState('*********');
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { setUser } = useContext(UserContext);
-
   const handleSignUp = async () => {
+    
+      // check with backend API or with some static data
+      // if (!email) errors.push('email');
+      // if (!firstName) errors.push('firstName');
+      // if (!lastName) errors.push('lastName');
+      // if (!password) errors.push('password');
+      // setErrors(errors);
+      // setLoading(false);
     
       try {
         const url = '/register';
         const response = await api.post(url, { firstName, lastName, email, userPassword });
         const token = response.data.token; // Access the token in the response
-        const userId = response.data.userId;
-        console.log("userId sign up " + userId);
-        const user = {
-          userId: userId,
-          token: token,
-        };
-        setUser(user); // Set user state in UserContext
-
-
-
-
         await AsyncStorage.setItem('jwtToken', token); // Store the token in AsyncStorage
-
         Alert.alert(
           'Success!',
           'Your account has been created',
           [
             {
               text: 'Continue', onPress: () => {
-                navigation.navigate('Browse', {userId})
+                navigation.navigate('Login')
               }
             }
           ],
@@ -68,7 +59,6 @@ export default function SignUp({ navigation })  {
       }
     };    
     const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
-
      return(
       <KeyboardAvoidingView style={styles.signup} behavior={Platform.OS === 'ios' ? 'position' : null} enabled>
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">        
@@ -133,7 +123,6 @@ export default function SignUp({ navigation })  {
                 <Text bold white center>Sign Up</Text>
               }
             </Button>
-
             <Button onPress={() => navigation.navigate('Login')}>
               <Text gray caption center style={{ textDecorationLine: 'underline' }}>
                 Back to Login
@@ -145,7 +134,6 @@ export default function SignUp({ navigation })  {
       </KeyboardAvoidingView>
   )
 }
-
 const styles = StyleSheet.create({
   signup: {
     flex: 1,
@@ -157,7 +145,6 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.colors.gray2,
     borderBottomWidth: StyleSheet.hairlineWidth,
     color: '#adb5bd'
-
   },
   label: {
     color: 'black',

@@ -14,27 +14,6 @@ export default function Records() {
 
   console.log("userId records " + userId)
 
-  // useEffect(() => {
-  //   const sampleExpenses = [
-  //     { id: '1', month: 'January', amount: '$100', categoryName: 'Rent' },
-  //     { id: '2', month: 'February', amount: '$50', categoryName: 'Groceries' },
-  //     { id: '3', month: 'March', amount: '$20', categoryName: 'Transportation' },
-  //     { id: '4', month: 'April', amount: '$80', categoryName: 'Dining out' },
-  //     { id: '5', month: 'May', amount: '$120', categoryName: 'Utilities' },
-  //   ];
-  //   const sampleIncomes = [
-  //     { id: '1', month: 'January', amount: '$2000', categoryName: 'Salary' },
-  //     { id: '2', month: 'February', amount: '$1500', categoryName: 'Freelance work' },
-  //     { id: '3', month: 'March', amount: '$1800', categoryName: 'Bonus' },
-  //     { id: '4', month: 'April', amount: '$1000', categoryName: 'Investment income' },
-  //     { id: '5', month: 'May', amount: '$2500', categoryName: 'Contract work' },
-  //   ];
-    
-  //   setExpenses(sampleExpenses);
-  //   setIncomes(sampleIncomes);
-  // }, []);
-
-
   useEffect(() => {
 
     if (!userId) {
@@ -69,6 +48,8 @@ export default function Records() {
   
         setExpenses(expenses);
         setIncomes(incomes);
+        fetchTransactions();
+
       } catch (error) {
         console.error('Error fetching transactions:', error);
       }

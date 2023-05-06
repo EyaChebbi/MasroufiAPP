@@ -60,6 +60,7 @@ export default function Categories() {
             categName: {
                 fontSize: 13,
                 color: 'black',
+                textAlign: 'center',
             }
         })  
         return { styles };
@@ -106,36 +107,19 @@ export default function Categories() {
         }, []
     );
         
-    const handleCategory = async(id) => {
-        console.log('ahla');
-        // setCategory(id);
-        // console.log('tajerba');
-        // const categories = {
-        //     category: category,
-        // };
-        // setCategories(categories);
-        // // console.log(category);
-        // navigation.goBack();
-        // const id=2;
-        
+    const handleCategory = async(id, name) => {
         try {
-            const url = '/categories/return';
             console.log(id);
-            const response = await api.get(url, { params: { id } });
+            const response = await api.get('/categories/return', { params: { id, name } });
             const temp = response.data[0];
-            const category = temp.id;
-            console.log('category id:', category);
+            const categoryID = temp.id;
+            const categoryName= temp.categoryName
+            console.log('category:', categoryID, "name", categoryName);
             const categories = {
-                category: category
+                categoryID: categoryID,
+                categoryName: categoryName,
             };
             setCategories(categories);
-      
-            // await AsyncStorage.setCategories('categories', categories);
-
-             // Set user state in UserContext
-      
-            // console.log(categories);
-            // navigation.navigate('Browse'); 
             navigation.goBack({categories});
         
           } catch (error) {
@@ -149,49 +133,15 @@ export default function Categories() {
     
     
         };
-    
-    // }
-    //version copied from records.js
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const result = await axios("http://192.168.48.36:3000/categories");
-    //         const data = await result.data;
-
-    //         setCategData(data);
-    //     };
-    //     fetchData();
-    // }, []);
-//     useEffect(() => {
-//   const fetchData = async () => {
-//     try {
-//       const response = await api.get('/categories'); // Use api instance instead of axios directly
-//       const data = response.data; // Extract data from the response
-//     //   console.log(data);
-//       setCategData(data);
-//       console.log(data);
-//       console.log('enter');
-//       console.log(categData)
-//     } catch (error) {
-//       console.error('Error fetching categories:', error);
-//     //   console.log("err");
-//       // Handle error
-//     }
-//   };
-  
-//   fetchData();
-// }, []);
-
-    // console.log('Current category data outside useEffect:', categData);
 
     const Category = ({name, catColor, id}) => {
         return (
-        <View style={styles.categElement}>
-            <Pressable onPress={() => handleCategory(id)}>
+            <Pressable onPress={() => handleCategory(id, name)}>
+                <View  style={styles.categElement} >
                 <View style={[styles.categColor,{backgroundColor: catColor}]} />
                 <Text style={styles.categName}>{name}</Text>
+                </View>
             </Pressable>
-            
-        </View>
         )
     }
 
@@ -201,12 +151,6 @@ export default function Categories() {
             <View style={styles.categSectionContainer}>
                 {categData.length > 0 ?
                     <FlatList 
-                        // refreshControl={
-                        //     <RefreshControl
-                        //     refreshing={refreshing} // Set refreshing state
-                        //     onRefresh={onRefresh} // Set onRefresh callback function
-                        //     />
-                        // }
                         data={categData}
                         renderItem={({item}) => <Category  name={item.categoryName}  catColor={item.color} id={item.id}/>}
                         keyExtractor={category => category.id}

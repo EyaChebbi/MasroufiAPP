@@ -39,7 +39,7 @@ app.post('/register', (req, res) => {
             const userId = result.insertId; // Get the user ID from the result of the INSERT operation
             const token = jwt.sign({ id: userId, email }, jwtSecretKey, { expiresIn: '1h' });
             console.log("token" + token);
-            res.status(200).json({ token, userID});
+            res.status(200).json({ token});
           }
         });
       }

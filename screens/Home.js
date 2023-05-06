@@ -26,7 +26,7 @@ export default function Home() {
 
     const { user } = useContext(UserContext);
     const userId = user?.userId;
-    console.log("userId Home " + userId)
+    //console.log("userId Home " + userId)
 
     // New state for controlling the visibility of the Add Account Modal
     const [isAddAccountModalVisible, setIsAddAccountModalVisible] = useState(false);

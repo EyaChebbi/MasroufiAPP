@@ -17,7 +17,7 @@ function NavigationBar({route}) {
 
   // const { token } = route.params; // Extract the JWT token from navigation parameters
 
-  const { userId } = route.params;
+  //const { userId } = route.params;
   return (
 
 <View style={styles.footer}>
