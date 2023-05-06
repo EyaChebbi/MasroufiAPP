@@ -22,7 +22,7 @@ export default function AddCategory() {
 
     const handleAddCateg = async () => {
         try {
-            const result = await api.post("http://192.168.50.47:3000/categories/add", {
+            const result = await api.post("/categories/add", {
                 name: categName,
                 color: selectedColor,
             });

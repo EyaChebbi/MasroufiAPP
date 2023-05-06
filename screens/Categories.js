@@ -4,10 +4,12 @@ import axios from "axios";
 import api from "../api";
 import { useNavigation } from "@react-navigation/native";
 import CategoryContext from "../server/CategoryContext";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Categories() {
 
+    //this function is created because I wanted to base my sizes on each user's screen, but I'm unable
+    //to get the dimensions from a separate hook call, it needs to be integrated in the styles function
+   
     const useStyle = () => {
         //gets window dimensions, doesn't work when typing { height, width } instead of dimensions
         const dimensions = useWindowDimensions();
@@ -61,48 +63,39 @@ export default function Categories() {
                 fontSize: 13,
                 color: 'black',
                 textAlign: 'center',
-            }
+            },
+            addButton: {
+                justifyContent: 'center',
+                textAlign: 'center',
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: dimensions.width * 0.9,
+                height: dimensions.height * 0.08,
+                alignSelf: 'center',
+                backgroundColor: 'white',
+                borderRadius: 20,
+            },
         })  
         return { styles };
     };
-    
-    const onRefresh = async () => {
-        // Function to handle refresh event
-        setRefreshing(true); // Set refreshing state to true
-    
-        // Perform refresh logic here, e.g., fetch new data from API
-        console.log("hi");
-        // Simulate asynchronous task with setTimeout
-        setTimeout(() => {
-          // After refreshing is done, set refreshing state back to false
-          setRefreshing(false);
-        }, 2000); // Adjust duration to suit your needs
-    };
-    
-    //this function is created because I wanted to base my sizes on each user's screen, but I'm unable
-    //to get the dimensions from a separate hook call, it needs to be integrated in the styles function
+   
     const navigation = useNavigation();
 
     const {styles} = useStyle(); 
     const [errors, setErrors] = useState([]);
     const { setCategories } = useContext(CategoryContext);
+    const [categData, setCategData] = useState([]);    
 
-    const [categData, setCategData] = useState([]);
-
-    // const [category, setCategory] = useState('');
-    
     useEffect(() => {
         const fetchData = async () => {
             try {
             const response = await api.get('/categories');
             const data = response.data;
             setCategData(data);
-            // console.log('Updated category data inside useEffect:', data);
             } catch (error) {
             console.error('Error fetching categories:', error);
             }
         };
-        
         fetchData();
         }, []
     );
@@ -130,16 +123,14 @@ export default function Categories() {
                 console.log(error);
               }
             }
-    
-    
         };
 
     const Category = ({name, catColor, id}) => {
         return (
             <Pressable onPress={() => handleCategory(id, name)}>
-                <View  style={styles.categElement} >
-                <View style={[styles.categColor,{backgroundColor: catColor}]} />
-                <Text style={styles.categName}>{name}</Text>
+                <View style={styles.categElement} >
+                    <View style={[styles.categColor,{backgroundColor: catColor}]} />
+                    <Text style={styles.categName}>{name}</Text>
                 </View>
             </Pressable>
         )
@@ -164,9 +155,11 @@ export default function Categories() {
                 </Pressable> */}
                   
             </View>
-            <TouchableOpacity style={styles.categElement} onPress={() => navigation.navigate("AddCategory")}>
-                <Category name="Add category..." catColor="white" fontSize='50' />
-            </TouchableOpacity>
+            <Pressable onPress={() => navigation.navigate("AddCategory")}>
+                <View style={styles.addButton}>
+                    <Text>Add Category...</Text>
+                </View>
+            </Pressable>
         </View>
     );
     
