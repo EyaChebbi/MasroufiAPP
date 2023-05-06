@@ -113,7 +113,7 @@ export default function Categories() {
             const response = await api.get('/categories/return', { params: { id, name } });
             const temp = response.data[0];
             const categoryID = temp.id;
-            const categoryName= temp.categoryName
+            const categoryName= temp.categoryName;
             console.log('category:', categoryID, "name", categoryName);
             const categories = {
                 categoryID: categoryID,

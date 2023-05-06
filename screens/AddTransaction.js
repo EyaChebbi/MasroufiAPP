@@ -41,17 +41,13 @@ export default function AddTransaction(route) {
 
     
     function CalendarComponent(props) {
-        const [selectedDate, setSelectedDate] = useState('');
         const [showCalendar, setShowCalendar] = useState(false);
     
-
         const handleDayPress = (day) => {
           setSelectedDate(day.dateString);
-          console.log(day);
-          console.log(selectedDate);
-        //   setShowCalendar(false);
-        props.selectedDate(day.dateString); 
-        setShowCalendar(false);
+          console.log("day.dateString " + day.dateString);
+          console.log("selectedDate "+ selectedDate);
+          setShowCalendar(false);
         };
         
         
@@ -69,13 +65,13 @@ export default function AddTransaction(route) {
             <CalendarModal
               isVisible={showCalendar}
               onDayPress={handleDayPress}
-              selectedDate={selectedDate}
+              //selectedDate={selectedDate}
             />
           </View>
         );
     }
     const [loading, setLoading] = useState(false);
-    const [selectedDate, setSelectedDate] = useState('Hey there');
+    const [selectedDate, setSelectedDate] = useState('');
     const [errors, setErrors] = useState([]);
     const [source, setSource] = useState('');
     const [amount, setAmount] = useState('000');
@@ -83,9 +79,7 @@ export default function AddTransaction(route) {
     const [isFocusedTime, setIsFocusedTime] = useState(false);
     const [time, setTime] = useState('');
     const { categories } = useContext(CategoryContext);
-    // const [category, setCategory] = useState('');
     const [payee, setPayee] = useState('');
-    // const [payer, setPayer] = useState('');
     const [type, setType] = useState('Spending');
     
     const handleFocus = () => {
@@ -99,11 +93,13 @@ export default function AddTransaction(route) {
     const handleAddExpense = async () => {
         console.log(amount);
         console.log(type);
+        console.log("Categ Id after save" + categoryID)
         console.log(selectedDate);
         console.log(userId);
         try {
         const url = '/transactions';
-        const response = await api.post(url, { userId, amount, category, selectedDate, source, payee, location,  time, type }); 
+        const response = await api.post(url, { userId, amount, categoryID, selectedDate, source, payee, location,  time, type }); 
+        const rsp = await api.put('/modifBalance',{userId, amount, type});
         console.log(response.data.token);
         Alert.alert(
             'Success!',
@@ -135,8 +131,8 @@ export default function AddTransaction(route) {
     const categoryName = categories?.categoryName;
     const navigation = useNavigation();
     const toggleExpanded = () => {
-        console.log("Category ID " + categoryID)
         navigation.navigate('Categories');  
+        console.log("Category ID " + categoryID)
         // setCategory(categories?.category);      
     };
    
@@ -247,6 +243,7 @@ export default function AddTransaction(route) {
                                 Location
                             </Text>
                         </View>
+                        <KeyboardAvoidingView style={styles.container} >
                         <TextInput
                         value={location}
                         onChangeText={(value) => setLocation(value)}
@@ -254,7 +251,10 @@ export default function AddTransaction(route) {
                         keyboardType="default"
                         placeholderTextColor='black'
                         style={styles.options}
+                        onSubmitEditing={Keyboard.dismiss}
+
                         />   
+                        </KeyboardAvoidingView>
                     </View>
 
                     :

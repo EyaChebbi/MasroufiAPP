@@ -147,18 +147,20 @@ app.use('/', router);
 
 //for the transactions, (it works) 
 app.post('/transactions', async(req, res) => {
-  const { userId, amount, category, selectedDate, source, payee, location,  time, type  } = req.body;
+  const { userId, amount, categoryID, selectedDate, source, payee, location,  time, type  } = req.body;
   const AddSpendingQuery = 'INSERT INTO Transactions (userID, amount, categoryID, transactionDate, transactionSource, payee, location, transactionTime, transactionType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ';
 
+ 
   connection.query(
     AddSpendingQuery,
-    [ userId, amount, category, selectedDate, source, payee, location,  time, type],
+    [ userId, amount, categoryID, selectedDate, source, payee, location,  time, type],
     (err, result) => {
       if (err) {
         console.error('Error adding transaction:', err);
         res.status(500).send('Error adding transaction.');
         return;
       }
+      console.log("category index"+ categoryID);
       res.status(200).send('Transaction added successfully.');
     }
   );
@@ -243,6 +245,49 @@ app.post('/categories/add', async (req, res) => {
     }
   });
 })
+
+// update balance from add transaction
+app.put('/modifBalance', async (req, res) => {
+  const { userId, amount, type } = req.body;
+  const addToBalanceQuery = "UPDATE users SET balance= ? where userId = ?";
+  connection.query(
+    'SELECT balance FROM users WHERE userId = ?', [userId],
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching balance:', err);
+        res.status(500).send('Error fetching balance.');
+        return;
+      }
+      let balance = results[0].balance;
+      let changedAmount = 0.0;
+      if (type === 'Spending') {
+        changedAmount = balance - amount;
+        console.log("balance" +balance,"amount "+ amount, "changed" +changedAmount)
+      }else if (type==='Earning') {
+        changedAmount = parseFloat(balance) + parseFloat(amount);
+        console.log("balance" +balance,"amount "+ amount, "changed" +changedAmount)
+      }
+      // } else if (type === 'Earning') {
+      //   changedAmount = balance + amount;
+      // } else {
+      //   res.status(400).send('Invalid type.');
+      //   return;
+      // }
+      connection.query(
+        addToBalanceQuery,
+        [changedAmount, userId],
+        (err, result) => {
+          if (err) {
+            console.error('Error updating balance:', err);
+            res.status(500).send('Error updating balance.');
+            return;
+          }
+          res.status(200).send('Balance updated successfully.');
+        }
+      );
+    }
+  );
+});
 
 
 // Define more routes here

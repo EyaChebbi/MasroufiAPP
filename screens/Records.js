@@ -10,10 +10,7 @@ export default function Records() {
   const [incomes, setIncomes] = useState([]);
   const { user } = useContext(UserContext);
   const userId = user?.userId;
-
-
-  console.log("userId records " + userId)
-
+  
   useEffect(() => {
 
     if (!userId) {
