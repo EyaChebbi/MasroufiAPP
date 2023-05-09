@@ -1,17 +1,16 @@
-// import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { LineChart } from 'react-native-chart-kit';
+import { Dimensions,
+    StyleSheet,
+    FlatList,
+    ScrollView,
+    TouchableOpacity,
+    View,
+    Text} from 'react-native';
 
-// import { LineChart } from 'react-native-chart-kit';
-// import {
-//   Dimensions,
-//   StyleSheet,
-//   FlatList,
-//   ScrollView,
-//   TouchableOpacity,
-//   View,
-//   Text,
-// } from "react-native";
-
-// const screenWidth = Dimensions.get('window').width - 85;
+const screenWidth = Dimensions.get('window').width - 85;
+import api from '../api';
+import UserContext from '../server/UserContext';
 
 // const chartData = {
 //   labels: [
@@ -26,81 +25,12 @@
 //   ],
 // };
 
-// const chartConfig = {
-//   backgroundColor: '#feffff',
-//   backgroundGradientFrom: '#feffff',
-//   backgroundGradientTo: '#feffff',
-//   decimalPlaces: 0,
-//   color: (opacity = 1) => `#405754`,
-// };
-// const Accounts = () => {
-//   return (
-//     <View>
-//        <Text style={styles.title}> Accounts</Text>
-//     </View>
-//   );
-// };
-
-// const BalanceTrend= () => {
-//   return (
-//     <>
-//     <View style={styles.card}>
-//     <Text style={styles.title}> Balance Trend</Text>
-//     {/* <View style={{ flex: 1 }}> */}
-//     <LineChart
-//       data={chartData}
-//       width={screenWidth}
-//       height={400}
-//       chartConfig={chartConfig}
-//       bezier
-//     />
-//      </View>
-//     <View style={styles.card}>
-//     <Accounts/>
-//     </View>
-//     </>
-   
-
-//   );
-// };
-
-import React, { useState } from 'react';
-import { LineChart } from 'react-native-chart-kit';
-import { Dimensions,
-    StyleSheet,
-    FlatList,
-    ScrollView,
-    TouchableOpacity,
-    View,
-    Text} from 'react-native';
-import BalanceByCategory from './BalanceByCategory';
-const screenWidth = Dimensions.get('window').width - 85;
-const chartData = {
-  labels: [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ],
-  datasets: [
-    {
-      data: [1200, 900, 700, 1000, 1500, 1300, 1100, 1000, 900, 700, 800, 600],
-      color: () => '#405457',
-      strokeWidth: 2,
-    },
-  ],
-};
-
 const chartConfig = {
   backgroundColor: '#feffff',
   backgroundGradientFrom: '#feffff',
   backgroundGradientTo: '#feffff',
   decimalPlaces: 0,
   color: (opacity = 1) => `#405754`,
-};
-const Accounts = () => {
-  return (
-    <View>
-       <Text style={styles.title}> Accounts</Text>
-    </View>
-  );
 };
 const TimeFrameBar = ({ setTimeFrame }) => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState('month');
@@ -167,37 +97,42 @@ const TimeFrameBar = ({ setTimeFrame }) => {
 const BalanceTrend = () => {
   const [timeFrame, setTimeFrame] = useState('Year');
 
-  const chartData = {
-    labels: [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ],
-    datasets: [
-      {
-        data: [1200, 900, 700, 1000, 1500, 1300, 1100, 1000, 900, 700, 800, 600],
-        color: () => '#405457',
-        strokeWidth: 2,
-      },
-    ],
-  };
+  const [balanceTrnd, setBalanceTrnd] = useState([{ month: 'Jan', balance: 1200 },
+{ month: 'Feb', balance: 900 },
+{ month: 'Mar', balance: 700 },
+{ month: 'Apr', balance: 1000 },
+{ month: 'May', balance: 1500 },
+{ month: 'Jun', balance: 1300 },
+{ month: 'Jul', balance: 1100 },
+]);
 
+  const fetchBalanceTrnd = async () => {
+    try {
+      if(userId){
+      const response = await api.get('/balanceHistory', { params: { userId:userId } });
+      const balanceHistory = response.data;
+      const newBalanceTrnd = balanceHistory.map((history) => {
+        const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
+        return { month: month, balance: history.amount };
+      });
+  
+      setBalanceTrnd(newBalanceTrnd);  
+    }
+    } catch (error) {
+      console.error('Error fetching balance history:', error);
+    }
+  };
+  useEffect(() => {
+    fetchBalanceTrnd();
+  }, [userId]);
+  const { user } = useContext(UserContext);
+  const userId = user?.userId;
   if (timeFrame === 'week') {
     // calculate data for week
   } else if (timeFrame === 'year') {
     // calculate data for year
   }
 
-  
   return (
     <>
      <ScrollView>
@@ -205,32 +140,34 @@ const BalanceTrend = () => {
         <Text style={styles.title}> Balance Trend</Text>
         <TimeFrameBar setTimeFrame={setTimeFrame} />
         <LineChart
-          data={chartData}
-          width={screenWidth}
-          height={400}
-          chartConfig={chartConfig}
-          bezier
-        />
+              style={styles.chart}
+              data={{
+                  labels: balanceTrnd.map((data) => data.month),
+                  datasets: [
+                      {
+                          data: balanceTrnd.map((data) => data.balance),
+                          color: () => 'black',
+                          id: 'balance',
+                      },
+                  ],
+              }}
+              width={screenWidth}
+              height={400}
+              chartConfig={chartConfig}
+              bezier
+          />
       </View>
-      {/* <View style={styles.card}>
-        <ScrollView>
-        <BalanceByCategory/>
-        </ScrollView>
-      </View> */}
       </ScrollView>
     </>
   );
 };
 
-
 const styles = StyleSheet.create({
-  
   bar: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 10,
     },
-
   container: {
     flex: 1,
     backgroundColor: '#6eccaf',
