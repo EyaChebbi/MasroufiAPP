@@ -132,6 +132,7 @@ export default function AddTransaction(route) {
             }
             ],
             { cancelable: false }
+        
         );
 
         } catch (error) {

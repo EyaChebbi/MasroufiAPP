@@ -225,7 +225,7 @@ app.get('/balance', (req, res) => {
 
 app.get('/topExpenses', async (req, res) => {
   const { id, period } = req.query
-  const topExpenseQuery = "SELECT transactions.transactionID, transactions.amount, transactions.categoryID, transactions.transactionDate, categories.categoryName, categories.color from Transactions LEFT OUTER JOIN categories ON transactions.categoryID = categories.id WHERE transactions.transactionType=\"Spending\" AND DATE_SUB(CURDATE(), INTERVAL ? DAY) <= transactions.transactionDate AND transactions.userID=? ORDER BY transactions.amount DESC LIMIT 3;"
+  const topExpenseQuery = "SELECT transactions.transactionID, transactions.amount, transactions.categoryID, transactions.transactionDate,categories.categoryName, categories.color from Transactions LEFT OUTER JOIN categories ON transactions.categoryID = categories.id WHERE transactions.transactionType=\"Spending\" AND DATE_SUB(CURDATE(), INTERVAL ? DAY) <= transactions.transactionDate AND transactions.userID=? ORDER BY transactions.amount DESC LIMIT 5;"
   connection.query(topExpenseQuery, [period, id], (err, result) => {
     if (err) {
       console.error('Error finding top expenses', err)

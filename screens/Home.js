@@ -20,6 +20,8 @@ import axios from 'axios';
 import api from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UserContext from "../server/UserContext";
+import moment from 'moment';
+
 
 export default function Home() {
 
@@ -232,16 +234,16 @@ export default function Home() {
         />
 
 <View style={styles.card}>
-          <Text style={styles.title}>Top Expenses</Text>
+          <Text style={styles.title}>Top 5 Expenses</Text>
           {topExpenses.map((expense) => (
-            <View key={expense.transactionID}>
-              <Text style={styles.topExpenseAmount}>{expense.amount}</Text>
-              <Text style={styles.topExpenseName}>{expense.categoryName}</Text>
-              <Text style={styles.topExpenseDate}>{expense.transactionDate.toString()}</Text>
-              {/* <Text style={styles.topExpenseColor}>{expense.color}</Text> */}
+            <View key={expense.transactionID} style={styles.transaction}>
+                <Text style={styles.topExpenseAmount}>{expense.amount}</Text>
+          <Text style={styles.topExpenseName}>{expense.categoryName}</Text>
+          <Text style={styles.topExpenseDate}>
+            {moment(expense.transactionDate).format('DD/MM/YYYY')}
+          </Text>
             </View>
           ))}
-          <Text style={styles.title}>Test</Text>
         </View>
            
             <View style={styles.card}>
@@ -377,7 +379,31 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
-    }
+    },
+      transaction: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+      },
+      topExpenseAmount: {
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+      topExpenseName: {
+        fontSize: 16,
+      },
+      topExpenseDate: {
+        fontSize: 14,
+        color: '#777',
+      },
+
+
+
+
+
+
+
 });
 
 
