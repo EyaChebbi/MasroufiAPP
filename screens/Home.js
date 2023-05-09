@@ -22,19 +22,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import UserContext from "../server/UserContext";
 
 export default function Home() {
-    const budget = 1500;
 
     const { user } = useContext(UserContext);
     const userId = user?.userId;
     //console.log("userId Home " + userId)
 
-    // New state for controlling the visibility of the Add Account Modal
     const [isAddAccountModalVisible, setIsAddAccountModalVisible] = useState(false);
-    
-    // New state for storing the input values for account_type and balance
     const [newAccountType, setNewAccountType] = useState('');
     const [newAccountNumber, setNewAccountNumber] = useState('');
-
     const [newAccountBalance, setNewAccountBalance] = useState('');
 
      const [accounts, setAccounts] = useState([]);
@@ -55,11 +50,11 @@ export default function Home() {
         } catch (error) {
           console.error(error);
         }
-      };
-
+    };
+     
       const AddAccountCard = () => {
         const handleAddAccount = () => {
-            console.log("Add account");
+            // console.log("Add account");
             setIsAddAccountModalVisible(true);
         };
       
@@ -70,8 +65,6 @@ export default function Home() {
             </TouchableOpacity>
         );
     };
-    
-
 
     const handleAddAccountSubmit = async () => {
         try {
@@ -83,7 +76,7 @@ export default function Home() {
           });
       
           const newAccount = response.data;
-          console.log("new account" + newAccount);
+        //   console.log("new account" + newAccount);
           setAccounts([...accounts, newAccount]);
           setNewAccountType("");
           setNewAccountBalance("");
@@ -95,44 +88,6 @@ export default function Home() {
           Alert.alert("Error", "An error occurred while adding the account.");
         }
       };
-      
-
-
-
-
-    // const handleAddAccountSubmit = async () => {
-    //     // Validate new account input values
-    //     if (newAccountType.trim() === '' || newAccountBalance.trim() === '') {
-    //         alert('Please enter both account type and balance');
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await api.post('/budgets', {
-    //             userId,
-    //             account_type: newAccountType,
-    //             balance: newAccountBalance,
-    //         });
-
-    //         // Update the accounts state to include the newly added account
-    //         setAccounts([
-    //             ...accounts,
-    //             {
-    //                 id: response.data.id,
-    //                 type: response.data.account_type,
-    //                 value: parseFloat(response.data.balance),
-    //             },
-    //         ]);
-
-    //         // Reset input values and close the modal
-    //         setNewAccountType('');
-    //         setNewAccountBalance('');
-    //         setIsAddAccountModalVisible(false);
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert('Failed to add account. Please try again.');
-    //     }
-    // };
 
     const handleAddAccountCancel = () => {
         // Reset input values and close the modal
@@ -141,7 +96,6 @@ export default function Home() {
         setNewAccountBalance('');
         setIsAddAccountModalVisible(false);
     };
-
 
     const BudgetCard = ({ type, value }) => {
         let icon;
@@ -162,28 +116,56 @@ export default function Home() {
         );
     };
 
-    const topExpenses = [
-        { name: 'Groceries', amount: 200 },
-        { name: 'Rent', amount: 800 },
-        { name: 'Utilities', amount: 100 },
-    ];
-    const balanceTrend = [
-        { month: 'Jan', balance: 1200 },
-        { month: 'Feb', balance: 900 },
-        { month: 'Mar', balance: 700 },
-        { month: 'Apr', balance: 1000 },
-        { month: 'May', balance: 1500 },
-        { month: 'Jun', balance: 1300 },
-        { month: 'Jul', balance: 1100 },
-        { month: 'Aug', balance: 1000 },
-        { month: 'Sep', balance: 900 },
-        { month: 'Oct', balance: 700 },
-        { month: 'Nov', balance: 800 },
-        { month: 'Dec', balance: 600 },
-    ];
+    const [topExpenses, setTopExpenses] = useState([]);
 
-    const totalExpenses = topExpenses.reduce((acc, expense) => acc + expense.amount, 0);
-    const balance = budget - totalExpenses;
+    const fetchTopExpenses = async () => {
+        try {
+          const response = await api.get("/topExpenses", {
+            params: {
+              period: 30,
+              id: userId,
+            },
+          });
+          const data = response.data;
+          setTopExpenses(data);
+        } catch (error) {
+          console.error("Error fetching top expenses:", error);
+        }
+    };
+    useEffect(() => {
+        fetchTopExpenses();
+        }, []
+    );
+
+
+
+    const [balance, setBalance] = useState(0);
+    const [balanceTrnd, setBalanceTrnd] = useState([{ month: 'Jan', balance: 1200 },
+    { month: 'Feb', balance: 900 }]);
+//fetch the user balance
+
+    const fetchBalanceTrnd = async () => {
+        try {
+            if(userId){
+          const response = await api.get('/balanceHistory', { params: { userId:userId } });
+          const balanceHistory = response.data;
+          const newBalanceTrnd = balanceHistory.map((history) => {
+            const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
+            return { month: month, balance: history.amount };
+          });
+
+          setBalanceTrnd(newBalanceTrnd);  
+        //   await AsyncStorage.setItem('balanceTrnd', JSON.stringify(newBalanceTrnd)); // Store data in AsyncStorage
+        }
+        } catch (error) {
+          console.error('Error fetching balance history:', error);
+        }
+      };
+    useEffect(() => {
+        fetchBalanceTrnd();
+      }, [userId]);
+      
+      
 
     const [expanded, setExpanded] = useState(false);
     const toggleExpanded = () => {
@@ -249,17 +231,18 @@ export default function Home() {
             }}
         />
 
-
-            <View style={styles.card}>
-                <Text style={styles.title}>Top Expenses</Text>
-                {topExpenses.map((expense) => (
-                    <View key={expense.name}>
-                        <Text>{expense.name}</Text>
-                        <Text style={styles.value}>{`${expense.amount} DT`}</Text>
-                    </View>
-                ))}
-                <Text style={styles.title}>{`Total Expenses: ${totalExpenses} DT`}</Text>
+<View style={styles.card}>
+          <Text style={styles.title}>Top Expenses</Text>
+          {topExpenses.map((expense) => (
+            <View key={expense.transactionID}>
+              <Text style={styles.topExpenseAmount}>{expense.amount}</Text>
+              <Text style={styles.topExpenseName}>{expense.categoryName}</Text>
+              <Text style={styles.topExpenseDate}>{expense.transactionDate.toString()}</Text>
+              {/* <Text style={styles.topExpenseColor}>{expense.color}</Text> */}
             </View>
+          ))}
+          <Text style={styles.title}>Test</Text>
+        </View>
            
             <View style={styles.card}>
                 <Text style={styles.title}> Balance Trend</Text>
@@ -267,11 +250,12 @@ export default function Home() {
                     <LineChart
                         style={styles.chart}
                         data={{
-                            labels: balanceTrend.map((data) => data.month),
+                            labels: balanceTrnd.map((data) => data.month),
                             datasets: [
                                 {
-                                    data: balanceTrend.map((data) => data.balance),
+                                    data: balanceTrnd.map((data) => data.balance),
                                     color: () => 'black',
+                                    id: 'balance',
                                 },
                             ],
                         }}

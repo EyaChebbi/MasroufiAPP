@@ -90,17 +90,37 @@ export default function AddTransaction(route) {
         setIsFocusedTime(false);
       };
 
+      function validateInput() {
+        if (categoryID === undefined || selectedDate === '' || amount === '' || amount === '000') {
+          Alert.alert(
+            'Error',
+            'Please choose a category, date, and write the amount before saving',
+            [
+              { text: 'OK' },
+            ],
+            { cancelable: false }
+          );
+          return false;
+        }
+        return true;
+      }
+      
+
     const handleAddExpense = async () => {
-        console.log(amount);
-        console.log(type);
-        console.log("Categ Id after save" + categoryID)
-        console.log(selectedDate);
-        console.log(userId);
+        if (!validateInput()) {
+            return;
+          }
+        // console.log(amount);
+        // console.log(type);
+        // console.log("Categ Id after save" + categoryID)
+        // console.log(selectedDate);
+        // console.log(userId);
         try {
         const url = '/transactions';
         const response = await api.post(url, { userId, amount, categoryID, selectedDate, source, payee, location,  time, type }); 
         const rsp = await api.put('/modifBalance',{userId, amount, type});
-        console.log(response.data.token);
+        const reponse = await api.post('/addBalanceHistory', {userId, selectedDate});
+        //console.log(response.data.token);
         Alert.alert(
             'Success!',
             'Your transaction has been added',
@@ -117,9 +137,9 @@ export default function AddTransaction(route) {
         } catch (error) {
         if (error.response && error.response.data) {
             setErrors(error.response.data.errors);
-            console.log(error.response.data);
+            // console.log(error.response.data);
         } else {
-            console.log(error);
+            // console.log(error);
         }
         } finally {
         setLoading(false);
@@ -132,7 +152,7 @@ export default function AddTransaction(route) {
     const navigation = useNavigation();
     const toggleExpanded = () => {
         navigation.navigate('Categories');  
-        console.log("Category ID " + categoryID)
+        // console.log("Category ID " + categoryID)
         // setCategory(categories?.category);      
     };
    

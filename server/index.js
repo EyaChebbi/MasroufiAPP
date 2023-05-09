@@ -24,7 +24,7 @@ app.post('/register', (req, res) => {
 
   connection.query(checkEmailQuery, [email], (err, results) => {
     if (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).send('Error checking email');
     } else {
       if (results.length > 0) {
@@ -33,12 +33,12 @@ app.post('/register', (req, res) => {
         const insertQuery = `INSERT INTO Users (firstName, lastName, emailAddress, userPassword) VALUES (?, ?, ?, ?)`;
         connection.query(insertQuery, [firstName, lastName, email, userPassword], (err, result) => {
           if (err) {
-            console.log(err);
+            // console.log(err);
             res.status(500).send('Error registering new user');
           } else {
             const userId = result.insertId; // Get the user ID from the result of the INSERT operation
             const token = jwt.sign({ id: userId, email }, jwtSecretKey, { expiresIn: '1h' });
-            console.log("token" + token);
+            // console.log("token" + token);
             res.status(200).json({ token});
           }
         });
@@ -79,7 +79,7 @@ app.post('/login', (req, res) => {
 
       return;
     } else if (user.userPassword !== password) {
-      console.log(password + " " + user.userPassword);
+      // console.log(password + " " + user.userPassword);
       res.status(401).json({ error: 'Incorrect password' });
 
       return;
@@ -103,7 +103,7 @@ app.get('/categories', async (req, res) => {
   const getQuery = `SELECT * FROM Categories`;
   connection.query(getQuery, [], (err, result) => {
     if (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).send('Error fetching categories');
     } else {
       res.status(200).json(result);
@@ -135,7 +135,7 @@ app.post('/categories/add', async (req, res) => {
 
   connection.query(postQuery, [name, color], (err, result) => {
     if (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).send('Error adding category');
     } else {
       res.status(200).send('Success!');
@@ -160,7 +160,7 @@ app.post('/transactions', async(req, res) => {
         res.status(500).send('Error adding transaction.');
         return;
       }
-      console.log("category index"+ categoryID);
+      // console.log("category index"+ categoryID);
       res.status(200).send('Transaction added successfully.');
     }
   );
@@ -203,13 +203,125 @@ app.get('/budgets', (req, res) => {
   );
 });
 
+//For the balance
+
+app.get('/balance', (req, res) => {
+  const { userId } = req.query;
+
+  connection.query(
+    'SELECT balance FROM users WHERE userId = ?', [userId],
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching balance:', err);
+        res.status(500).send('Error fetching balance.');
+        return;
+      }
+      // console.log("balance index" + results)
+      // console.log(results)
+      res.status(200).json(results[0]); // Return only the first result
+    }
+  );
+});
+
+app.get('/topExpenses', async (req, res) => {
+  const { id, period } = req.query
+  const topExpenseQuery = "SELECT transactions.transactionID, transactions.amount, transactions.categoryID, transactions.transactionDate, categories.categoryName, categories.color from Transactions LEFT OUTER JOIN categories ON transactions.categoryID = categories.id WHERE transactions.transactionType=\"Spending\" AND DATE_SUB(CURDATE(), INTERVAL ? DAY) <= transactions.transactionDate AND transactions.userID=? ORDER BY transactions.amount DESC LIMIT 3;"
+  connection.query(topExpenseQuery, [period, id], (err, result) => {
+    if (err) {
+      console.error('Error finding top expenses', err)
+      res.status(500).send('Error finding top expenses')
+      return;
+    }
+    res.status(200).json(result)
+  })
+})
+
+// retrieve balance history
+app.get('/balanceHistory', (req, res) => {
+  const { userId } = req.query;
+
+  const query = 'SELECT balanceDate, amount from balancehistory where userID = ?';
+  const params =[userId];
+  connection.query(
+    query,
+    params,
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching balance history:', err);
+        res.status(500).send('Error fetching balance history.');
+        return;
+      }
+      res.status(200).json(results);
+    }
+  );
+});
+
+
+
+
+
+//add new balance to balance history
+
+app.post('/addBalanceHistory', async (req, res) => {
+  const { userId, selectedDate } = req.body;
+  const addToBalanceHistoryQuery = "INSERT into balancehistory (userID, balanceDate, amount) VALUES (?,?,?)";
+  connection.query(
+    'SELECT balance FROM users WHERE userId = ?', [userId],
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching balance:', err);
+        res.status(500).send('Error fetching balance.');
+        return;
+      }
+      console.log(results[0]);
+      let bal = results[0].balance;
+      connection.query(
+        addToBalanceHistoryQuery,
+        [userId, selectedDate, bal],
+        (err, result) => {
+          if (err) {
+            console.error('Error updating balance history:', err);
+            res.status(500).send('Error updating balance history.');
+            return;
+          }
+          res.status(200).send('Balance history updated successfully.');
+        }
+      );
+    }
+  );
+});
+
+
+
+// retrieve balance history
+app.get('/balanceHistory', (req, res) => {
+  const { userId } = req.body;
+
+  const query = 'SELECT balanceDate, amount from balancehistory where userID = ?';
+  const params =[userId];
+  connection.query(
+    query,
+    params,
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching balance history:', err);
+        res.status(500).send('Error fetching balance history.');
+        return;
+      }
+      res.status(200).json(results);
+    }
+  );
+});
+
+
+
 //add account (Home screen)
 app.post("/budgets/add", async (req, res) => {
     const {userId, account_number, account_type, balance } = req.body;
     const postQuery = 'INSERT INTO budgets(userId, account_number, account_type, balance) VALUES (?,?,?,?)';
     connection.query(postQuery, [userId, account_number, account_type, balance], (err, result) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
         res.status(500).send('Error adding account');
       } else {
         res.status(200).send('Success!');
@@ -217,28 +329,13 @@ app.post("/budgets/add", async (req, res) => {
     })
   });
 
-  //   if (!account_type || !balance) {
-  //     return res.status(400).json({ error: "Missing required fields" });
-  //   }
-
-  //   const newAccount = await budgets.create({
-  //     account_type,
-  //     balance,
-  //   });
-
-  //   res.status(201).json(newAccount);
-  // } catch (error) {
-  //   console.error(error);
-  //   res.status(500).json({ error: "An error occurred while adding the account" });
-
-
 app.post('/categories/add', async (req, res) => {
   const { name, color } = req.body;
   const postQuery = 'INSERT INTO Categories(categoryName, color) VALUES (?,?)';
 
   connection.query(postQuery, [name, color], (err, result) => {
     if (err) {
-      console.log(err);
+      // console.log(err);
       res.status(500).send('Error adding category');
     } else {
       res.status(200).send('Success!');
@@ -262,17 +359,11 @@ app.put('/modifBalance', async (req, res) => {
       let changedAmount = 0.0;
       if (type === 'Spending') {
         changedAmount = balance - amount;
-        console.log("balance" +balance,"amount "+ amount, "changed" +changedAmount)
+        // console.log("balance" +balance,"amount "+ amount, "changed" +changedAmount)
       }else if (type==='Earning') {
         changedAmount = parseFloat(balance) + parseFloat(amount);
-        console.log("balance" +balance,"amount "+ amount, "changed" +changedAmount)
+        // console.log("balance" +balance,"amount "+ amount, "changed" +changedAmount)
       }
-      // } else if (type === 'Earning') {
-      //   changedAmount = balance + amount;
-      // } else {
-      //   res.status(400).send('Invalid type.');
-      //   return;
-      // }
       connection.query(
         addToBalanceQuery,
         [changedAmount, userId],
@@ -290,10 +381,8 @@ app.put('/modifBalance', async (req, res) => {
 });
 
 
-// Define more routes here
-
 app.listen(3000, () => {
-  console.log('Server listening on port 3000');
+  // console.log('Server listening on port 3000');
 });
 app.get('/api/data', (req, res) => {
   const data = {
@@ -303,66 +392,3 @@ app.get('/api/data', (req, res) => {
 });
 
 module.exports = router;
-
-//old code that works fine, to retrieve in case of errors in new code
-//for the register (works fine to keep in case of errors)
-/*
-app.post('/register', (req, res) => {
-  const { firstName, lastName, email, userPassword } = req.body;
-  const insertQuery = `INSERT INTO Users (firstName, lastName, emailAddress, userPassword) VALUES (?, ?, ?, ?)`;
-  connection.query(insertQuery, [firstName, lastName, email, userPassword], (err, result) => {
-    if (err) {
-      console.log
-      console.log(err);
-      res.status(500).send('Error registering new user');
-    } else {
-      res.status(200).send('Success');
-    }
-    });
-});
-*/
-
-
-//Login works fine (to keep in case of errors) with user not found and incorrect password
-/*
-app.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  const errors = [];
-
-  if (!email) {
-    errors.push('email');
-  }
-  if (!password) {
-    errors.push('password');
-  }
-
-  if (errors.length) {
-    res.status(400).json({ errors });
-    return;
-  }
-
-  const query = `SELECT * FROM Users WHERE emailAddress = ?`;
-  const params = [email];
-
-  connection.query(query, params, (err, results) => {
-    if (err) {
-      console.error('Error querying MySQL:', err);
-      res.status(500).json({ error: 'Internal server error' });
-      return;
-    }
-    const user = results[0];
-    if (results.length === 0) {
-      res.status(401).json({ error: 'User not found. Please sign up.' });
- 
-      return;
-    } else if (user.userPassword !== password) {
-      console.log(password + " " + user.userPassword);
-      res.status(401).json({ error: 'Incorrect password' });
-     
-      return;
-    }
-    res.json({ user });
-  });
-});
-
-*/

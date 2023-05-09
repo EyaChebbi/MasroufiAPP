@@ -23,7 +23,6 @@ export default function Records() {
   
         const transactions = response.data;
         const expenses = [];
-        const incomes = [];
   
         transactions.forEach(transaction => {
           const month = new Date(transaction.transactionDate).toLocaleString('default', { month: 'long' });
