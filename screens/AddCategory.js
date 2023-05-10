@@ -11,7 +11,6 @@ import api from '../api';
 export default function AddCategory() {
 
     const [refreshing, setRefreshing] = useState(false); // State to keep track of refresh status
-
   
     //used useState to change the color of the "preview" color after selecting a color
     const [categName, setCategName] = useState("");

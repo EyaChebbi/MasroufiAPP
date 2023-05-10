@@ -256,10 +256,6 @@ app.get('/balanceHistory', (req, res) => {
   );
 });
 
-
-
-
-
 //add new balance to balance history
 
 app.post('/addBalanceHistory', async (req, res) => {

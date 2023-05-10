@@ -15,15 +15,6 @@ export default function SignUp({ navigation })  {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
   const handleSignUp = async () => {
-    
-      // check with backend API or with some static data
-      // if (!email) errors.push('email');
-      // if (!firstName) errors.push('firstName');
-      // if (!lastName) errors.push('lastName');
-      // if (!password) errors.push('password');
-      // setErrors(errors);
-      // setLoading(false);
-    
       try {
         const url = '/register';
         const response = await api.post(url, { firstName, lastName, email, userPassword });

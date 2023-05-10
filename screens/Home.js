@@ -257,30 +257,6 @@ export default function Home({  route }) {
         fetchBalanceTrnd();
       }, [userId]);
     
-
-    // const fetchBalanceTrnd = async () => {
-    //   try {
-    //     if (userId) {
-    //       const response = await api.get('/balanceHistory', { params: { userId: userId } });
-    
-    //       if (response.data) {
-    //         setBalanceHistory(response.data); // Use setBalanceHistory to update the state
-    
-    //         const newBalanceTrnd = response.data.map((history) => {
-    //           const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
-    //           return { month: month, balance: history.amount };
-    //         });
-    
-    //         setBalanceTrnd(newBalanceTrnd);
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching balance history:', error);
-    //   }
-    // };
-   
-    
-
     const [expanded, setExpanded] = useState(false);
     const toggleExpanded = () => {
             navigation.navigate('BalanceTrend');
