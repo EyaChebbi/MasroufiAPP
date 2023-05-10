@@ -100,26 +100,35 @@ const BalanceTrend = () => {
 
   const [balanceTrnd, setBalanceTrnd] = useState([]);
 
-const fetchBalanceTrnd = async () => {
-  try {
-    if (userId) {
-      const response = await api.get('/balanceHistory', { params: { userId: userId } });
+  const fetchBalanceTrnd = async () => {
+    try {
+        if(userId){
+      const response = await api.get('/balanceHistory', { params: { userId:userId } });
+      
+   
+      const balanceHistory = response.data;
+      
+      console.log("balance history" + balanceHistory[0])
+          if (balanceHistory.length>1){
 
-      if (response.data) {
-        setBalanceHistory(response.data); // Use setBalanceHistory to update the state
-
-        const newBalanceTrnd = response.data.map((history) => {
-          const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
-          return { month: month, balance: history.amount };
-        });
-
-        setBalanceTrnd(newBalanceTrnd);
-      }
+      const newBalanceTrnd = balanceHistory.map((history) => {
+        const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
+        return { month: month, balance: history.amount };
+      });
+   
+      setBalanceTrnd(newBalanceTrnd);  
     }
+
+  }
   } catch (error) {
     console.error('Error fetching balance history:', error);
   }
 };
+
+useEffect(() => {
+  fetchBalanceTrnd();
+}, [userId]);
+
 
 
   const { user } = useContext(UserContext);
