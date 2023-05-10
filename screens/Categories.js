@@ -5,7 +5,7 @@ import api from "../api";
 import { useNavigation } from "@react-navigation/native";
 import CategoryContext from "../server/CategoryContext";
 
-export default function Categories() {
+export default function Categories({ route }) {
 
     //this function is created because I wanted to base my sizes on each user's screen, but I'm unable
     //to get the dimensions from a separate hook call, it needs to be integrated in the styles function
@@ -74,12 +74,15 @@ export default function Categories() {
                 alignSelf: 'center',
                 backgroundColor: 'white',
                 borderRadius: 20,
+                marginTop: 20,
             },
         })  
         return { styles };
     };
    
     const navigation = useNavigation();
+
+
 
     const {styles} = useStyle(); 
     const [errors, setErrors] = useState([]);
@@ -135,7 +138,18 @@ export default function Categories() {
             </Pressable>
         )
     }
-
+    if(route.params) {
+        const fetchData = async () => {
+            try {
+            const response = await api.get('/categories');
+            const data = response.data;
+            setCategData(data);
+            } catch (error) {
+            console.error('Error fetching categories:', error);
+            }
+        };
+        fetchData();
+    }
     return(
         <View style={styles.bigContainer}>
             <Text style={styles.screenTitle}>Select Category</Text>

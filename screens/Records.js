@@ -29,13 +29,13 @@ export default function Records() {
           if (transaction.transactionType === 'Spending') {
             expenses.push({
               month: month,
-              amount: `$${transaction.amount}`,
+              amount: `${transaction.amount} TND`,
               categoryName: transaction.categoryName
             });
           } else {
             incomes.push({
               month: month,
-              amount: `$${transaction.amount}`,
+              amount: `${transaction.amount} TND`,
               categoryName: transaction.categoryName
             });
           }
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderColor: '#4FA095', 
     borderWidth: 2,
-    width: 80,
+    width: 100,
     height: 30,
     textAlignVertical: 'center',
     textAlign: 'center',

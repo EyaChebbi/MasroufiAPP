@@ -24,7 +24,7 @@ import UserContext from "../server/UserContext";
 import moment from 'moment';
 
 
-export default function Home() {
+export default function Home({  route }) {
 
     const { user } = useContext(UserContext);
     const userId = user?.userId;
@@ -158,13 +158,76 @@ export default function Home() {
       fetchUserBalance();
     }, [userId]);
     
-
+    if(route.params) {
+      // const fetchUserBalance = async () => {
+      //   try {
+      //     if (userId) {
+      //       const response = await api.get('/balance', { params: { userId } });
+      //       setBalance(response.data.balance);
+      //     }
+      //   } catch (error) {
+      //     console.error('Error fetching user balance:', error);
+      //   }
+      // };
+      // const fetchTopExpenses = async () => {
+      //   try {
+      //     const response = await api.get("/topExpenses", {
+      //       params: {
+      //         period: 30,
+      //         id: userId,
+      //       },
+      //     });
+      //     const data = response.data;
+      //     setTopExpenses(data);
+      //   } catch (error) {
+      //     console.error("Error fetching top expenses:", error);
+      //   }
+      // };
+      // const fetchBalanceTrnd = async () => {
+      //   try {
+      //     if (userId) {
+      //       const response = await api.get('/balanceHistory', { params: { userId: userId } });
+      
+      //       if (response.data) {
+      //         setBalanceHistory(response.data); // Use setBalanceHistory to update the state
+      
+      //         const newBalanceTrnd = response.data.map((history) => {
+      //           const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
+      //           return { month: month, balance: history.amount };
+      //         });
+      
+      //         setBalanceTrnd(newBalanceTrnd);
+      //       }
+      //     }
+      //   } catch (error) {
+      //     console.error('Error fetching balance history:', error);
+      //   }
+      // };
+      // const fetchAccounts = async () => {
+      //   try {
+      //     if (userId) {
+      //       const response = await api.get(`/budgets`, { params: { userId } });
+      //       const formattedAccounts = response.data.map((account) => ({
+      //         id: account.id,
+      //         type: account.account_type,
+      //         value: parseFloat(account.balance),
+      //       }));
+      //       setAccounts(formattedAccounts);
+      //     }
+      //   } catch (error) {
+      //     console.error(error);
+      //   }
+      // };
+      
+      // fetchUserBalance();
+      // fetchTopExpenses();
+      // fetchBalanceTrnd();
+      // fetchAccounts();
+    }
 
 //fetch the user balance
-
-
-    const [balanceTrnd, setBalanceTrnd] = useState([]);
-const [balanceHistory, setBalanceHistory] = useState(null);
+  const [balanceTrnd, setBalanceTrnd] = useState([]);
+  const [balanceHistory, setBalanceHistory] = useState(null);
 
 
     // const fetchBalanceTrnd = async () => {
@@ -226,6 +289,10 @@ const [balanceHistory, setBalanceHistory] = useState(null);
         console.error('Error fetching balance history:', error);
       }
     };
+    // useEffect(() => {
+    //   fetchBalanceTrnd()
+    //   ,[]
+    // })
     
 
     const [expanded, setExpanded] = useState(false);
@@ -237,137 +304,151 @@ const [balanceHistory, setBalanceHistory] = useState(null);
     const navigation = useNavigation();
 
     return (
-        <ScrollView style={styles.container}>
-   <Modal
-            animationType="slide"
-            transparent={true}
-            visible={isAddAccountModalVisible}
+      <ScrollView style={styles.container}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isAddAccountModalVisible}
         >
-            <View style={styles.modalBackdrop}>
-                <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Add Account</Text>
-                    <TextInput
-                        style={styles.modalInput}
-                        onChangeText={setNewAccountType}
-                        value={newAccountType}
-                        placeholder="Account Type"
-                    />
-                     <TextInput
-                        style={styles.modalInput}
-                        onChangeText={setNewAccountNumber}
-                        value={newAccountNumber}
-                        placeholder="Number"
-                        keyboardType="numeric"
-                    />
-                    <TextInput
-                        style={styles.modalInput}
-                        onChangeText={setNewAccountBalance}
-                        value={newAccountBalance}
-                        placeholder="Balance"
-                        keyboardType="numeric"
-                    />
-                    <View style={styles.modalButtons}>
-                        <Button onPress={handleAddAccountSubmit} title="Submit" />
-                        <Button
-                            onPress={handleAddAccountCancel}
-                            title="Cancel"
-                            color="red"
-                        />
-                    </View>
-                </View>
+          <View style={styles.modalBackdrop}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Add Account</Text>
+              <TextInput
+                style={styles.modalInput}
+                onChangeText={setNewAccountType}
+                value={newAccountType}
+                placeholder="Account Type"
+              />
+              <TextInput
+                style={styles.modalInput}
+                onChangeText={setNewAccountNumber}
+                value={newAccountNumber}
+                placeholder="Number"
+                keyboardType="numeric"
+              />
+              <TextInput
+                style={styles.modalInput}
+                onChangeText={setNewAccountBalance}
+                value={newAccountBalance}
+                placeholder="Balance"
+                keyboardType="numeric"
+              />
+              <View style={styles.modalButtons}>
+                <Button onPress={handleAddAccountSubmit} title="Submit" />
+                <Button
+                  onPress={handleAddAccountCancel}
+                  title="Cancel"
+                  color="red"
+                />
+              </View>
             </View>
+          </View>
         </Modal>
 
-
-       <FlatList
-            data={[...accounts, { isAddAccountCard: true }]}
-            horizontal={true}
-            renderItem={({ item }) => {
-                if (item.isAddAccountCard) {
-                    return <AddAccountCard />;
-                }
-                return (
-                    <BudgetCard style={styles.card2} type={item.type} value={item.value} />
-                );
-            }}
+        <FlatList
+          data={[...accounts, { isAddAccountCard: true }]}
+          horizontal={true}
+          renderItem={({ item }) => {
+            if (item.isAddAccountCard) {
+              return <AddAccountCard />;
+            }
+            return (
+              <BudgetCard
+                style={styles.card2}
+                type={item.type}
+                value={item.value}
+              />
+            );
+          }}
         />
 
-<View style={styles.card}>
+        <View style={styles.card}>
           <Text style={styles.title}>Top 5 Expenses</Text>
-            {
-                topExpenses.length == 0 ?
-                <>
-                <View style={styles.innerContainer}>
-                  <Image source={require('../assets/images/decline.png')} style={styles.image}/>
-                  <Text style = {styles.noData}>No data has been recorded</Text>
-                </View>  
-              </>
-              :
-<>
-          {topExpenses.map((expense) => (
-            <View key={expense.transactionID} style={styles.transaction}>
-                <Text style={styles.topExpenseAmount}>{expense.amount}</Text>
-          <Text style={styles.topExpenseName}>{expense.categoryName}</Text>
-          <Text style={styles.topExpenseDate}>
-            {moment(expense.transactionDate).format('DD/MM/YYYY')}
-          </Text>
-            </View>
-          ))}
-          </>
-}
+          {topExpenses.length == 0 ? (
+            <>
+              <View style={styles.innerContainer}>
+                <Image
+                  source={require("../assets/images/decline.png")}
+                  style={styles.image}
+                />
+                <Text style={styles.noData}>No data has been recorded</Text>
+              </View>
+            </>
+          ) : (
+            <>
+              {topExpenses.map((expense) => (
+                <View key={expense.transactionID} style={styles.transaction}>
+                  <Text style={styles.topExpenseAmount}>{expense.amount}</Text>
+                  <Text style={styles.topExpenseName}>
+                    {expense.categoryName}
+                  </Text>
+                  <Text style={styles.topExpenseDate}>
+                    {moment(expense.transactionDate).format("DD/MM/YYYY")}
+                  </Text>
+                </View>
+              ))}
+            </>
+          )}
         </View>
-          
-           
-            <View style={styles.card}>
-                <Text style={styles.title}> Balance Trend</Text>
+
+        <View style={styles.card}>
+          <Text style={styles.title}> Balance Trend</Text>
+          {balanceTrnd.length === 0 ? (
+            <>
+              <View style={styles.innerContainer}>
+                <Image
+                  source={require("../assets/images/decline.png")}
+                  style={styles.image}
+                />
+                <Text style={styles.noData}>No data has been recorded</Text>
+              </View>
+            </>
+          ) : (
+            <View style={{ flex: 1 }}>
+              <LineChart
+                style={styles.chart}
+                data={{
+                  labels: balanceTrnd.map((data) => data.month),
+                  datasets: [
                     {
-                        balanceTrnd.length === 0 ?
-                        <>
-                        <View style={styles.innerContainer}>
-                          <Image source={require('../assets/images/decline.png')} style={styles.image}/>
-                          <Text style = {styles.noData}>No data has been recorded</Text>
-                        </View>  
-                      </>
-                      :
-                <View style={{ flex: 1 }}>
-                    <LineChart
-                        style={styles.chart}
-                        data={{
-                            labels: balanceTrnd.map((data) => data.month),
-                            datasets: [
-                                {
-                                    data: balanceTrnd.map((data) => data.balance),
-                                    color: () => 'black',
-                                    id: 'balance',
-                                },
-                            ],
-                        }}
-                        width={Dimensions.get('window').width - 85}
-                        height={220}
-                        chartConfig={{
-                            backgroundColor: '#feffff',
-                            backgroundGradientFrom: '#feffff',
-                            backgroundGradientTo: '#feffff',
-                            decimalPlaces: 0,
-                            color: (opacity = 1) => `blue`,
-                        }}
-                        bezier
-                    />
-                    <TouchableOpacity onPress={toggleExpanded}>
-                <Text style={{ color: "blue", marginTop: 10 ,  fontWeight: 'bold', textAlign: 'right'}}>
-                    {expanded ? "See Less" : "See More"}
+                      data: balanceTrnd.map((data) => data.balance),
+                      color: () => "black",
+                      id: "balance",
+                    },
+                  ],
+                }}
+                width={Dimensions.get("window").width - 85}
+                height={220}
+                chartConfig={{
+                  backgroundColor: "#feffff",
+                  backgroundGradientFrom: "#feffff",
+                  backgroundGradientTo: "#feffff",
+                  decimalPlaces: 0,
+                  color: (opacity = 1) => `blue`,
+                }}
+                bezier
+              />
+              <TouchableOpacity onPress={toggleExpanded}>
+                <Text
+                  style={{
+                    color: "blue",
+                    marginTop: 10,
+                    fontWeight: "bold",
+                    textAlign: "right",
+                  }}
+                >
+                  {expanded ? "See Less" : "See More"}
                 </Text>
-            </TouchableOpacity>
-                </View> }
+              </TouchableOpacity>
             </View>
-                   
-            
-            <View style={styles.card}>
-                <Text style={styles.title}>Current Balance</Text>
-                <Text style={styles.value}>{`${balance} DT`}</Text>
-            </View>
-        </ScrollView>
-        
+          )}
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.title}>Current Balance</Text>
+          <Text style={styles.value}>{`${balance} DT`}</Text>
+        </View>
+      </ScrollView>
     );
                     
 };
@@ -490,8 +571,4 @@ const styles = StyleSheet.create({
         height: 130,
         alignSelf: 'center', 
       },
-
-
-
-
 });

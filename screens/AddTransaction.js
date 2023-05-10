@@ -110,11 +110,7 @@ export default function AddTransaction(route) {
         if (!validateInput()) {
             return;
           }
-        // console.log(amount);
-        // console.log(type);
-        // console.log("Categ Id after save" + categoryID)
-        // console.log(selectedDate);
-        // console.log(userId);
+
         try {
         const url = '/transactions';
         const response = await api.post(url, { userId, amount, categoryID, selectedDate, source, payee, location,  time, type }); 
@@ -127,7 +123,7 @@ export default function AddTransaction(route) {
             [
             {
                 text: 'Ok', onPress: () => {
-                navigation.push('Home')
+                navigation.navigate('Home', { userId, amount, categoryID, selectedDate, source, payee, location,  time, type })
                 }
             }
             ],
