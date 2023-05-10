@@ -4,13 +4,12 @@ import axios from 'axios';
 import UserContext from '../server/UserContext'
 import api from '../api';
 
-
 export default function Records() {
   const [expenses, setExpenses] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const { user } = useContext(UserContext);
   const userId = user?.userId;
-  
+
   useEffect(() => {
 
     if (!userId) {
@@ -25,7 +24,7 @@ export default function Records() {
         const expenses = [];
   
         transactions.forEach(transaction => {
-          const month = new Date(transaction.transactionDate).toLocaleString('default', { month: 'long' });
+          const month = new Date(transaction.transactionDate).toLocaleString('default', { month: 'long', day: 'numeric' });
   
           if (transaction.transactionType === 'Spending') {
             expenses.push({
@@ -44,8 +43,6 @@ export default function Records() {
   
         setExpenses(expenses);
         setIncomes(incomes);
-        fetchTransactions();
-
       } catch (error) {
         console.error('Error fetching transactions:', error);
       }
@@ -57,7 +54,7 @@ export default function Records() {
 
 
   const renderExpense = ({ item }) => (
-    <View style={styles.expenseContainer}>
+    <View key={item.transactionID} style={styles.expenseContainer}>
       <View style={styles.expenseMonth}>
         <Text style={styles.expenseMonthText}>{item.month}</Text>
       </View>
@@ -81,9 +78,7 @@ export default function Records() {
                 <Image source={require('../assets/images/decline.png')} style={styles.image}/>
                 <Text style = {styles.noData}>No expenses have been recorded</Text>
               </View>
-              
             </>
-            
           :
             <FlatList
             data={expenses}
@@ -91,8 +86,7 @@ export default function Records() {
             keyExtractor={item => item.id}
             />
         }
-        
-      </View>
+        </View>
 
       <View style={styles.container}>
         <Text style={styles.title}>Incomes</Text>
@@ -122,15 +116,11 @@ const styles = StyleSheet.create({
   containerTop: {
     flex: 1,
     backgroundColor: 'white',
-    // alignContent: 'center'
   },
   container: {
     backgroundColor: '#fff',
     paddingTop: 20,
-    flex: 1,
-    // height: 50%,
-    // marginBottom: 20,    
-    // justifyContent: 'center'    
+    flex: 1, 
   },
   innerContainer: {
     flex: 1,
@@ -150,13 +140,8 @@ const styles = StyleSheet.create({
     padding: 10,
     marginRight: 15,
     marginLeft:15,
-    //marginRight: 15,
-    //alignItems: 'flex-start',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-  },
-  expenseMonth: {
-    //
   },
   expenseMonthText:{
     //textAlign: 'left',

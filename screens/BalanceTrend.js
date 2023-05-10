@@ -6,7 +6,8 @@ import { Dimensions,
     ScrollView,
     TouchableOpacity,
     View,
-    Text} from 'react-native';
+    Text,
+  Image} from 'react-native';
 
 const screenWidth = Dimensions.get('window').width - 85;
 import api from '../api';
@@ -97,34 +98,30 @@ const TimeFrameBar = ({ setTimeFrame }) => {
 const BalanceTrend = () => {
   const [timeFrame, setTimeFrame] = useState('Year');
 
-  const [balanceTrnd, setBalanceTrnd] = useState([{ month: 'Jan', balance: 1200 },
-{ month: 'Feb', balance: 900 },
-{ month: 'Mar', balance: 700 },
-{ month: 'Apr', balance: 1000 },
-{ month: 'May', balance: 1500 },
-{ month: 'Jun', balance: 1300 },
-{ month: 'Jul', balance: 1100 },
-]);
+  const [balanceTrnd, setBalanceTrnd] = useState([]);
 
-  const fetchBalanceTrnd = async () => {
-    try {
-      if(userId){
-      const response = await api.get('/balanceHistory', { params: { userId:userId } });
-      const balanceHistory = response.data;
-      const newBalanceTrnd = balanceHistory.map((history) => {
-        const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
-        return { month: month, balance: history.amount };
-      });
-  
-      setBalanceTrnd(newBalanceTrnd);  
+const fetchBalanceTrnd = async () => {
+  try {
+    if (userId) {
+      const response = await api.get('/balanceHistory', { params: { userId: userId } });
+
+      if (response.data) {
+        setBalanceHistory(response.data); // Use setBalanceHistory to update the state
+
+        const newBalanceTrnd = response.data.map((history) => {
+          const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
+          return { month: month, balance: history.amount };
+        });
+
+        setBalanceTrnd(newBalanceTrnd);
+      }
     }
-    } catch (error) {
-      console.error('Error fetching balance history:', error);
-    }
-  };
-  useEffect(() => {
-    fetchBalanceTrnd();
-  }, [userId]);
+  } catch (error) {
+    console.error('Error fetching balance history:', error);
+  }
+};
+
+
   const { user } = useContext(UserContext);
   const userId = user?.userId;
   if (timeFrame === 'week') {
@@ -138,6 +135,16 @@ const BalanceTrend = () => {
      <ScrollView>
       <View style={styles.card}>
         <Text style={styles.title}> Balance Trend</Text>
+        {
+                        balanceTrnd.length === 0 ?
+                        <>
+                        <View style={styles.innerContainer}>
+                          <Image source={require('../assets/images/decline.png')} style={styles.image}/>
+                          <Text style = {styles.noData}>No data has been recorded</Text>
+                        </View>  
+                      </>
+                      :
+                      <>
         <TimeFrameBar setTimeFrame={setTimeFrame} />
         <LineChart
               style={styles.chart}
@@ -156,6 +163,9 @@ const BalanceTrend = () => {
               chartConfig={chartConfig}
               bezier
           />
+          </>
+            }
+
       </View>
       </ScrollView>
     </>
@@ -234,6 +244,17 @@ const styles = StyleSheet.create({
   selectedButtonText: {
     color: '#feffff',
   },
+  noData: {
+        fontSize: 18,
+        fontWeight: '600',
+        textAlign: 'center',
+        marginTop: 25,
+      },
+      image:{ 
+        width: 130, 
+        height: 130,
+        alignSelf: 'center', 
+      },
 });
 
 export default BalanceTrend;

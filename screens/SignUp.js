@@ -60,7 +60,7 @@ export default function SignUp({ navigation })  {
     };    
     const hasErrors = key => errors && errors.includes && errors.includes(key) ? styles.hasErrors : null;
      return(
-      <KeyboardAvoidingView style={styles.signup} behavior={Platform.OS === 'ios' ? 'position' : null} enabled>
+       <KeyboardAvoidingView style={styles.signup} behavior={Platform.OS === 'ios' ? 'position' : null} enabled>
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">        
         <Block padding={[0, theme.sizes.base * 2]}>
           {/* <Text h1 bold>Sign Up</Text>*/ }
@@ -131,13 +131,14 @@ export default function SignUp({ navigation })  {
           </Block>
         </Block>
         </ScrollView>
-      </KeyboardAvoidingView>
+       </KeyboardAvoidingView>
   )
 }
 const styles = StyleSheet.create({
   signup: {
     flex: 1,
     justifyContent: 'center',
+    marginTop: 100,
   },
   default:{
     borderRadius: 0,

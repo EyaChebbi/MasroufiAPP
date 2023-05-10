@@ -127,7 +127,7 @@ export default function AddTransaction(route) {
             [
             {
                 text: 'Ok', onPress: () => {
-                navigation.navigate('Home')
+                navigation.push('Home')
                 }
             }
             ],

@@ -27,7 +27,7 @@ export default function AddCategory() {
                 color: selectedColor,
             });
             console.log(result.data);
-            navigation.navigate("Categories");
+            navigation.push("Categories");
         } catch (error) {
             console.log(error);
         }
