@@ -227,72 +227,58 @@ export default function Home({  route }) {
 
 //fetch the user balance
   const [balanceTrnd, setBalanceTrnd] = useState([]);
-  const [balanceHistory, setBalanceHistory] = useState(null);
-
-
-    // const fetchBalanceTrnd = async () => {
-    //     try {
-    //         if(userId){
-    //       const response = await api.get('/balanceHistory', { params: { userId:userId } });
-          
-    //           //let balanceHistory = [null];
-
-    //       if (response.data){
-    //           balanceHistory = response.data;
-    //           {
-    //             balanceHistory === null ? (
-    //               // Show a message or a loader while data is being fetched or when no data is available
-    //               <Text>Loading...</Text>
-    //             ) : (
-    //               balanceHistory.map((history, index) => {
-    //                 // Render the balance history data here
-    //               })
-    //             );
-    //           }
-              
-    //         }
-    //       console.log("balance history" + balanceHistory)
-    //       const newBalanceTrnd = balanceHistory.map((history) => {
-    //         const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
-    //         return { month: month, balance: history.amount };
-    //       });
-
-    //       setBalanceTrnd(newBalanceTrnd);  
-    //     }
-    //   }
-    //    catch (error) {
-    //       console.error('Error fetching balance history:', error);
-    //     }
-    //   };
-    // useEffect(() => {
-    //     fetchBalanceTrnd();
-    //   }, [userId]);
-    
 
     const fetchBalanceTrnd = async () => {
-      try {
-        if (userId) {
-          const response = await api.get('/balanceHistory', { params: { userId: userId } });
-    
-          if (response.data) {
-            setBalanceHistory(response.data); // Use setBalanceHistory to update the state
-    
-            const newBalanceTrnd = response.data.map((history) => {
-              const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
-              return { month: month, balance: history.amount };
-            });
-    
-            setBalanceTrnd(newBalanceTrnd);
-          }
+        try {
+            if(userId){
+          const response = await api.get('/balanceHistory', { params: { userId:userId } });
+          
+       
+          const balanceHistory = response.data;
+          
+          console.log("balance history" + balanceHistory[0])
+              if (balanceHistory.length>1){
+
+          const newBalanceTrnd = balanceHistory.map((history) => {
+            const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
+            return { month: month, balance: history.amount };
+          });
+       
+          setBalanceTrnd(newBalanceTrnd);  
         }
-      } catch (error) {
-        console.error('Error fetching balance history:', error);
+
       }
-    };
-    // useEffect(() => {
-    //   fetchBalanceTrnd()
-    //   ,[]
-    // })
+      }
+       catch (error) {
+          console.error('Error fetching balance history:', error);
+        }
+      };
+    useEffect(() => {
+        fetchBalanceTrnd();
+      }, [userId]);
+    
+
+    // const fetchBalanceTrnd = async () => {
+    //   try {
+    //     if (userId) {
+    //       const response = await api.get('/balanceHistory', { params: { userId: userId } });
+    
+    //       if (response.data) {
+    //         setBalanceHistory(response.data); // Use setBalanceHistory to update the state
+    
+    //         const newBalanceTrnd = response.data.map((history) => {
+    //           const month = new Date(history.balanceDate).toLocaleString('default', { month: 'long' });
+    //           return { month: month, balance: history.amount };
+    //         });
+    
+    //         setBalanceTrnd(newBalanceTrnd);
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching balance history:', error);
+    //   }
+    // };
+   
     
 
     const [expanded, setExpanded] = useState(false);
@@ -400,7 +386,7 @@ export default function Home({  route }) {
                   source={require("../assets/images/decline.png")}
                   style={styles.image}
                 />
-                <Text style={styles.noData}>No data has been recorded</Text>
+                <Text style={styles.noData}>Not enough data has been recorded</Text>
               </View>
             </>
           ) : (
