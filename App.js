@@ -2,8 +2,10 @@ import React, {useState} from 'react';
 import { View, StyleSheet, RefreshControl, ScrollView } from "react-native";
 import RootNavigator from './navigation/RootNavigator';
 import { DefaultTheme } from '@react-navigation/native';
-
 import { theme } from './constants';
+
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs()
 
 const MyTheme = {
   ...DefaultTheme,
